@@ -49,32 +49,40 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="AxInterop.AXVLC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\nhibernate\Castle.Core.dll</HintPath>
+      <HintPath>..\..\lib\AxInterop.AXVLC.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib\nhibernate\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate">
-      <HintPath>..\lib\nhibernate\FluentNHibernate.dll</HintPath>
+      <HintPath>..\..\lib\nhibernate\FluentNHibernate.dll</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate.Search">
-      <HintPath>..\lib\nhibernate\FluentNHibernate.Search.dll</HintPath>
+      <HintPath>..\..\lib\nhibernate\FluentNHibernate.Search.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
-      <HintPath>..\lib\HtmlAgilityPack.dll</HintPath>
+      <HintPath>..\..\lib\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.AXVLC, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\lib\Interop.AXVLC.dll</HintPath>
     </Reference>
     <Reference Include="Lucene.Net">
-      <HintPath>..\lib\nhibernate\Lucene.Net.dll</HintPath>
+      <HintPath>..\..\lib\nhibernate\Lucene.Net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="NHibernate">
-      <HintPath>..\lib\nhibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\lib\nhibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+      <HintPath>..\..\lib\nhibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.Search">
-      <HintPath>..\lib\nhibernate\NHibernate.Search.dll</HintPath>
+      <HintPath>..\..\lib\nhibernate\NHibernate.Search.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -93,9 +101,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="VIBlend.WinForms.Controls, Version=6.0.0.0, Culture=neutral, PublicKeyToken=6feea38fef5ea0cf, processorArchitecture=MSIL" />
-    <Reference Include="VIBlend.WinForms.DataGridView, Version=6.0.0.0, Culture=neutral, PublicKeyToken=84a1a092e92851e6, processorArchitecture=MSIL" />
-    <Reference Include="VIBlend.WinForms.Utilities, Version=6.0.0.0, Culture=neutral, PublicKeyToken=970a5af59bc48043" />
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
@@ -232,25 +237,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="AxAXVLC">
-      <Guid>{DF2BBE39-40A8-433B-A279-073F48DA94B6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>aximp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
-    <COMReference Include="AXVLC">
-      <Guid>{DF2BBE39-40A8-433B-A279-073F48DA94B6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Rewind.gif" />

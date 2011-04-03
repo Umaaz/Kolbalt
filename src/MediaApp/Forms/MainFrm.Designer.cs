@@ -1686,8 +1686,6 @@
         private System.Windows.Forms.Button btn_AdvSearch;
         private System.Windows.Forms.TextBox txtb_Search;
         private System.Windows.Forms.Label lbl_Search;
-        private VIBlend.WinForms.Controls.vApplicationMenuItem APMI_Database;
-        private VIBlend.WinForms.Controls.vApplicationMenuItem APMI_DBCreate;
         private System.Windows.Forms.ContextMenuStrip CMS_Settings;
         private System.Windows.Forms.ToolStripMenuItem CMSI_dataBase;
         private System.Windows.Forms.ToolStripMenuItem CMSI_creatDataBase;
