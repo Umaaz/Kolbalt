@@ -123,7 +123,6 @@
     <Compile Include="Domain\Alarms.cs" />
     <Compile Include="Domain\Film.cs" />
     <Compile Include="Domain\FilmType.cs" />
-    <Compile Include="Domain\Keyword.cs" />
     <Compile Include="Domain\Person.cs" />
     <Compile Include="Domain\Role.cs" />
     <Compile Include="Forms\FullScreanVideo.cs">
@@ -168,7 +167,6 @@
     <Compile Include="Mappings\Conventions\TableNameConventions.cs" />
     <Compile Include="Mappings\FilmMap.cs" />
     <Compile Include="Mappings\FilmTypeMap.cs" />
-    <Compile Include="Mappings\KeywordMap.cs" />
     <Compile Include="Mappings\PersonMap.cs" />
     <Compile Include="Mappings\RoleMap.cs" />
     <Compile Include="Mappings\SearchMap.cs" />

@@ -15,6 +15,7 @@ namespace MediaApp.Mappings
             Map(x => x.ReleaseDate);
             Map(x => x.FilmPath);
             Map(x => x.Synopsis).Length(4000);
+            Map(x => x.Keywords);
             References(x => x.Director).Cascade.All(); //is this right then?
 
                 //nice and simple now, you hope.. need to rebuild db tho
@@ -24,10 +25,6 @@ namespace MediaApp.Mappings
             //HasManyToMany(x=>x.Director)
             //    .AsBag()
             //    .Cascade.All();
-            
-            HasManyToMany(x => x.Keywords)
-                .AsBag()
-                .Cascade.All();
 
             HasManyToMany(x => x.Genre)
                 .AsBag()

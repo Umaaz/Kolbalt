@@ -10,7 +10,6 @@ namespace MediaApp.Domain
             Cast = new List<Role>();
             Genre = new List<FilmType>();
             //Director = new List<Person>();
-            Keywords = new List<Keyword>();
         }
 
         public virtual Guid Id { get; set; }
@@ -23,8 +22,8 @@ namespace MediaApp.Domain
         public virtual IList<Role> Cast { get; set; }
         public virtual IList<FilmType> Genre { get; set; }
         public virtual string Synopsis { get; set; }
-        public virtual String FilmPath { get; set; }
-        public virtual IList<Keyword> Keywords { get; set; }
+        public virtual string FilmPath { get; set; }
+        public virtual string Keywords { get; set; }
         
         //reviews
         //writers
