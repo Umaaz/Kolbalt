@@ -1,0 +1,9 @@
+
+#ignore thumbnails created by windows
+Thumbs.db
+*.obj
+*.user
+*.suo
+obj/
+_ReSharper*/
+*.workdangnabit

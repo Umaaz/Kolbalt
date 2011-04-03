@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaApp", "MediaApp\MediaApp.csproj", "{9B0A3550-33B7-466F-A3FE-D576465F938A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B0A3550-33B7-466F-A3FE-D576465F938A}.Debug|x86.ActiveCfg = Debug|x86
+		{9B0A3550-33B7-466F-A3FE-D576465F938A}.Debug|x86.Build.0 = Debug|x86
+		{9B0A3550-33B7-466F-A3FE-D576465F938A}.Release|x86.ActiveCfg = Release|x86
+		{9B0A3550-33B7-466F-A3FE-D576465F938A}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

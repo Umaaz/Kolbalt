@@ -1,0 +1,31 @@
+#ignore thumbnails created by windows
+Thumbs.db
+#Ignore files from Visual Studio and MonoDevelop
+*.obj
+*.exe
+*.pdb
+*.user
+*.userprefs
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.pidb
+*.ilk
+*.log
+[Aa]pp_[Dd]ata
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
