@@ -154,7 +154,7 @@ namespace MediaApp
             var DBC = new DbCreate();
             if (DBC.ShowDialog() == DialogResult.OK)
             {
-                RefreshFilmGrids();
+                buildFilm();
             }
         }
 
@@ -167,6 +167,96 @@ namespace MediaApp
 
         #region Film Database controls
 
+        //Build film queryable based on search string todo needs additions to also search cast and genres
+        private IQueryable<Film> GetFilms()
+        {
+            var query = txtb_Search.Text;
+            if (string.IsNullOrWhiteSpace(query))
+                return _nhSession.Query<Film>();
+
+            var parser = new MultiFieldQueryParser(Lucene.Net.Util.Version.LUCENE_CURRENT,
+                new[] { "Title", "Synopsis", "Director" }, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT));
+            var searchSession = NHibernate.Search.Search.CreateFullTextSession(_nhSession);
+            return searchSession.CreateFullTextQuery(parser.Parse(query), new[] { typeof(Film) }).List<Film>().AsQueryable();
+        }
+        //builds actor list based on above films
+        private IList<ListBoxItem> FillActors()
+        {
+            var films = GetFilms();
+            var actors =
+                films.SelectMany(f => f.Cast).OrderBy(o => o.Person.Name).Select(
+                    p => new ListBoxItem(p.Person.Id, p.Person.Name)).ToList();
+            IList<ListBoxItem> aList = new List<ListBoxItem>();
+            foreach (var listBoxItem in actors)
+            {
+                var inc = false;
+                foreach (var boxItem in aList.Where(boxItem => listBoxItem.Id == boxItem.Id))
+                {
+                    inc = true;
+                }
+                if(!inc)
+                    aList.Add(listBoxItem);
+            }
+            return aList;
+        }
+        //builds genre list based on above films
+        private IList<ListBoxItem> FillGenres()
+        {
+            var films = GetFilms();
+            var genres =
+                films.SelectMany(f => f.Genre).OrderBy(o => o.Type).Select(g => new ListBoxItem(g.Id, g.Type)).ToList();
+            IList<ListBoxItem> gList = new List<ListBoxItem>();
+            foreach (var listBoxItem in genres)
+            {
+                var inc = false;
+                foreach (var boxItem in gList.Where(boxItem => listBoxItem.Id == boxItem.Id))
+                {
+                    inc = true;
+                }
+                if(!inc)
+                    gList.Add(listBoxItem);
+            }
+            return gList;
+        }
+        //builds director list based on above films
+        private IList<ListBoxItem> FillDirector()
+        {
+            var films = GetFilms();
+            var directors =
+                films.OrderBy(o => o.Director.Name).Select(d => new ListBoxItem(d.Director.Id, d.Director.Name)).ToList();
+            IList<ListBoxItem> dList = new List<ListBoxItem>();
+            foreach (var listBoxItem in directors)
+            {
+                var inc = false;
+                foreach (var boxItem in dList.Where(boxItem => listBoxItem.Id == boxItem.Id))
+                {
+                    inc = true;
+                }
+                if(!inc)
+                    dList.Add(listBoxItem);
+            }
+            return dList;
+        }
+        //calls build film on search string change
+        private void txtb_Search_TextChanged(object sender, EventArgs e)
+        {
+            buildFilm();
+        }
+        //populates Actor, Genre, Director list boxes, and sets DataSource for GridView (called upon entering film library view)
+        private void buildFilm()
+        {
+            var defaultListBoxItem = new[] { new ListBoxItem(Guid.Empty, "All") };
+            ActorList.DataSource = defaultListBoxItem.Union(FillActors()).ToList();
+            GenreList.DataSource = defaultListBoxItem.Union(FillGenres()).ToList();
+            DirectorList.DataSource = defaultListBoxItem.Union(FillDirector()).ToList();
+            DGV_Films.DataSource = GetFilms().Select(x => new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, x.ReleaseDate })
+                .ToList();
+            if (DGV_Films != null)
+            {
+                DGV_Films.Columns["Id"].Visible = false;
+            }
+        }
+        //initiates extra Film details search
         private void DGV_Films_Click(object sender, EventArgs e)
         {
             if (!SC_LibraryDetails.Panel2Collapsed)
@@ -179,56 +269,7 @@ namespace MediaApp
                 fb.Dock = DockStyle.Fill;
             }
         }
-
-        private void lv_FilmCast_Click(object sender, EventArgs e)
-        {
-            var id = lv_FilmCast.SelectedItems[0].SubItems[2].Text.ToString();
-            SelectedFilmDetailsPanel.Controls.Clear();
-            var fb = new ActorDetails(_nhSession.Get<Person>(new Guid(id)).imdbID) { Visible = true };
-            SelectedFilmDetailsPanel.Controls.Add(fb);
-            fb.Dock = DockStyle.Fill;
-        }
-
-        private void btn_Clear_Click(object sender, EventArgs e)
-        {
-            txtb_Search.Clear();
-            buildFilm();
-        }
-
-        private void RefreshFilmGrids()
-        {
-
-            //gets the film table
-            var filmsQuery = _nhSession.Query<Film>();
-            //need to check if there are any films
-            //query film table, for selected actor
-            if (ActorList.Items.Count > 0 && ((ListBoxItem)ActorList.SelectedItem).Id != Guid.Empty)
-                filmsQuery = filmsQuery.Where(x => x.Cast
-                    .Where(y => y.Person.Id == ((ListBoxItem)ActorList.SelectedItem).Id).Any());
-            //query film table, for selected director
-            if (DirectorList.Items.Count > 0 && ((ListBoxItem)DirectorList.SelectedItem).Id != Guid.Empty)
-                filmsQuery = filmsQuery.Where(x => x.Director.Id == ((ListBoxItem)DirectorList.SelectedItem).Id);
-            //querey film tabl, for selected genre
-            if (GenreList.Items.Count > 0 && ((ListBoxItem)GenreList.SelectedItem).Id != Guid.Empty)
-                filmsQuery = filmsQuery.Where(x => x.Genre
-                    .Where(y => y.Id == ((ListBoxItem)GenreList.SelectedItem).Id).Any());
-            //run query
-            var films = filmsQuery.Select(x => new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, x.ReleaseDate })
-                .ToList();
-
-            //total films, and run time
-
-            //set dgv data source to queried film table
-            DGV_Films.DataSource = films;
-            if (DGV_Films != null)
-            {
-                DGV_Films.Columns["Id"].Visible = false;
-            }
-            var totalRuntime = TimeSpan.FromMinutes(films.Sum(x => x.RunTime));
-            lbl_LibraryDetails.Text = string.Format("{0} films, {1} days {2} hours {3} minutes", films.Count(),
-                                                    totalRuntime.Days, totalRuntime.Hours, totalRuntime.Minutes);
-        }
-        
+        //populates cast list of selected film, fills runtime/releaseDate labels
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             if (DGV_Films.SelectedRows.Count <= 0) return;
@@ -244,7 +285,21 @@ namespace MediaApp
             lbl_rdate.Text = _nhSession.Get<Film>(new Guid(id)).ReleaseDate.ToShortDateString();
             lbl_RTimeLabel.Text = _nhSession.Get<Film>(new Guid(id)).RunTime.ToString();
         }
-        
+        //initiates extra Actor details ssearch
+        private void lv_FilmCast_Click(object sender, EventArgs e)
+        {
+            var id = lv_FilmCast.SelectedItems[0].SubItems[2].Text.ToString();
+            SelectedFilmDetailsPanel.Controls.Clear();
+            var fb = new ActorDetails(_nhSession.Get<Person>(new Guid(id)).imdbID) { Visible = true };
+            SelectedFilmDetailsPanel.Controls.Add(fb);
+            fb.Dock = DockStyle.Fill;
+        }
+        //clears search box, calling txtb_Search_TextChanged -- buildFilm()
+        private void btn_Clear_Click(object sender, EventArgs e)
+        {
+            txtb_Search.Clear();
+        }
+        //show or hides the extra film details, saving settings to selectedFilmDetailsShow
         private void btn_showHideFilmDetails_Click(object sender, EventArgs e)
         {
             btn_showHideFilmDetails.Text = Properties.Settings.Default.selectedFilmDetailsShow ? "Hide Details" : "Show Details";
@@ -252,225 +307,145 @@ namespace MediaApp
             Properties.Settings.Default.Save();
             SC_LibraryDetails.Panel2Collapsed = Properties.Settings.Default.selectedFilmDetailsShow;
         }
-
-        private void buildFilm()
-        {
-            btn_showHideFilmDetails.Text = !Properties.Settings.Default.selectedFilmDetailsShow ? "Hide Details" : "Show Details";
-            btn_PlaylistShowHide.Text = Properties.Settings.Default.playlistShow ? "<" : ">";
-
-
-            var actors = _nhSession.Query<Person>()
-                .OrderBy(x => x.Name)
-                .Select(r => new ListBoxItem(r.Id, r.Name))
-                .ToList();
-
-            var filmstolist = _nhSession.Query<Film>();
-            IList<ListBoxItem> dir = new List<ListBoxItem>();
-            foreach (var film in filmstolist)
-            {
-                var dirs = film.Director;
-                //foreach (var person in dirs)
-                //{
-                var d = dir.Where(x => x.Text == dirs.Name.ToString()).ToList();
-                if (d.Count >= 1) continue;
-                dir.Add(new ListBoxItem(dirs.Id, dirs.Name));
-                //}
-            }
-            var directors = dir;
-
-            var genres = _nhSession.Query<FilmType>()
-                .OrderBy(r => r.Type)
-                .Select(r => new ListBoxItem(r.Id, r.Type))
-                .ToList();
-
-            var defaultListOption = new[] { new ListBoxItem(Guid.Empty, "All") };
-            ActorList.DataSource = defaultListOption.Union(actors).ToList();
-            DirectorList.DataSource = defaultListOption.Union(directors).ToList();
-            GenreList.DataSource = defaultListOption.Union(genres).ToList();
-
-            RefreshFilmGrids();
-        }
-
+        //builds film list based on search string and selected actor
         private void ActorList_Click(object sender, EventArgs e)
         {
-            if (ActorList.SelectedItem.ToString().Equals("All"))
+            var item = (ListBoxItem) ActorList.SelectedItem;
+            if(item.Id == Guid.Empty)
             {
-                var actors = _nhSession.Query<Person>()
-                    .OrderBy(x => x.Name)
-                    .Select(r => new ListBoxItem(r.Id, r.Name))
-                    .ToList();
-
-                var filmstolist = _nhSession.Query<Film>();
-                IList<ListBoxItem> dir = new List<ListBoxItem>();
-                foreach (var film in filmstolist)
-                {
-                    var person = film.Director;
-                    //foreach (var person in dirs)
-                    //{
-                    var d = dir.Where(x => x.Text == person.Name.ToString()).ToList();
-                    if (d.Count >= 1) continue;
-                    dir.Add(new ListBoxItem(person.Id, person.Name));
-                    //}
-                }
-                var directors = dir;
-
-                var genres = _nhSession.Query<FilmType>()
-                    .OrderBy(r => r.Type)
-                    .Select(r => new ListBoxItem(r.Id, r.Type))
-                    .ToList();
-
-                var defaultListOption = new[] { new ListBoxItem(Guid.Empty, "All") };
-                ActorList.DataSource = defaultListOption.Union(actors).ToList();
-                DirectorList.DataSource = defaultListOption.Union(directors).ToList();
-                GenreList.DataSource = defaultListOption.Union(genres).ToList();
-                RefreshFilmGrids();
-
-                return;
-
+                buildFilm();
             }
             else
             {
-                var personName = ActorList.SelectedItem.ToString();
-                var filmstolist = _nhSession.Query<Film>()
-                    .Where(x => x.Cast.Any(role => role.Person.Name == personName) || x.Director.Name == personName)
-                    .ToList();
+                var films = GetFilms();
+                
+                var ff = films.ToList();
+                var person = (ListBoxItem) ActorList.SelectedItem;
+                var ID = person.Id;
+                var gf = GetFilms().Where(f => f.Cast.Any(r => r.Person.Id == ID)).ToList();
+                var genres =
+                    films.Where(f => f.Cast.Any(r => r.Person.Id == ID)).SelectMany(f => f.Genre).OrderBy(o => o.Type).Select(
+                        g => new ListBoxItem(g.Id, g.Type)).ToList();
+                IList<ListBoxItem> gList = new List<ListBoxItem>();
+                foreach (var listBoxItem in genres)
+                {
+                    var inc = false;
+                    foreach (var boxItem in gList.Where(boxItem => listBoxItem.Id == boxItem.Id))
+                    {
+                        inc = true;
+                    }
+                    if (!inc)
+                        gList.Add(listBoxItem);
+                }
+                var defaultListBoxItem = new[] { new ListBoxItem(Guid.Empty, "All") };
+                GenreList.DataSource = defaultListBoxItem.Union(gList).ToList();
 
-                var directors = filmstolist
-                        .OrderBy(x => x.Director.Name)
-                        .Select(x => new ListBoxItem(x.Director.Id, x.Director.Name))
-                        .Distinct()
-                        .ToList();
-
-                var apearedinfilms =
-                    filmstolist.Select(
-                        x =>
-                        new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, x.ReleaseDate })
-                        .ToList();
-
-                var genres = filmstolist
-                        .SelectMany(x => x.Genre)
-                        .OrderBy(x => x.Type)
-                        .Select(x => new ListBoxItem(x.Id, x.Type))
-                        .Distinct()
-                        .ToList();
-
-                var defaultListOption = new[] { new ListBoxItem(Guid.Empty, "All") };
-                DirectorList.DataSource = defaultListOption.Union(directors).ToList();
-                GenreList.DataSource = defaultListOption.Union(genres).ToList();
-                DGV_Films.DataSource = apearedinfilms;
-                var newid = (ListBoxItem)ActorList.SelectedItem;
-                var id = newid.Id.ToString();
-                SelectedFilmDetailsPanel.Controls.Clear();
-                var fb = new ActorDetails(_nhSession.Get<Person>(new Guid(id)).imdbID) { Visible = true };
-                SelectedFilmDetailsPanel.Controls.Add(fb);
-                fb.Dock = DockStyle.Fill;
-                var films = apearedinfilms;
-                var totalRuntime = TimeSpan.FromMinutes(films.Sum(x => x.RunTime));
-                lbl_LibraryDetails.Text = string.Format("{0} films, {1} days {2} hours {3} minutes", films.Count(),
-                                                        totalRuntime.Days, totalRuntime.Hours, totalRuntime.Minutes);
+                var directors =
+                    films.Where(f => f.Cast.Any(r => r.Person.Id == ID)).OrderBy(o => o.Director.Name).Select(
+                        d => new ListBoxItem(d.Director.Id, d.Director.Name)).ToList();
+                IList<ListBoxItem> dList = new List<ListBoxItem>();
+                foreach (var listBoxItem in directors)
+                {
+                    var inc = false;
+                    foreach (var boxItem in dList.Where(boxItem => listBoxItem.Id == boxItem.Id))
+                    {
+                        inc = true;
+                    }
+                    if (!inc)
+                        dList.Add(listBoxItem);
+                }
+                DirectorList.DataSource = defaultListBoxItem.Union(dList).ToList();
+                DGV_Films.DataSource = GetFilms().Where(f => f.Cast.Any(r => r.Person.Id == ID)).Select(x => new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, x.ReleaseDate })
+                .ToList();
+                if (DGV_Films != null)
+                {
+                    DGV_Films.Columns["Id"].Visible = false;
+                }
             }
         }
-
+        //builds film list based on search string and selected actor and/or genre
         private void GenreList_Click(object sender, EventArgs e)
         {
-            if (GenreList.SelectedItem.ToString().Equals("All"))
+            var item = (ListBoxItem) GenreList.SelectedItem;
+            if(item.Id == Guid.Empty)
             {
                 ActorList_Click(sender, e);
                 return;
             }
-            var genreType = GenreList.SelectedItem.ToString();
-            IList<Film> filmstolist = new List<Film>();
-            if (ActorList.SelectedItem.ToString().Equals("All"))
+            var genreID = item.Id;
+            var aItem = (ListBoxItem) ActorList.SelectedItem;
+            var films = GetFilms();
+            if(aItem.Id == Guid.Empty)
             {
-                filmstolist = _nhSession.Query<Film>().ToList()
-                    .Where(x => x.Genre.Any(ty => ty.Type == genreType))
-                    .ToList();
+                films = films.Where(f => f.Genre.Any(t => t.Id == genreID));
             }
             else
             {
-                var personName = ActorList.SelectedItem.ToString();
-                filmstolist = _nhSession.Query<Film>()
-                    .Where(x => x.Cast.Any(role => role.Person.Name == personName) || x.Director.Name == personName)
-                    .Where(y => y.Genre.Any(ty => ty.Type == genreType))
-                    .ToList();
+                films =
+                    films.Where(c => c.Cast.Any(r => r.Person.Id == aItem.Id)).Where(
+                        g => g.Genre.Any(t => t.Id == genreID));
             }
-
-            var directors = filmstolist
-                .OrderBy(x => x.Director.Name)
-                .Select(x => new ListBoxItem(x.Director.Id, x.Director.Name))
-                .Distinct()
-                .ToList();
-
-            var apearedinfilms =
-                filmstolist.Select(
-                    x =>
-                    new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, x.ReleaseDate })
-                    .ToList();
-
-            var defaultListOption = new[] { new ListBoxItem(Guid.Empty, "All") };
-            DirectorList.DataSource = defaultListOption.Union(directors).ToList();
-            DGV_Films.DataSource = apearedinfilms;
-            var films = apearedinfilms;
-            var totalRuntime = TimeSpan.FromMinutes(films.Sum(x => x.RunTime));
-            lbl_LibraryDetails.Text = string.Format("{0} films, {1} days {2} hours {3} minutes", films.Count(),
-                                                    totalRuntime.Days, totalRuntime.Hours, totalRuntime.Minutes);
+            var directors =
+                films.OrderBy(o => o.Director.Name).Select(d => new ListBoxItem(d.Director.Id, d.Director.Name)).
+                    ToList();
+            IList<ListBoxItem> dList = new List<ListBoxItem>();
+            foreach (var listBoxItem in directors)
+            {
+                var inc = false;
+                foreach (var boxItem in dList.Where(boxItem => listBoxItem.Id == boxItem.Id))
+                {
+                    inc = true;
+                }
+                if (!inc)
+                    dList.Add(listBoxItem);
+            }
+            var defaultListBoxItem = new[] { new ListBoxItem(Guid.Empty, "All") };
+            DirectorList.DataSource = defaultListBoxItem.Union(dList).ToList();
+            DGV_Films.DataSource =
+                films.Select(x => new {x.Id, x.Title, Director = x.Director.Name, x.RunTime, x.ReleaseDate}).ToList();
+            if (DGV_Films != null)
+                DGV_Films.Columns["Id"].Visible = false;
         }
-
+        //builds film list based on search string and selected actor and/or genre and/or director
         private void DirectorList_Click(object sender, EventArgs e)
         {
-            if (DirectorList.SelectedItem.ToString().Equals("All"))
+            var item = (ListBoxItem) DirectorList.SelectedItem;
+            if(item.Id == Guid.Empty)
             {
                 GenreList_Click(sender, e);
                 return;
             }
-            IList<Film> filmstolist = new List<Film>();
-            var personName = ActorList.SelectedItem.ToString();
-            var genreType = GenreList.SelectedItem.ToString();
-            var directorName = DirectorList.SelectedItem.ToString();
-            if (personName != "All" && genreType != "All")
-            {
-                filmstolist = _nhSession.Query<Film>()
-                    .Where(x => x.Cast.Any(role => role.Person.Name == personName) || x.Director.Name == personName)
-                    .Where(y => y.Genre.Any(ty => ty.Type == genreType))
-                    .Where(z => z.Director.Name == directorName)
-                    .ToList();
-            }
-            else if (personName == "All" && genreType != "All")
-            {
-                filmstolist = _nhSession.Query<Film>()
-                    .Where(y => y.Genre.Any(ty => ty.Type == genreType))
-                    .Where(x => x.Director.Name == directorName)
-                    .ToList();
-            }
-            else if (personName != "All" && genreType == "All")
-            {
-                filmstolist = _nhSession.Query<Film>()
-                    .Where(x => x.Cast.Any(role => role.Person.Name == personName) || x.Director.Name == personName)
-                    .Where(x => x.Director.Name == directorName)
-                    .ToList();
-            }
             else
             {
-                filmstolist = _nhSession.Query<Film>()
-                    .Where(x => x.Director.Name == directorName)
-                    .ToList();
+                var directorID = item.Id;
+                var aItem = (ListBoxItem) ActorList.SelectedItem;
+                var gItem = (ListBoxItem) GenreList.SelectedItem;
+                var films = GetFilms();
+                if(aItem.Id == Guid.Empty && gItem.Id == Guid.Empty)
+                {
+                    films = films.Where(f => f.Director.Id == directorID);
+                }
+                else if(aItem.Id == Guid.Empty && gItem.Id != Guid.Empty)
+                {
+                    films = films.Where(f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.Id == directorID);
+                }
+                else if(aItem.Id != Guid.Empty && gItem.Id == Guid.Empty)
+                {
+                    films =
+                        films.Where(f => f.Cast.Any(r => r.Person.Id == aItem.Id)).Where(
+                            f => f.Director.Id == directorID);
+                }
+                else if(aItem.Id != Guid.Empty && gItem.Id != Guid.Empty)
+                {
+                    films =
+                        films.Where(f => f.Cast.Any(r => r.Person.Id == aItem.Id)).Where(
+                            f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.Id == directorID);
+                }
+                DGV_Films.DataSource =
+                films.Select(x => new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, x.ReleaseDate }).ToList();
+                if (DGV_Films != null)
+                    DGV_Films.Columns["Id"].Visible = false;
             }
-            var apearedinfilms =
-                filmstolist.Select(
-                    x =>
-                    new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, x.ReleaseDate })
-                    .ToList();
-            DGV_Films.DataSource = apearedinfilms;
-            var films = apearedinfilms;
-            var totalRuntime = TimeSpan.FromMinutes(films.Sum(x => x.RunTime));
-            lbl_LibraryDetails.Text = string.Format("{0} films, {1} days {2} hours {3} minutes", films.Count(),
-                                                    totalRuntime.Days, totalRuntime.Hours, totalRuntime.Minutes);
-            var newid = (ListBoxItem)DirectorList.SelectedItem;
-            var id = newid.Id.ToString();
-            SelectedFilmDetailsPanel.Controls.Clear();
-            var fb = new ActorDetails(_nhSession.Get<Person>(new Guid(id)).imdbID) { Visible = true };
-            SelectedFilmDetailsPanel.Controls.Add(fb);
-            fb.Dock = DockStyle.Fill;
         }
 
         #endregion
@@ -601,26 +576,6 @@ namespace MediaApp
                 this.Show();
             }
             fs.Dispose();
-        }
-
-        private void txtb_Search_TextChanged(object sender, EventArgs e)
-        {
-            DGV_Films.DataSource = Films().Select(
-                   x =>
-                   new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, x.ReleaseDate })
-                   .ToList();
-        }
-
-        private IQueryable<Film> Films()
-        {
-            var query = txtb_Search.Text;
-            if (string.IsNullOrWhiteSpace(query))
-                return _nhSession.Query<Film>();
-            
-            var parser = new MultiFieldQueryParser(Lucene.Net.Util.Version.LUCENE_CURRENT,
-                new[] { "Title", "Synopsis", "Director" }, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT));
-            var searchSession = NHibernate.Search.Search.CreateFullTextSession(_nhSession);
-            return searchSession.CreateFullTextQuery(parser.Parse(query), new[] { typeof(Film) }).List<Film>().AsQueryable();
         }
 
         private void btn_AdvSearch_Click(object sender, EventArgs e)
