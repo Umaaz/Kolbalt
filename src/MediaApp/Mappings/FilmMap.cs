@@ -27,29 +27,4 @@ namespace MediaApp.Mappings
                 .Cascade.All();
         }
     }
-
-    public class FilmSearchMap : DocumentMap<Film>
-    {
-        protected override void Configure()
-        {
-            Id(x => x.Id).Bridge().Guid();
-            Name("Film");
-
-            Map(x => x.Title)
-                .Index().Tokenized()
-                .Store().Yes();
-
-            Map(x => x.Synopsis)
-                .Index().Tokenized()
-                .Store().Yes();
-
-            Embedded(x => x.Director)
-                .Mappings(m =>
-                    m.Map(a => a.Name)
-                        .Name("Director")
-                        .Index().Tokenized()
-                        .Store().Yes()
-                );
-        }
-    }
 }
