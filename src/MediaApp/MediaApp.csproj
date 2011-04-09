@@ -182,9 +182,11 @@
     <Compile Include="Mappings\Conventions\ForeignKeyConstraintNameConvention.cs" />
     <Compile Include="Mappings\Conventions\TableNameConventions.cs" />
     <Compile Include="Mappings\FilmMap.cs" />
+    <Compile Include="Mappings\FilmSearchMap.cs" />
     <Compile Include="Mappings\FilmTypeMap.cs" />
     <Compile Include="Mappings\PersonMap.cs" />
     <Compile Include="Mappings\RoleMap.cs" />
+    <Compile Include="Mappings\RoleSearchMap.cs" />
     <Compile Include="Mappings\SearchMap.cs" />
     <Compile Include="MediaDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
