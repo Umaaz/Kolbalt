@@ -32,6 +32,7 @@
             this.tp_tv = new System.Windows.Forms.TabPage();
             this.tp_film = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.chk_PMatches = new System.Windows.Forms.CheckBox();
             this.chk_AllMatches = new System.Windows.Forms.CheckBox();
@@ -52,7 +53,6 @@
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tp_film.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -111,6 +111,16 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Database";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(272, 196);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 22);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "Build";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // groupBox2
             // 
@@ -200,7 +210,7 @@
             this.btn_Build.Name = "btn_Build";
             this.btn_Build.Size = new System.Drawing.Size(75, 23);
             this.btn_Build.TabIndex = 3;
-            this.btn_Build.Text = "Build";
+            this.btn_Build.Text = "Re-Build";
             this.btn_Build.UseVisualStyleBackColor = true;
             this.btn_Build.Click += new System.EventHandler(this.btn_Build_Click);
             // 
@@ -223,6 +233,7 @@
             this.lbl_Current.Size = new System.Drawing.Size(57, 13);
             this.lbl_Current.TabIndex = 1;
             this.lbl_Current.Text = "lbl_Current";
+            this.lbl_Current.Visible = false;
             // 
             // progressBar1
             // 
@@ -257,9 +268,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(8, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 13);
+            this.label1.Size = new System.Drawing.Size(165, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Film Directories";
+            this.label1.Text = "Film Directories - Watched folders";
             // 
             // lisb_films
             // 
@@ -306,16 +317,6 @@
             // backgroundWorker1
             // 
             this.backgroundWorker1.WorkerReportsProgress = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(272, 196);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 22);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // DbCreate
             // 

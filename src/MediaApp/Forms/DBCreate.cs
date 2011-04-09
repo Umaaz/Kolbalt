@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MediaApp.Data;
 using MediaApp.Domain;
@@ -170,73 +171,123 @@ namespace MediaApp.Forms
             this.Hide();
         }
 
+        private List<String> getFilms()
+        {
+            List<String> files = new List<string>();
+            foreach (string s in lisb_films.Items)
+            {
+                string[] types = {"*.avi", "*.mkv", "*.wmv"};
+                foreach (var type in types)
+                {
+                    files.AddRange(Directory.GetFiles(s, type, SearchOption.AllDirectories));
+                }
+            }
+            return files;
+        }
+
+        private List<String> filterFilms(List<String> files)
+        {
+            var filteredfilms = new List<String>();
+            var filter = new[] {"xvid", "divx", "dvdrip","ac3","hdtv","repack", "proper", "mp3"};
+            foreach (var file in files)
+            {
+                if (file.Contains("\\extras\\")) //does contains ignore case?
+                    continue; 
+                var f = file.Replace("."," ").Replace("_"," ");
+                f = Regex.Replace(f, @"\dch",""); //may need re worked to include 5.1 7.1 2.0 2 etc
+                foreach (var s in filter)
+                {
+                    f = f.Replace(s, "");
+                }
+                if (f.IndexOf("(") > 0 && f.IndexOf(")") > 0)
+                    f = f.Remove(f.IndexOf("("), f.IndexOf(")") - f.IndexOf("(") - 1);
+                if (f.IndexOf("[") > 0 && f.IndexOf("]") > 0)
+                    f = f.Remove(f.IndexOf("["), f.IndexOf("]") - f.IndexOf("[") - 1);
+                if (f.IndexOf("{") > 0 && f.IndexOf("}") > 0)
+                    f = f.Remove(f.IndexOf("{"), f.IndexOf("}") - f.IndexOf("{") - 1);
+
+                    filteredfilms.Add(f);
+
+            }
+
+            return filteredfilms;
+        }
+
+        private Film grapFilm(String film)
+        {
+            var realNewFilm = new Film();
+            var url = film.Remove(0, film.LastIndexOf("\\")+1);
+            url = url.Remove(url.Length - 4);
+            var newFilm = ImdbFilm.GetTopResultByName(url);
+            if (newFilm == null)
+            {
+                //todo some form of error record.
+                return null;
+            }
+            if (!NhSession.Query<Film>().Where(x => x.ImdbId == newFilm.ImdbId).Any())
+            {
+                realNewFilm.FilmPath = film;
+                realNewFilm.ImdbId = newFilm.ImdbId;
+                realNewFilm.ReleaseDate = newFilm.ReleaseDate;
+                realNewFilm.RunTime = newFilm.RunTime;
+                realNewFilm.Synopsis = newFilm.Synopsis;
+                realNewFilm.Title = newFilm.Title;
+                realNewFilm.Director = GetPersonFromCache(newFilm.Director.imdbID)
+                    ?? NhSession.Query<Person>().Where(x => x.imdbID == newFilm.Director.imdbID).SingleOrDefault()
+                    ?? newFilm.Director;
+                AddPersonToCache(realNewFilm.Director);
+                foreach (var filmType in newFilm.Genre)
+                {
+                    var type =
+                        NhSession.Query<FilmType>().Where(x => x.Type == filmType.Type).
+                            SingleOrDefault();
+                    realNewFilm.Genre.Add(type ?? filmType);
+                }
+                foreach (var role in newFilm.Cast)
+                {
+                    var actor = GetPersonFromCache(role.Person.imdbID)
+                        ?? NhSession.Query<Person>().Where(x => x.imdbID == role.Person.imdbID).SingleOrDefault()
+                        ?? role.Person;
+                    AddPersonToCache(actor);
+                    var role2 = new Role
+                    {
+                        Character = role.Character,
+                        Person = actor
+                    };
+                    realNewFilm.Cast.Add(role2);
+                }
+                return realNewFilm;
+            }
+            return null;
+        }
+
         private void Execute(object sender, DoWorkEventArgs e)
         {
+            IList<Film> filmstoadd = new List<Film>();
             var worker = sender as BackgroundWorker;
+            var films = getFilms();
+            var count = 1;
+                foreach (var film in films)
+                {
+                    var f = grapFilm(film);
+                    if(f != null)
+                        filmstoadd.Add(f);
+                    var per = (int)(((double)count / films.Count) * 100);
+                    worker.ReportProgress(per,film);
+                    count++;
+                }
+            //display filmstoadd in control for user verification
+            //if ok
+            SaveFilms(filmstoadd);
+        }
+
+        private void SaveFilms(IList<Film> films)
+        {
             using (var tx = NhSession.BeginTransaction())
             {
-                var total = 0;
-                foreach (string s in lisb_films.Items)
-                    total += Directory.GetDirectories(s).Count();
-                var count = 0;
-                foreach (string s in lisb_films.Items)
+                foreach (var film in films)
                 {
-                    if (Directory.Exists(s))
-                    {
-                        foreach (var folder in Directory.GetDirectories(s))
-                        {
-                            #region grap film
-                            //getting film from folder, change to getting film from file
-                            //possible use of while loop, or some lamda expression
-                            //get all vedio files into a list, if mutlipule files found for one film
-                            //mark in db as multifile film, at run time scan folder to find additional parts
-                            var film = folder.Remove(0, folder.LastIndexOf("\\") + 1);
-                            var realNewFilm = new Film();
-                            var newFilm = ImdbFilm.GetTopResultByName(film);
-                            if (newFilm == null)
-                            {
-//todo some form of error record.
-                                continue;
-                            }
-                            if (!NhSession.Query<Film>().Where(x => x.ImdbId == newFilm.ImdbId).Any())
-                            {
-                                realNewFilm.FilmPath = folder;
-                                realNewFilm.ImdbId = newFilm.ImdbId;
-                                realNewFilm.ReleaseDate = newFilm.ReleaseDate;
-                                realNewFilm.RunTime = newFilm.RunTime;
-                                realNewFilm.Synopsis = newFilm.Synopsis;
-                                realNewFilm.Title = newFilm.Title;
-                                realNewFilm.Director = GetPersonFromCache(newFilm.Director.imdbID)
-                                    ?? NhSession.Query<Person>().Where(x => x.imdbID == newFilm.Director.imdbID).SingleOrDefault()
-                                    ?? newFilm.Director;
-                                AddPersonToCache(realNewFilm.Director);
-                                foreach (var filmType in newFilm.Genre)
-                                {
-                                    var type =
-                                        NhSession.Query<FilmType>().Where(x => x.Type == filmType.Type).
-                                            SingleOrDefault();
-                                    realNewFilm.Genre.Add(type ?? filmType);
-                                }
-                                foreach (var role in newFilm.Cast)
-                                {
-                                    var actor = GetPersonFromCache(role.Person.imdbID)
-                                        ?? NhSession.Query<Person>().Where(x => x.imdbID == role.Person.imdbID).SingleOrDefault()
-                                        ?? role.Person;
-                                    AddPersonToCache(actor);
-                                    var role2 = new Role
-                                    {
-                                        Character = role.Character,
-                                        Person = actor
-                                    };
-                                    realNewFilm.Cast.Add(role2);
-                                }
-                                NhSession.Save(realNewFilm);
-                            }
-                            count++;
-                            worker.ReportProgress((count / total) * 100, "Scanned " + folder);
-                            #endregion
-                        }
-                    }
+                    NhSession.Save(film);
                 }
                 tx.Commit();
             }
@@ -244,25 +295,31 @@ namespace MediaApp.Forms
 
         private void btn_Build_Click(object sender, EventArgs e)
         {
-            progressBar1.Maximum = 100;
-            lbl_Current.Text = "Scanning...";
-            lbl_Current.Visible = true;
-            backgroundWorker1.WorkerReportsProgress = true;
-            backgroundWorker1.ProgressChanged += (o, args) =>
-                                                     {
-                                                         progressBar1.Value = args.ProgressPercentage;
-                                                         lbl_Current.Text = (string) args.UserState;
-                                                     };
-            backgroundWorker1.DoWork += Execute;
-            backgroundWorker1.RunWorkerCompleted += (s, ee) =>
-                                                        {
-                                                            lbl_Current.Visible = false;
-                                                            MessageBox.Show("done");
-                                                        };
-            backgroundWorker1.RunWorkerAsync();
+            if (MessageBox.Show("This will delete all entries in the current database!\nWould you like to continue?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+            //    NhSession.Delete(NhSession.Query<Film>());
+                progressBar1.Maximum = 100;
+                lbl_Current.Text = "Scanning...";
+                lbl_Current.Visible = true;
+                backgroundWorker1.WorkerReportsProgress = true;
+                backgroundWorker1.ProgressChanged += (o, args) =>
+                                                         {
+                                                             progressBar1.Value = args.ProgressPercentage;
+                                                             lbl_Current.Text = (string) args.UserState;
+                                                         };
+                backgroundWorker1.DoWork += Execute;
+                backgroundWorker1.RunWorkerCompleted += (s, ee) =>
+                                                            {
+                                                                lbl_Current.Visible = false;
+                                                                MessageBox.Show("done");
+                                                                updateIndex();
+                                                            };
+                backgroundWorker1.RunWorkerAsync();
+
+            }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void updateIndex()
         {
             var session = NHibernate.Search.Search.CreateFullTextSession(NhSession);
             using (var trans = session.BeginTransaction())
@@ -273,6 +330,11 @@ namespace MediaApp.Forms
                 }
                 trans.Commit();
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
