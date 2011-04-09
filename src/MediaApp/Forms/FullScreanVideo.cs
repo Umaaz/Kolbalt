@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using MediaApp.Forms.UserControls;
 
 namespace MediaApp.Forms
 {
@@ -10,7 +11,9 @@ namespace MediaApp.Forms
         public int Time { get; set; }
         public int _playlistIndex = 0;
         private double _rate = 1.0;
-        public FullScreanVideo(string path, int time, double rate, int playListIndex)
+        private Point _oldPoint;
+        private Slider _player = new Slider();
+        public FullScreanVideo(string path, int time, double rate, int playListIndex, int vol)
         {
             _playlistIndex = playListIndex;
             _rate = rate;
@@ -18,7 +21,12 @@ namespace MediaApp.Forms
             axVLCPlugin21.playlist.add(path);
             axVLCPlugin21.playlist.play();
             axVLCPlugin21.input.Time = time;
+            _oldPoint = new Point(this.Location.X, this.Location.Y);
             panel1.Location = Properties.Settings.Default.FullScreenPanelLoc;
+            volume1.slider1.Value = vol;
+            _player.slider1.IsMoveToPointEnabled = true;
+            elementHost2.Child = _player;
+            _player.slider1.Value = time;
         }
 
         private void FullScreanVideo_DoubleClick(object sender, System.EventArgs e)
@@ -37,35 +45,21 @@ namespace MediaApp.Forms
         {
             if (!axVLCPlugin21.playlist.isPlaying) return;
             var time = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Time);
-            String hour = time.Hours.ToString();
-            String min = time.Minutes.ToString();
-            String sec = time.Seconds.ToString();
-            if (time.Seconds <= 9)
-                sec = "0" + time.Seconds;
-            if (time.Minutes <= 9)
-                min = "0" + time.Minutes;
-            if (time.Hours <= 9)
-                hour = "0" + time.Hours;
-            slider1.slider1.Maximum = axVLCPlugin21.input.Length;
-            slider1.slider1.Value = axVLCPlugin21.input.Time;
-            label1.Text = string.Format("{0}:{1}:{2}", hour, min, sec);
+            label1.Text = (DateTime.Today + time).ToString("HH:mm:ss");
             time = TimeSpan.FromMilliseconds(axVLCPlugin21.input.Length);
-            hour = time.Hours.ToString();
-            min = time.Minutes.ToString();
-            sec = time.Seconds.ToString();
-            if (time.Seconds <= 9)
-                sec = "0" + time.Seconds;
-            if (time.Minutes <= 9)
-                min = "0" + time.Minutes;
-            if (time.Hours <= 9)
-                hour = "0" + time.Hours;
-            label2.Text = string.Format("{0}:{1}:{2}", hour, min, sec);
+            label2.Text = time.ToString("c");
+            if (!_player.slider1.IsMouseOver)
+            {
+                _player.slider1.Maximum = axVLCPlugin21.input.Length;
+                _player.slider1.Value = axVLCPlugin21.input.Time;
+            }
+            axVLCPlugin21.audio.Volume = (int) volume1.slider1.Value;
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left) return;
-            var newLoc = new Point(e.X + panel1.Location.X, e.Y + panel1.Location.Y);
+            var newLoc = new Point(e.X + panel1.Location.X - _oldPoint.X, e.Y + panel1.Location.Y - _oldPoint.Y);
             panel1.Location = newLoc;
             Properties.Settings.Default.FullScreenPanelLoc = newLoc;
             Properties.Settings.Default.Save();
@@ -99,9 +93,8 @@ namespace MediaApp.Forms
                 case 5://stopped
                 case 0://idle
                     axVLCPlugin21.playlist.play();
-                    Thread.Sleep(100);
-                    slider1.slider1.Maximum = axVLCPlugin21.input.Length;
-                    slider1.slider1.ValueChanged += (slider1_ValueChanged);
+                    _player.slider1.Maximum = axVLCPlugin21.input.Length;
+                    _player.slider1.ValueChanged += new System.Windows.RoutedPropertyChangedEventHandler<double>(slider1_ValueChanged);
                     timer1.Enabled = true;
                     btn_PlayPause.Image = Properties.Resources.Pause;
                     break;
@@ -110,7 +103,7 @@ namespace MediaApp.Forms
 
         void slider1_ValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
         {
-            axVLCPlugin21.input.Time = slider1.slider1.Value;
+            axVLCPlugin21.input.Time = _player.slider1.Value;
         }
 
         private void btn_Stop_Click(object sender, EventArgs e)
@@ -127,6 +120,11 @@ namespace MediaApp.Forms
         {
             axVLCPlugin21.playlist.next();
             _playlistIndex++;
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            _oldPoint = new Point(e.X, e.Y);
         }
     }
 }

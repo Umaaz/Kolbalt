@@ -40,12 +40,11 @@
             this.button1 = new System.Windows.Forms.Button();
             this.axVLCPlugin21 = new AxAXVLC.AxVLCPlugin2();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.elementHost2 = new System.Windows.Forms.Integration.ElementHost();
-            this.slider1 = new MediaApp.Forms.UserControls.Slider();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.volume1 = new MediaApp.Forms.UserControls.Volume();
+            this.elementHost2 = new System.Windows.Forms.Integration.ElementHost();
             ((System.ComponentModel.ISupportInitialize)(this.axVLCPlugin21)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -166,16 +165,8 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(300, 60);
             this.panel1.TabIndex = 24;
+            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
-            // 
-            // elementHost2
-            // 
-            this.elementHost2.Location = new System.Drawing.Point(59, 2);
-            this.elementHost2.Name = "elementHost2";
-            this.elementHost2.Size = new System.Drawing.Size(169, 26);
-            this.elementHost2.TabIndex = 26;
-            this.elementHost2.Text = "elementHost2";
-            this.elementHost2.Child = this.slider1;
             // 
             // label2
             // 
@@ -203,6 +194,15 @@
             this.elementHost1.TabIndex = 23;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.volume1;
+            // 
+            // elementHost2
+            // 
+            this.elementHost2.Location = new System.Drawing.Point(52, 7);
+            this.elementHost2.Name = "elementHost2";
+            this.elementHost2.Size = new System.Drawing.Size(161, 21);
+            this.elementHost2.TabIndex = 26;
+            this.elementHost2.Text = "elementHost2";
+            this.elementHost2.Child = null;
             // 
             // FullScreanVideo
             // 
@@ -235,11 +235,10 @@
         private System.Windows.Forms.Button button1;
         public AxAXVLC.AxVLCPlugin2 axVLCPlugin21;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Integration.ElementHost elementHost2;
-        private UserControls.Slider slider1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private UserControls.Volume volume1;
+        private System.Windows.Forms.Integration.ElementHost elementHost2;
     }
 }
