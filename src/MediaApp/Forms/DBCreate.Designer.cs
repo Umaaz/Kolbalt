@@ -28,19 +28,15 @@
         /// </summary>
         private void InitializeComponent() //see this method, yes, 
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tp_tv = new System.Windows.Forms.TabPage();
             this.tp_film = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.grpBoxDatabase = new System.Windows.Forms.GroupBox();
+            this.lbl_TR = new System.Windows.Forms.Label();
+            this.lbl_TRemaing = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.chk_PMatches = new System.Windows.Forms.CheckBox();
-            this.chk_AllMatches = new System.Windows.Forms.CheckBox();
-            this.chk_ApproxMatches = new System.Windows.Forms.CheckBox();
-            this.chk_PopTitles = new System.Windows.Forms.CheckBox();
-            this.chk_ExactMatches = new System.Windows.Forms.CheckBox();
-            this.chk_TakeFirstFilm = new System.Windows.Forms.CheckBox();
-            this.btn_Build = new System.Windows.Forms.Button();
+            this.btn_ReBuild = new System.Windows.Forms.Button();
             this.chk_DisplayFilmResults = new System.Windows.Forms.CheckBox();
             this.lbl_Current = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -53,10 +49,10 @@
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tp_film.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.grpBoxDatabase.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -70,6 +66,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(464, 466);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
             // 
             // tp_tv
             // 
@@ -84,7 +81,7 @@
             // tp_film
             // 
             this.tp_film.BackColor = System.Drawing.SystemColors.Control;
-            this.tp_film.Controls.Add(this.groupBox1);
+            this.tp_film.Controls.Add(this.grpBoxDatabase);
             this.tp_film.Controls.Add(this.btn_Addfilm);
             this.tp_film.Controls.Add(this.btn_RemoveFilm);
             this.tp_film.Controls.Add(this.label1);
@@ -96,21 +93,41 @@
             this.tp_film.TabIndex = 1;
             this.tp_film.Text = "Film";
             // 
-            // groupBox1
+            // grpBoxDatabase
             // 
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Controls.Add(this.chk_TakeFirstFilm);
-            this.groupBox1.Controls.Add(this.btn_Build);
-            this.groupBox1.Controls.Add(this.chk_DisplayFilmResults);
-            this.groupBox1.Controls.Add(this.lbl_Current);
-            this.groupBox1.Controls.Add(this.progressBar1);
-            this.groupBox1.Location = new System.Drawing.Point(11, 201);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(434, 228);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Database";
+            this.grpBoxDatabase.Controls.Add(this.lbl_TR);
+            this.grpBoxDatabase.Controls.Add(this.lbl_TRemaing);
+            this.grpBoxDatabase.Controls.Add(this.button1);
+            this.grpBoxDatabase.Controls.Add(this.btn_ReBuild);
+            this.grpBoxDatabase.Controls.Add(this.chk_DisplayFilmResults);
+            this.grpBoxDatabase.Controls.Add(this.lbl_Current);
+            this.grpBoxDatabase.Controls.Add(this.progressBar1);
+            this.grpBoxDatabase.Location = new System.Drawing.Point(11, 201);
+            this.grpBoxDatabase.Name = "grpBoxDatabase";
+            this.grpBoxDatabase.Size = new System.Drawing.Size(434, 228);
+            this.grpBoxDatabase.TabIndex = 5;
+            this.grpBoxDatabase.TabStop = false;
+            this.grpBoxDatabase.Text = "Database";
+            // 
+            // lbl_TR
+            // 
+            this.lbl_TR.AutoSize = true;
+            this.lbl_TR.Location = new System.Drawing.Point(90, 157);
+            this.lbl_TR.Name = "lbl_TR";
+            this.lbl_TR.Size = new System.Drawing.Size(68, 13);
+            this.lbl_TR.TabIndex = 13;
+            this.lbl_TR.Text = "Calculating...";
+            this.lbl_TR.Visible = false;
+            // 
+            // lbl_TRemaing
+            // 
+            this.lbl_TRemaing.AutoSize = true;
+            this.lbl_TRemaing.Location = new System.Drawing.Point(6, 157);
+            this.lbl_TRemaing.Name = "lbl_TRemaing";
+            this.lbl_TRemaing.Size = new System.Drawing.Size(78, 13);
+            this.lbl_TRemaing.TabIndex = 12;
+            this.lbl_TRemaing.Text = "Time Remaing:";
+            this.lbl_TRemaing.Visible = false;
             // 
             // button1
             // 
@@ -122,117 +139,36 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // groupBox2
+            // btn_ReBuild
             // 
-            this.groupBox2.Controls.Add(this.chk_PMatches);
-            this.groupBox2.Controls.Add(this.chk_AllMatches);
-            this.groupBox2.Controls.Add(this.chk_ApproxMatches);
-            this.groupBox2.Controls.Add(this.chk_PopTitles);
-            this.groupBox2.Controls.Add(this.chk_ExactMatches);
-            this.groupBox2.Enabled = false;
-            this.groupBox2.Location = new System.Drawing.Point(278, 42);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(150, 147);
-            this.groupBox2.TabIndex = 10;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Include";
-            // 
-            // chk_PMatches
-            // 
-            this.chk_PMatches.AutoSize = true;
-            this.chk_PMatches.Location = new System.Drawing.Point(16, 46);
-            this.chk_PMatches.Name = "chk_PMatches";
-            this.chk_PMatches.Size = new System.Drawing.Size(99, 17);
-            this.chk_PMatches.TabIndex = 9;
-            this.chk_PMatches.Text = "Partial Matches";
-            this.chk_PMatches.UseVisualStyleBackColor = true;
-            this.chk_PMatches.CheckedChanged += new System.EventHandler(this.Chk_PMatches_CheckedChanged);
-            // 
-            // chk_AllMatches
-            // 
-            this.chk_AllMatches.AutoSize = true;
-            this.chk_AllMatches.Location = new System.Drawing.Point(16, 115);
-            this.chk_AllMatches.Name = "chk_AllMatches";
-            this.chk_AllMatches.Size = new System.Drawing.Size(37, 17);
-            this.chk_AllMatches.TabIndex = 5;
-            this.chk_AllMatches.Text = "All";
-            this.chk_AllMatches.UseVisualStyleBackColor = true;
-            this.chk_AllMatches.CheckedChanged += new System.EventHandler(this.chk_AllMatches_CheckedChanged);
-            // 
-            // chk_ApproxMatches
-            // 
-            this.chk_ApproxMatches.AutoSize = true;
-            this.chk_ApproxMatches.Location = new System.Drawing.Point(16, 92);
-            this.chk_ApproxMatches.Name = "chk_ApproxMatches";
-            this.chk_ApproxMatches.Size = new System.Drawing.Size(103, 17);
-            this.chk_ApproxMatches.TabIndex = 8;
-            this.chk_ApproxMatches.Text = "Approx Matches";
-            this.chk_ApproxMatches.UseVisualStyleBackColor = true;
-            this.chk_ApproxMatches.CheckedChanged += new System.EventHandler(this.chk_ApproxMatches_CheckedChanged);
-            // 
-            // chk_PopTitles
-            // 
-            this.chk_PopTitles.AutoSize = true;
-            this.chk_PopTitles.Location = new System.Drawing.Point(16, 19);
-            this.chk_PopTitles.Name = "chk_PopTitles";
-            this.chk_PopTitles.Size = new System.Drawing.Size(90, 17);
-            this.chk_PopTitles.TabIndex = 6;
-            this.chk_PopTitles.Text = "Popular Titles";
-            this.chk_PopTitles.UseVisualStyleBackColor = true;
-            this.chk_PopTitles.CheckedChanged += new System.EventHandler(this.chk_PopTitles_CheckedChanged);
-            // 
-            // chk_ExactMatches
-            // 
-            this.chk_ExactMatches.AutoSize = true;
-            this.chk_ExactMatches.Location = new System.Drawing.Point(16, 69);
-            this.chk_ExactMatches.Name = "chk_ExactMatches";
-            this.chk_ExactMatches.Size = new System.Drawing.Size(97, 17);
-            this.chk_ExactMatches.TabIndex = 7;
-            this.chk_ExactMatches.Text = "Exact Matches";
-            this.chk_ExactMatches.UseVisualStyleBackColor = true;
-            this.chk_ExactMatches.CheckedChanged += new System.EventHandler(this.chk_ExactMatches_CheckedChanged);
-            // 
-            // chk_TakeFirstFilm
-            // 
-            this.chk_TakeFirstFilm.AutoSize = true;
-            this.chk_TakeFirstFilm.Enabled = false;
-            this.chk_TakeFirstFilm.Location = new System.Drawing.Point(278, 19);
-            this.chk_TakeFirstFilm.Name = "chk_TakeFirstFilm";
-            this.chk_TakeFirstFilm.Size = new System.Drawing.Size(128, 17);
-            this.chk_TakeFirstFilm.TabIndex = 4;
-            this.chk_TakeFirstFilm.Text = "Take first IMDB result";
-            this.chk_TakeFirstFilm.UseVisualStyleBackColor = true;
-            this.chk_TakeFirstFilm.CheckedChanged += new System.EventHandler(this.chk_TakeFirstFilm_CheckedChanged);
-            // 
-            // btn_Build
-            // 
-            this.btn_Build.Location = new System.Drawing.Point(353, 195);
-            this.btn_Build.Name = "btn_Build";
-            this.btn_Build.Size = new System.Drawing.Size(75, 23);
-            this.btn_Build.TabIndex = 3;
-            this.btn_Build.Text = "Re-Build";
-            this.btn_Build.UseVisualStyleBackColor = true;
-            this.btn_Build.Click += new System.EventHandler(this.btn_Build_Click);
+            this.btn_ReBuild.Location = new System.Drawing.Point(353, 195);
+            this.btn_ReBuild.Name = "btn_ReBuild";
+            this.btn_ReBuild.Size = new System.Drawing.Size(75, 23);
+            this.btn_ReBuild.TabIndex = 3;
+            this.btn_ReBuild.Text = "Re-Build";
+            this.btn_ReBuild.UseVisualStyleBackColor = true;
+            this.btn_ReBuild.Click += new System.EventHandler(this.btn_ReBuild_Click);
             // 
             // chk_DisplayFilmResults
             // 
             this.chk_DisplayFilmResults.AutoSize = true;
+            this.chk_DisplayFilmResults.Checked = global::MediaApp.Properties.Settings.Default.filmDisplayResults;
+            this.chk_DisplayFilmResults.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::MediaApp.Properties.Settings.Default, "filmDisplayResults", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.chk_DisplayFilmResults.Location = new System.Drawing.Point(9, 19);
             this.chk_DisplayFilmResults.Name = "chk_DisplayFilmResults";
             this.chk_DisplayFilmResults.Size = new System.Drawing.Size(186, 17);
             this.chk_DisplayFilmResults.TabIndex = 2;
             this.chk_DisplayFilmResults.Text = "Display search results before build";
             this.chk_DisplayFilmResults.UseVisualStyleBackColor = true;
-            this.chk_DisplayFilmResults.CheckedChanged += new System.EventHandler(this.chk_DisplayFilmResults_CheckedChanged);
             // 
             // lbl_Current
             // 
             this.lbl_Current.AutoSize = true;
             this.lbl_Current.Location = new System.Drawing.Point(6, 138);
             this.lbl_Current.Name = "lbl_Current";
-            this.lbl_Current.Size = new System.Drawing.Size(57, 13);
+            this.lbl_Current.Size = new System.Drawing.Size(427, 13);
             this.lbl_Current.TabIndex = 1;
-            this.lbl_Current.Text = "lbl_Current";
+            this.lbl_Current.Text = "1234567890123456789012345678901234567890123456789012345678901234667890";
             this.lbl_Current.Visible = false;
             // 
             // progressBar1
@@ -240,7 +176,7 @@
             this.progressBar1.Enabled = false;
             this.progressBar1.Location = new System.Drawing.Point(6, 111);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(262, 23);
+            this.progressBar1.Size = new System.Drawing.Size(413, 23);
             this.progressBar1.TabIndex = 0;
             // 
             // btn_Addfilm
@@ -309,6 +245,7 @@
             this.btn_Cancel.TabIndex = 2;
             this.btn_Cancel.Text = "&Cancel";
             this.btn_Cancel.UseVisualStyleBackColor = true;
+            this.btn_Cancel.Click += new System.EventHandler(this.btn_Cancel_Click);
             // 
             // folderBrowserDialog1
             // 
@@ -317,6 +254,11 @@
             // backgroundWorker1
             // 
             this.backgroundWorker1.WorkerReportsProgress = true;
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // DbCreate
             // 
@@ -335,10 +277,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tp_film.ResumeLayout(false);
             this.tp_film.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.grpBoxDatabase.ResumeLayout(false);
+            this.grpBoxDatabase.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -355,21 +295,17 @@
         private System.Windows.Forms.Button btn_Addfilm;
         private System.Windows.Forms.Button btn_RemoveFilm;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox grpBoxDatabase;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox chk_PMatches;
-        private System.Windows.Forms.CheckBox chk_AllMatches;
-        private System.Windows.Forms.CheckBox chk_ApproxMatches;
-        private System.Windows.Forms.CheckBox chk_PopTitles;
-        private System.Windows.Forms.CheckBox chk_ExactMatches;
-        private System.Windows.Forms.CheckBox chk_TakeFirstFilm;
-        private System.Windows.Forms.Button btn_Build;
+        private System.Windows.Forms.Button btn_ReBuild;
         private System.Windows.Forms.CheckBox chk_DisplayFilmResults;
         private System.Windows.Forms.Label lbl_Current;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label lbl_TR;
+        private System.Windows.Forms.Label lbl_TRemaing;
     }
 }
 

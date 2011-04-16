@@ -13,7 +13,7 @@ namespace MediaApp.Domain
         }
 
         public virtual Guid Id { get; set; }
-        public virtual string ImdbId { get; set; }
+        public virtual string IMDBId { get; set; }
 
         public virtual string Title { get; set; }
         public virtual Person Director { get; set; }

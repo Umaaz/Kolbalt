@@ -9,7 +9,7 @@ namespace MediaApp.Mappings
         {
             Id(x => x.Id).GeneratedBy.Guid();
             Map(x => x.Name);
-            Map(x => x.imdbID).Unique();
+            Map(x => x.IMDBID).Unique();
         }
     }
 }

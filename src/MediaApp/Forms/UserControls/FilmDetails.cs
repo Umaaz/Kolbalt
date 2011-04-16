@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using HtmlAgilityPack;
+using MediaApp.Data;
 
 namespace MediaApp.Forms.UserControls
 {
@@ -13,18 +14,19 @@ namespace MediaApp.Forms.UserControls
         private readonly String _url;
         public FilmDetails(String url)
         {
-            _url ="Http://www.imdb.com/title/tt" + url;
+            _url ="Http://www.IMDB.com/title/tt" + url;
             InitializeComponent();
         }
 
         private void LoadTrivia(object sender, DoWorkEventArgs e)
         {
             var worker = sender as BackgroundWorker;
-            var cc = new HtmlEscapeCharConverter();
             var hw = new HtmlWeb();
             var doc = hw.Load(_url + "/trivia");
+            if (!doc.ToString().Contains("class=\"sodatext\""))
+                return;
             var trivi = doc.DocumentNode.SelectNodes(".//div[@class='sodatext']").ToList();
-            var trivis = cc.Decode(trivi[randomNum(0, trivi.Count - 1)].InnerText).Trim().Replace("Link this trivia","");
+            var trivis = HtmlEscapeCharConverter.Decode(trivi[randomNum(0, trivi.Count - 1)].InnerText).Trim().Replace("Link this trivia", "");
             if (worker != null) worker.ReportProgress(100,trivis);
         }
 
@@ -34,6 +36,8 @@ namespace MediaApp.Forms.UserControls
             var cc = new HtmlEscapeCharConverter();
             var hw = new HtmlWeb();
             var doc = hw.Load(_url + "/goofs");
+            if (!doc.ToString().Contains("class\"trivia\""))
+                return;
             var goofs = doc.DocumentNode.SelectNodes(".//ul [@class='trivia']").ToList();
             IList<String> goo = new List<String>();
             foreach (var htmlNode in goofs)
@@ -44,7 +48,7 @@ namespace MediaApp.Forms.UserControls
                     goo.Add(node.InnerText);
                 }
             }
-            var goof = cc.Decode(goo[randomNum(0, goo.Count-1)].Trim());
+            var goof = HtmlEscapeCharConverter.Decode(goo[randomNum(0, goo.Count - 1)].Trim());
             if (worker != null) worker.ReportProgress(100,goof);
         }
 
@@ -122,7 +126,7 @@ namespace MediaApp.Forms.UserControls
             var cc = new HtmlEscapeCharConverter();
             var title = doc.DocumentNode.SelectSingleNode(".//h1[@class='header']").InnerText.Trim();
             var year = title.Substring(title.LastIndexOf("(")+1, 4);
-            title = cc.Decode(title.Remove(title.IndexOf("(")));
+            title = HtmlEscapeCharConverter.Decode(title.Remove(title.IndexOf("(")));
             worker.ReportProgress(10,title);
             worker.ReportProgress(20, year);
             var divs = doc.DocumentNode.SelectNodes(".//div[@class='txt-block']");
@@ -131,8 +135,8 @@ namespace MediaApp.Forms.UserControls
             var dirNum = dirnum.Remove(0, dirnum.IndexOf("nm") + 2);
             dirNum = dirNum.Remove(7);
             var rating = doc.DocumentNode.SelectNodes(".//span[@class='rating-rating']").Single().InnerText;
-            var imdbrating = rating.Replace("\"", "");
-            worker.ReportProgress(30, imdbrating);
+            var IMDBrating = rating.Replace("\"", "");
+            worker.ReportProgress(30, IMDBrating);
             worker.ReportProgress(40, director);
             worker.ReportProgress(50,dirNum);
             var stars = divs
@@ -160,7 +164,7 @@ namespace MediaApp.Forms.UserControls
             var worker = sender as BackgroundWorker;
             var hw = new HtmlWeb();
             var doc = hw.Load(_url).DocumentNode.WriteContentTo();
-            var picURL = doc.Remove(0, doc.IndexOf("<img src=\"http://ia.media-imdb.com") + 10);
+            var picURL = doc.Remove(0, doc.IndexOf("<img src=\"http://ia.media-IMDB.com") + 10);
             picURL = picURL.Remove(picURL.IndexOf("\""));
             var pic = new Data.DownloadImage(picURL);
             pic.Download();
@@ -182,7 +186,7 @@ namespace MediaApp.Forms.UserControls
                         break;
                     case 20:
                         llbl_year.Text = args.UserState.ToString();
-                        llbl_year.Click += (s, ee) => System.Diagnostics.Process.Start("HTTP://www.imdb.com/year/" + args.UserState.ToString());
+                        llbl_year.Click += (s, ee) => System.Diagnostics.Process.Start("HTTP://www.IMDB.com/year/" + args.UserState.ToString());
                         break;
                     case 30:
                         lbl_Frating.Text = args.UserState.ToString();
@@ -192,7 +196,7 @@ namespace MediaApp.Forms.UserControls
                         llbl_director.BringToFront();
                         break;
                     case 50:
-                        llbl_director.Click += (s, ee) => System.Diagnostics.Process.Start("HTTP://www.imdb.com/name/nm" + args.UserState.ToString());
+                        llbl_director.Click += (s, ee) => System.Diagnostics.Process.Start("HTTP://www.IMDB.com/name/nm" + args.UserState.ToString());
                         break;
                     case 60:
                         var star = args.UserState.ToString().Split(' ');
@@ -211,12 +215,12 @@ namespace MediaApp.Forms.UserControls
                     case 70:
                         llbl_Star1.Click +=
                             (s, ee) =>
-                            System.Diagnostics.Process.Start("HTTP://www.imdb.com/name/nm" + args.UserState.ToString());
+                            System.Diagnostics.Process.Start("HTTP://www.IMDB.com/name/nm" + args.UserState.ToString());
                         break;
                     case 80:
                         llbl_star2.Click +=
                             (s, ee) =>
-                            System.Diagnostics.Process.Start("HTTP://www.imdb.com/name/nm" + args.UserState.ToString());
+                            System.Diagnostics.Process.Start("HTTP://www.IMDB.com/name/nm" + args.UserState.ToString());
                         break;
                     case 100:
                         panel1.Visible = true;

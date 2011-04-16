@@ -1,5 +1,4 @@
 ﻿using FluentNHibernate.Mapping;
-using FluentNHibernate.Search.Mapping;
 using MediaApp.Domain;
 
 namespace MediaApp.Mappings
@@ -9,7 +8,7 @@ namespace MediaApp.Mappings
         public FilmMap()
         {
             Id(x => x.Id).GeneratedBy.Guid();
-            Map(x => x.ImdbId).Unique();
+            Map(x => x.IMDBId).Unique();
             Map(x => x.Title);
             Map(x => x.RunTime);
             Map(x => x.ReleaseDate);

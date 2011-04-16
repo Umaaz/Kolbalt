@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using HtmlAgilityPack;
+using MediaApp.Data;
 
 namespace MediaApp.Forms.UserControls
 {
@@ -12,7 +13,7 @@ namespace MediaApp.Forms.UserControls
         public ActorDetails(String url)
         {
             InitializeComponent();
-            _url = "http://www.imdb.com/name/nm" +url;
+            _url = "http://www.IMDB.com/name/nm" +url;
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.ProgressChanged += (o, args) =>
                                                      {
@@ -55,7 +56,7 @@ namespace MediaApp.Forms.UserControls
             var worker = sender as BackgroundWorker;
             var hw = new HtmlWeb();
             var doc = hw.Load(_url).DocumentNode.WriteContentTo();
-            var picURL = doc.Remove(0, doc.IndexOf("<img src=\"http://ia.media-imdb.com") + 10);
+            var picURL = doc.Remove(0, doc.IndexOf("<img src=\"http://ia.media-IMDB.com") + 10);
             picURL = picURL.Remove(picURL.IndexOf("\""));
             var pic = new Data.DownloadImage(picURL);
             pic.Download();
@@ -69,14 +70,13 @@ namespace MediaApp.Forms.UserControls
             var worker = sender as BackgroundWorker;
             var hw = new HtmlWeb();
             var doc = hw.Load(_url);
-            var cc = new HtmlEscapeCharConverter();
-            
+
             var born = doc.DocumentNode.SelectSingleNode(".//div[@class='txt-block']").InnerText.Trim();
-            worker.ReportProgress(30,cc.Decode(born.Replace("  ", " ").Replace("\n", "")));
+            worker.ReportProgress(30, HtmlEscapeCharConverter.Decode(born.Replace("  ", " ").Replace("\n", "")));
             var name = doc.DocumentNode.SelectSingleNode(".//h1[@class='header']").InnerText.Trim();
-            worker.ReportProgress(60, cc.Decode(name.Replace("  ", " ").Replace("\n", "")));
+            worker.ReportProgress(60, HtmlEscapeCharConverter.Decode(name.Replace("  ", " ").Replace("\n", "")));
             var bio = doc.DocumentNode.SelectNodes(".//p").First().InnerText.Trim();
-            worker.ReportProgress(90, cc.Decode(bio));
+            worker.ReportProgress(90, HtmlEscapeCharConverter.Decode(bio));
         }
     }
 }

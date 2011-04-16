@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using MediaApp.Domain;
 
-namespace MediaApp
+namespace MediaApp.Data.IMDB
 {
-    public class ImdbFilm
+    public class IMDBFilm
     {
-        public static Film GetTopResultByName(String film)
+        public static Film GetFilmByName(String film)
         {
-            var url = "http://www.imdb.com/find?s=all&q=" + film;
+            var url = "http://www.IMDB.com/find?s=all&q=" + film;
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Proxy = null;
             HttpWebResponse response;
@@ -27,36 +27,37 @@ namespace MediaApp
             }
             var sr = new StreamReader(response.GetResponseStream());
             var source = sr.ReadToEnd();
-            var imdb = new ImdbSearch((string)film);
-            imdb.SearchImdb(source);
-            var results = imdb.Results;
-            if (results.Count > 0)
+            IMDBResult result = null;
+            if (response.ResponseUri.ToString().Contains("http://www.imdb.com/find?s=all"))
             {
-                var topresult = (Imdbresult)results[0];
-                var urlEnd = topresult.Url;
-                url = "Http://www.imdb.com" + urlEnd;
+                result = IMDBSearch.TopResultBySource(source);
+            }
+            if (result!= null)
+            {
+                var urlEnd = result.Url;
+                url = "Http://www.IMDB.com/title/tt" + urlEnd;
             }
             else
             {
                 url = response.ResponseUri.AbsoluteUri;
             }
-            return GetTopResultByUrl(url);
+            
+            return GetFilmByUrl(url);
         }
         
         
-        public static Film GetTopResultByUrl(string url)
+        public static Film GetFilmByUrl(string url)
         {
             var cast = new List<Role>();
             String title = "", director = "";
-            var cc = new HtmlEscapeCharConverter();
             // what if there is no property listed..
-            //the top search is not always returning correct film, due to the way imdb lists the films. need to check acuracy of the search.
+            //the top search is not always returning correct film, due to the way IMDB lists the films. need to check acuracy of the search.
             var hw = new HtmlWeb();
             var doc = hw.Load(url);
-            var imdbfilmid = url.Remove(0, url.LastIndexOf("tt") + 2);
-            imdbfilmid = imdbfilmid.Remove(imdbfilmid.IndexOf("/"));
+            var IMDBFilmId = url.Remove(0, url.LastIndexOf("tt") + 2);
+            IMDBFilmId = IMDBFilmId.Replace("/", "");
             title = doc.DocumentNode.SelectSingleNode(".//h1[@class='header']").InnerText.Trim();
-            title = cc.Decode(title.Remove(title.IndexOf("(")));
+            title = HtmlEscapeCharConverter.Decode(title.Remove(title.IndexOf("(")));
             var divs = doc.DocumentNode.SelectNodes(".//div[@class='txt-block']");
             
             //genres
@@ -71,7 +72,7 @@ namespace MediaApp
             {
                 genres = gen.Select(g => new FilmType
                                                              {
-                                                                 Type = cc.Decode(g.InnerText.Trim())
+                                                                 Type = HtmlEscapeCharConverter.Decode(g.InnerText.Trim())
                                                              }).ToList();
             }
             
@@ -80,7 +81,7 @@ namespace MediaApp
             var dirnum = divs.First().InnerHtml;
             var dirNum = dirnum.Remove(0, dirnum.IndexOf("nm") + 2);
             dirNum = dirNum.Remove(7);
-            var directors = new Person(){imdbID = dirNum,Name = director};
+            var directors = new Person {IMDBID = dirNum,Name = director};
             
             //Release date
             var dateString = divs
@@ -113,7 +114,7 @@ namespace MediaApp
                 doc.DocumentNode.SelectNodes(".//div[@class='article']").Where(
                     x => x.SelectNodes(".//h2") != null && x.SelectNodes(".//h2").First().InnerText == "Storyline").
                     First();
-            var story = cc.Decode(u.SelectNodes(".//p").First().InnerText);
+            var story = HtmlEscapeCharConverter.Decode(u.SelectNodes(".//p").First().InnerText);
 
             //Cast
             var tab = doc.DocumentNode.SelectNodes(".//table[@class='cast_list']//tr");
@@ -131,10 +132,10 @@ namespace MediaApp
                 {
                     character = character.Replace("  ", " ");
                 }
-                var per = new Person() { imdbID = actNum, Name = cc.Decode(name.Trim())};
+                var per = new Person { IMDBID = actNum, Name = HtmlEscapeCharConverter.Decode(name.Trim()) };
                 cast.Add(new Role
                              {
-                                 Character = cc.Decode(character),
+                                 Character = HtmlEscapeCharConverter.Decode(character),
                                  Person = per
                              });
             }
@@ -144,7 +145,7 @@ namespace MediaApp
                            Title = title,
                            Synopsis = story,
                            RunTime = rt,
-                           ImdbId = imdbfilmid,
+                           IMDBId = IMDBFilmId,
                            ReleaseDate = d,
                            Genre = genres,
                            Director = directors,

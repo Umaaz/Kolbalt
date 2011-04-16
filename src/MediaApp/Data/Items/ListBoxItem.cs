@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MediaApp.Data
+namespace MediaApp.Data.Items
 {
     public class ListBoxItem
     {

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers;
 using MediaApp.Data;
+using MediaApp.Data.Items;
 using MediaApp.Domain;
 using NHibernate;
 using NHibernate.Linq;
@@ -30,7 +31,7 @@ namespace MediaApp.Forms.UserControls
             if (string.IsNullOrWhiteSpace(query))
                 return _nhSession.Query<Film>();
             var parser = new MultiFieldQueryParser(Lucene.Net.Util.Version.LUCENE_CURRENT,
-                new[] { "Title", "Synopsis", "Director" }, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT));
+                new[] { "Title", "Synopsis", "Director", "Cast" }, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT));
             var searchSession = NHibernate.Search.Search.CreateFullTextSession(_nhSession);
             return searchSession.CreateFullTextQuery(parser.Parse(query), new[] { typeof(Film) }).List<Film>().AsQueryable();
         }
@@ -118,7 +119,7 @@ namespace MediaApp.Forms.UserControls
             {
                 var id = DGV_Films.SelectedRows[0].Cells[0].Value.ToString();
                 SelectedFilmDetailsPanel.Controls.Clear();
-                var fb = new FilmDetails(_nhSession.Get<Film>(new Guid(id)).ImdbId);
+                var fb = new FilmDetails(_nhSession.Get<Film>(new Guid(id)).IMDBId);
                 fb.Visible = true;
                 SelectedFilmDetailsPanel.Controls.Add(fb);
                 fb.Dock = DockStyle.Fill;
@@ -145,7 +146,7 @@ namespace MediaApp.Forms.UserControls
         {
             var id = lv_FilmCast.SelectedItems[0].SubItems[2].Text.ToString();
             SelectedFilmDetailsPanel.Controls.Clear();
-            var fb = new ActorDetails(_nhSession.Get<Person>(new Guid(id)).imdbID) { Visible = true };
+            var fb = new ActorDetails(_nhSession.Get<Person>(new Guid(id)).IMDBID) { Visible = true };
             SelectedFilmDetailsPanel.Controls.Add(fb);
             fb.Dock = DockStyle.Fill;
         }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MediaApp.Data;
+using MediaApp.Data.IMDB;
 using MediaApp.Domain;
 using NHibernate;
 using NHibernate.Linq;
@@ -14,41 +15,60 @@ namespace MediaApp.Forms
 {
     public partial class DbCreate : Form
     {
+        
         private static readonly ISession NhSession = NhContext.GetSession();
+        public DbCreate()
+        {
+            InitializeComponent();
+        }
+
+        private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (tabControl1.SelectedIndex)
+            {
+                case 0:
+                    break;
+                case 1:
+                    BuildFilm();
+                    break;
+                case 2:
+                    break;
+            }
+        }
+
+        #region film
         private readonly Dictionary<string, Person> _people = new Dictionary<string, Person>();
-        Person GetPersonFromCache(string imDb)
+        private double _time;
+
+        Person GetPersonFromCache(string IMDB)
         {
             Person temp;
-            _people.TryGetValue(imDb, out temp);
+            _people.TryGetValue(IMDB, out temp);
             return temp;
         }
         void AddPersonToCache(Person person)
         {
-            if (!_people.ContainsKey(person.imdbID))
-                _people[person.imdbID] = person;
+            if (!_people.ContainsKey(person.IMDBID))
+                _people[person.IMDBID] = person;
         }
 
-
-        public DbCreate()
+        private void BuildFilm()
         {
-            InitializeComponent();
+            PopulateList();
+        }
 
+        #region watchedfolders
+
+        private void PopulateList()
+        {
+            lisb_films.Items.Clear();
             var films = Properties.Settings.Default.FilmDirectories.Split('|');
             foreach (var film in films.Where(film => !film.Equals("")))
             {
                 lisb_films.Items.Add(film);
             }
-            chk_ApproxMatches.Checked = Properties.Settings.Default.filmApproxMatches;
-            chk_DisplayFilmResults.Checked = Properties.Settings.Default.filmDisplayResults;
-            chk_ExactMatches.Checked = Properties.Settings.Default.filmExactMatches;
-            chk_PMatches.Checked = Properties.Settings.Default.filmPartialMatches;
-            chk_PopTitles.Checked = Properties.Settings.Default.filmPopTitles;
-            chk_TakeFirstFilm.Checked = Properties.Settings.Default.filmTakeFirst;
-            chk_AllMatches.Checked = Properties.Settings.Default.filmAll;
-            chkChanged();
         }
 
-        
         private void btn_Addfilm_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
@@ -72,110 +92,130 @@ namespace MediaApp.Forms
                 lisb_films.Items.RemoveAt(lisb_films.SelectedIndex);
             }
         }
-
-        #region checkBoxes
-
-        private void chkChanged()
-        {
-            if (chk_DisplayFilmResults.Checked)
-            {
-                chk_TakeFirstFilm.Enabled = true;
-            }
-            else
-            {
-                chk_TakeFirstFilm.Enabled = false;
-                chk_TakeFirstFilm.Checked = true;
-                groupBox2.Enabled = false;
-            }
-            if (!chk_TakeFirstFilm.Checked)
-            {
-                groupBox2.Enabled = true;
-                if (chk_PopTitles.Checked)
-                {
-                    chk_TakeFirstFilm.Checked = false;
-                }
-                if (chk_PopTitles.Checked)
-                {
-                    chk_TakeFirstFilm.Checked = false;
-                }
-                if (chk_PopTitles.Checked)
-                {
-                    chk_TakeFirstFilm.Checked = false;
-                }
-                if (chk_PopTitles.Checked)
-                {
-                    chk_TakeFirstFilm.Checked = false;
-                }
-                if (chk_AllMatches.Checked)
-                {
-                    chk_TakeFirstFilm.Checked = false;
-                    chk_ApproxMatches.Checked = true;
-                    chk_ExactMatches.Checked = true;
-                    chk_PMatches.Checked = true;
-                    chk_PopTitles.Checked = true;
-                }
-            }
-            else
-            {
-                groupBox2.Enabled = false;
-            }
-        }
-
-        private void chk_DisplayFilmResults_CheckedChanged(object sender, EventArgs e)
-        {
-            chkChanged();
-        }
-
-        private void chk_TakeFirstFilm_CheckedChanged(object sender, EventArgs e)
-        {
-            chkChanged();
-        }
-
-        private void chk_PopTitles_CheckedChanged(object sender, EventArgs e)
-        {
-            chkChanged();
-        }
-
-        private void Chk_PMatches_CheckedChanged(object sender, EventArgs e)
-        {
-            chkChanged();
-        }
-
-        private void chk_ExactMatches_CheckedChanged(object sender, EventArgs e)
-        {
-            chkChanged();
-        }
-
-        private void chk_ApproxMatches_CheckedChanged(object sender, EventArgs e)
-        {
-            chkChanged();
-        }
-
-        private void chk_AllMatches_CheckedChanged(object sender, EventArgs e)
-        {
-            chkChanged();
-        }
         #endregion
 
-        private void btn_ok_Click(object sender, EventArgs e)
+        #region Build film database
+        
+        private static IList<IList<IMDBResult>> _results = new List<IList<IMDBResult>>();
+        
+        private void btn_ReBuild_Click(object sender, EventArgs e)
         {
-//todo check the datbindings again
-            Properties.Settings.Default.filmApproxMatches = chk_ApproxMatches.Checked;
-            Properties.Settings.Default.filmDisplayResults = chk_DisplayFilmResults.Checked;
-            Properties.Settings.Default.filmExactMatches = chk_ExactMatches.Checked;
-            Properties.Settings.Default.filmPartialMatches = chk_PMatches.Checked;
-            Properties.Settings.Default.filmPopTitles = chk_PopTitles.Checked;
-            Properties.Settings.Default.filmTakeFirst = chk_TakeFirstFilm.Checked;
-            Properties.Settings.Default.filmAll = chk_AllMatches.Checked;
-            Properties.Settings.Default.Save();
-            this.Hide();
+            if (MessageBox.Show("This will delete all entries in the current database!\nWould you like to continue?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                //todo delete all films
+                var films = NhSession.Query<Film>();
+                foreach (var film in films)
+                {
+                    NhSession.Delete(film);
+                }
+                build();
+            }
         }
 
-        private List<String> getFilms()
+        private void build()
         {
-            List<String> files = new List<string>();
+            progressBar1.Maximum = 100;
+            lbl_Current.Text = "Scanning...";
+            lbl_Current.Visible = true;
+            lbl_TR.Visible = true;
+            lbl_TRemaing.Visible = true;
+            backgroundWorker1.WorkerReportsProgress = true;
+            timer1.Enabled = true;
+            backgroundWorker1.ProgressChanged += (o, args) =>
+            {
+                if (args.ProgressPercentage == 99)
+                    BringToFront();
+                progressBar1.Value = args.ProgressPercentage;
+                if (args.UserState.ToString().Length <= 80)
+                    lbl_Current.Text = (string)args.UserState;
+                else
+                {
+                    var temp = args.UserState.ToString().Remove(80);
+                    lbl_Current.Text = temp + "...";
+                }
+
+                UpdateTimeRemaining(args.ProgressPercentage);
+                _time = 0;
+            };
+            backgroundWorker1.DoWork += Execute;
+            backgroundWorker1.RunWorkerCompleted += (s, ee) =>
+            {
+                lbl_Current.Visible = false;
+                lbl_TR.Visible = false;
+                lbl_TRemaing.Visible = false;
+
+                MessageBox.Show("done");
+            };
+            backgroundWorker1.RunWorkerAsync();
+        }
+
+
+        private void Execute(object sender, DoWorkEventArgs e)
+        {
+            IList<Film> filmstoadd = new List<Film>();
+            var worker = sender as BackgroundWorker;
+            var films = GetFilms();
+            var count = 1;
+            foreach (var film in films)
+            {
+                var ff = FilterFilms(film);
+                Film f = null;
+                if (ff != null)
+                    f = GrapFilm(ff);
+                if (f != null)
+                    filmstoadd.Add(f);
+                var per = (int)(((double)count / films.Count) * 100);
+                worker.ReportProgress(per - 1, film);
+                count++;
+            }
+            IList<Film> filmstoreallyadd = new List<Film>();
+            IList<IList<IMDBResult>> realResults = new List<IList<IMDBResult>>();
+            for (int i = 0; i < filmstoadd.Count; i++)
+            {
+                var inc = false;
+                foreach (var film in filmstoreallyadd)
+                {
+                    if(film.IMDBId == filmstoadd[i].IMDBId)
+                    {
+                        inc = true;
+                    }
+                }
+                if(!inc)
+                {
+                    filmstoreallyadd.Add(filmstoadd[i]);
+                    realResults.Add(_results[i]);
+                }
+            }
+            if (Properties.Settings.Default.filmDisplayResults)
+            {
+                var dr = new Results(filmstoreallyadd, realResults);
+                worker.ReportProgress(98, "Awaiting user verification!");
+                if (dr.ShowDialog() == DialogResult.OK)
+                {
+                    worker.ReportProgress(98, "Commiting to database");
+                    SaveFilms(filmstoreallyadd);
+                    worker.ReportProgress(98, "Indexing...");
+                    UpdateIndex();
+                }
+                worker.ReportProgress(99,"");
+            }
+            else
+            {
+                worker.ReportProgress(98, "Commiting to database");
+                SaveFilms(filmstoreallyadd);
+                worker.ReportProgress(98, "Indexing...");
+                UpdateIndex();
+            }
+            
+            worker.ReportProgress(100, "");
+        }
+        
+        private List<String> GetFilms()
+        {
+            var files = new List<string>();
             foreach (string s in lisb_films.Items)
             {
+                if(!Directory.Exists(s)) continue;
                 string[] types = {"*.avi", "*.mkv", "*.wmv"};
                 foreach (var type in types)
                 {
@@ -185,100 +225,48 @@ namespace MediaApp.Forms
             return files;
         }
 
-        private List<String> filterFilms(List<String> files)
+        private static String FilterFilms(String file)
         {
-            var filteredfilms = new List<String>();
             var filter = new[] {"xvid", "divx", "dvdrip","ac3","hdtv","repack", "proper", "mp3"};
-            foreach (var file in files)
-            {
-                if (file.Contains("\\extras\\")) //does contains ignore case?
-                    continue; 
-                var f = file.Replace("."," ").Replace("_"," ");
-                f = Regex.Replace(f, @"\dch",""); //may need re worked to include 5.1 7.1 2.0 2 etc
-                foreach (var s in filter)
-                {
-                    f = f.Replace(s, "");
-                }
-                if (f.IndexOf("(") > 0 && f.IndexOf(")") > 0)
-                    f = f.Remove(f.IndexOf("("), f.IndexOf(")") - f.IndexOf("(") - 1);
-                if (f.IndexOf("[") > 0 && f.IndexOf("]") > 0)
-                    f = f.Remove(f.IndexOf("["), f.IndexOf("]") - f.IndexOf("[") - 1);
-                if (f.IndexOf("{") > 0 && f.IndexOf("}") > 0)
-                    f = f.Remove(f.IndexOf("{"), f.IndexOf("}") - f.IndexOf("{") - 1);
 
-                    filteredfilms.Add(f);
-
-            }
-
-            return filteredfilms;
-        }
-
-        private Film grapFilm(String film)
-        {
-            var realNewFilm = new Film();
-            var url = film.Remove(0, film.LastIndexOf("\\")+1);
-            url = url.Remove(url.Length - 4);
-            var newFilm = ImdbFilm.GetTopResultByName(url);
-            if (newFilm == null)
-            {
-                //todo some form of error record.
+            if (file.Contains("\\extras\\") || file.Contains("\\EXTRAS\\") || file.Contains("\\extra\\") || file.Contains("\\EXTRA\\"))
                 return null;
-            }
-            if (!NhSession.Query<Film>().Where(x => x.ImdbId == newFilm.ImdbId).Any())
+
+            var f = file.Replace("."," ").Replace("_"," ").Replace("-","");
+            f = Regex.Replace(f, @"\dch",""); //may need re worked to include 5.1 7.1 2.0 2 etc
+            foreach (var s in filter)
             {
-                realNewFilm.FilmPath = film;
-                realNewFilm.ImdbId = newFilm.ImdbId;
-                realNewFilm.ReleaseDate = newFilm.ReleaseDate;
-                realNewFilm.RunTime = newFilm.RunTime;
-                realNewFilm.Synopsis = newFilm.Synopsis;
-                realNewFilm.Title = newFilm.Title;
-                realNewFilm.Director = GetPersonFromCache(newFilm.Director.imdbID)
-                    ?? NhSession.Query<Person>().Where(x => x.imdbID == newFilm.Director.imdbID).SingleOrDefault()
-                    ?? newFilm.Director;
-                AddPersonToCache(realNewFilm.Director);
-                foreach (var filmType in newFilm.Genre)
-                {
-                    var type =
-                        NhSession.Query<FilmType>().Where(x => x.Type == filmType.Type).
-                            SingleOrDefault();
-                    realNewFilm.Genre.Add(type ?? filmType);
-                }
-                foreach (var role in newFilm.Cast)
-                {
-                    var actor = GetPersonFromCache(role.Person.imdbID)
-                        ?? NhSession.Query<Person>().Where(x => x.imdbID == role.Person.imdbID).SingleOrDefault()
-                        ?? role.Person;
-                    AddPersonToCache(actor);
-                    var role2 = new Role
-                    {
-                        Character = role.Character,
-                        Person = actor
-                    };
-                    realNewFilm.Cast.Add(role2);
-                }
-                return realNewFilm;
+                f = f.Replace(s, "");
             }
-            return null;
+            if (f.IndexOf("(") > 0 && f.IndexOf(")") > 0)
+                f = f.Remove(f.IndexOf("("), f.IndexOf(")") - f.IndexOf("(") - 1);
+            if (f.IndexOf("[") > 0 && f.IndexOf("]") > 0)
+                f = f.Remove(f.IndexOf("["), f.IndexOf("]") - f.IndexOf("[") - 1);
+            if (f.IndexOf("{") > 0 && f.IndexOf("}") > 0)
+                f = f.Remove(f.IndexOf("{"), f.IndexOf("}") - f.IndexOf("{") - 1);
+            f = Regex.Replace(f, @"Part\s\d", "", RegexOptions.IgnoreCase);
+            f = Regex.Replace(f, @"CD\s\d", "", RegexOptions.IgnoreCase);
+            f = Regex.Replace(f, @"Part\d", "", RegexOptions.IgnoreCase);
+            f = Regex.Replace(f, @"CD\d", "", RegexOptions.IgnoreCase);
+            f = f.Trim();
+            
+            return f;
         }
 
-        private void Execute(object sender, DoWorkEventArgs e)
+        private static Film GrapFilm(String film)
         {
-            IList<Film> filmstoadd = new List<Film>();
-            var worker = sender as BackgroundWorker;
-            var films = getFilms();
-            var count = 1;
-                foreach (var film in films)
-                {
-                    var f = grapFilm(film);
-                    if(f != null)
-                        filmstoadd.Add(f);
-                    var per = (int)(((double)count / films.Count) * 100);
-                    worker.ReportProgress(per,film);
-                    count++;
-                }
-            //display filmstoadd in control for user verification
-            //if ok
-            SaveFilms(filmstoadd);
+            var title = film.Remove(0, film.LastIndexOf("\\")+1);
+            title = title.Remove(title.Length - 4);
+            Film newFilm = new Film();
+            newFilm = IMDBFilm.GetFilmByName(title);
+            GetIMDBResults(title);
+           
+            return newFilm;
+        }
+
+        private static void GetIMDBResults(String title)
+        {
+            _results.Add(IMDBSearch.SearchIMDBByTitle(title));
         }
 
         private void SaveFilms(IList<Film> films)
@@ -287,39 +275,59 @@ namespace MediaApp.Forms
             {
                 foreach (var film in films)
                 {
-                    NhSession.Save(film);
+                    var realNewFilm = new Film();
+                    if (!NhSession.Query<Film>().Where(x => x.IMDBId == film.IMDBId).Any())
+                    {
+                        realNewFilm.FilmPath = film.FilmPath;
+                        realNewFilm.IMDBId = film.IMDBId;
+                        realNewFilm.ReleaseDate = film.ReleaseDate;
+                        realNewFilm.RunTime = film.RunTime;
+                        realNewFilm.Synopsis = film.Synopsis;
+                        realNewFilm.Title = film.Title;
+                        realNewFilm.Director = GetPersonFromCache(film.Director.IMDBID)
+                                               ??
+                                               NhSession.Query<Person>().Where(x => x.IMDBID == film.Director.IMDBID).
+                                                   SingleOrDefault()
+                                               ?? film.Director;
+                        AddPersonToCache(realNewFilm.Director);
+                        foreach (var filmType in film.Genre)
+                        {
+                            var type =
+                                NhSession.Query<FilmType>().Where(x => x.Type == filmType.Type).
+                                    SingleOrDefault();
+                            realNewFilm.Genre.Add(type ?? filmType);
+                        }
+                        foreach (var role in film.Cast)
+                        {
+                            var actor = GetPersonFromCache(role.Person.IMDBID)
+                                        ??
+                                        NhSession.Query<Person>().Where(x => x.IMDBID == role.Person.IMDBID).
+                                            SingleOrDefault()
+                                        ?? role.Person;
+                            AddPersonToCache(actor);
+                            var role2 = new Role
+                                            {
+                                                Character = role.Character,
+                                                Person = actor
+                                            };
+                            realNewFilm.Cast.Add(role2);
+                        }
+                        NhSession.Save(realNewFilm);
+                    }
                 }
                 tx.Commit();
             }
         }
-
-        private void btn_Build_Click(object sender, EventArgs e)
+        
+        private void UpdateTimeRemaining(int prog)
         {
-            if (MessageBox.Show("This will delete all entries in the current database!\nWould you like to continue?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-            {
-            //    NhSession.Delete(NhSession.Query<Film>());
-                progressBar1.Maximum = 100;
-                lbl_Current.Text = "Scanning...";
-                lbl_Current.Visible = true;
-                backgroundWorker1.WorkerReportsProgress = true;
-                backgroundWorker1.ProgressChanged += (o, args) =>
-                                                         {
-                                                             progressBar1.Value = args.ProgressPercentage;
-                                                             lbl_Current.Text = (string) args.UserState;
-                                                         };
-                backgroundWorker1.DoWork += Execute;
-                backgroundWorker1.RunWorkerCompleted += (s, ee) =>
-                                                            {
-                                                                lbl_Current.Visible = false;
-                                                                MessageBox.Show("done");
-                                                                updateIndex();
-                                                            };
-                backgroundWorker1.RunWorkerAsync();
-
-            }
+            var total = 100-prog;
+            var totalt = _time* total;
+            var time = TimeSpan.FromSeconds(totalt);
+            lbl_TR.Text = time.ToString("c");
         }
 
-        private void updateIndex()
+        private static void UpdateIndex()
         {
             var session = NHibernate.Search.Search.CreateFullTextSession(NhSession);
             using (var trans = session.BeginTransaction())
@@ -328,13 +336,37 @@ namespace MediaApp.Forms
                 {
                     session.Index(thing);
                 }
+                //foreach (var thing in session.CreateCriteria(typeof(Role)).List<Role>())
+                //{
+                //    session.Index(thing);
+                //}
                 trans.Commit();
             }
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            _time++;
+        }
+        
+        #endregion
+        
+        #endregion
+
+        private void btn_ok_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Save();
+            Hide();
+        }
+
+        private void btn_Cancel_Click(object sender, EventArgs e)
+        {
+            Hide();
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            build();
         }
     }
 }

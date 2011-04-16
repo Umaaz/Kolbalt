@@ -222,5 +222,17 @@ namespace MediaApp.Properties {
                 this["FullScreenPanelLoc"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool resultsCastEditable {
+            get {
+                return ((bool)(this["resultsCastEditable"]));
+            }
+            set {
+                this["resultsCastEditable"] = value;
+            }
+        }
     }
 }

@@ -7,11 +7,11 @@ namespace MediaApp.Domain
     {
         public virtual Guid Id { get; set; }
         public virtual string Name { get; set; }
-        public virtual string imdbID { get; set; }
+        public virtual string IMDBID { get; set; }
         //dob
         //bio?
         //place of birth
         //picture, or link to picture..
-        //link to imdb page..can Id be replaced with imdb number..
+        //link to IMDB page..can Id be replaced with IMDB number..
     }
 }

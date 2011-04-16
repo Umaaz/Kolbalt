@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\DownloadImage.cs" />
-    <Compile Include="Data\ListViewItem.cs" />
+    <Compile Include="Data\Items\ComboBoxItem.cs" />
     <Compile Include="Forms\ClkSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,6 +141,12 @@
     <Compile Include="Forms\FullScreanVideo.Designer.cs">
       <DependentUpon>FullScreanVideo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\IMDBResultsList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IMDBResultsList.Designer.cs">
+      <DependentUpon>IMDBResultsList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainFrm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,11 +154,18 @@
       <DependentUpon>MainFrm.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\HTMLescapeCharConverter.cs" />
-    <Compile Include="Data\ImdbFilm.cs" />
-    <Compile Include="Data\imdbresult.cs" />
-    <Compile Include="Data\IMDBSearch.cs" />
-    <Compile Include="Data\ListBoxItem.cs" />
+    <Compile Include="Data\IMDB\IMDBFilm.cs" />
+    <Compile Include="Data\IMDB\IMDBResult.cs" />
+    <Compile Include="Data\IMDB\IMDBSearch.cs" />
+    <Compile Include="Data\Items\ListBoxItem.cs" />
     <Compile Include="Data\AlarmListViewItem.cs" />
+    <Compile Include="Forms\Popups\InputBox.cs" />
+    <Compile Include="Forms\Results.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Results.Designer.cs">
+      <DependentUpon>Results.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UserControls\ActorDetails.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -170,6 +183,12 @@
     </Compile>
     <Compile Include="Forms\UserControls\FilmLibrary.Designer.cs">
       <DependentUpon>FilmLibrary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControls\ResultsTemplate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControls\ResultsTemplate.Designer.cs">
+      <DependentUpon>ResultsTemplate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\UserControls\Slider.xaml.cs">
       <DependentUpon>Slider.xaml</DependentUpon>
@@ -210,8 +229,14 @@
     <EmbeddedResource Include="Forms\FullScreanVideo.resx">
       <DependentUpon>FullScreanVideo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\IMDBResultsList.resx">
+      <DependentUpon>IMDBResultsList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainFrm.resx">
       <DependentUpon>MainFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Results.resx">
+      <DependentUpon>Results.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControls\ActorDetails.resx">
       <DependentUpon>ActorDetails.cs</DependentUpon>
@@ -221,6 +246,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControls\FilmLibrary.resx">
       <DependentUpon>FilmLibrary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControls\ResultsTemplate.resx">
+      <DependentUpon>ResultsTemplate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
