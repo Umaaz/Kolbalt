@@ -140,7 +140,7 @@ namespace MediaApp
         }
         
         #region Settings
-
+        
         private void creatDataBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var DBC = new DbCreate();

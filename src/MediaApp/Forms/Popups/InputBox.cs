@@ -10,6 +10,35 @@ namespace MediaApp.Forms.Popups
 {
     public class InputBox
     {
+        public static DialogResult Show(string title, string promptText, String defaultText, ref String value, Boolean confirmation)
+        {
+            Boolean? result = null;
+            var dresult = DialogResult.None;
+            while (!result.HasValue)
+            {
+                dresult = Show(title, promptText, defaultText, ref value);
+                switch (dresult)
+                {
+                    case DialogResult.OK:
+                        {
+                            var message = "Are you sure the following information is correct?\n";
+                            message += promptText + ": " + value;
+
+                            if (MessageBox.Show(message, @"Please Confirm!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                            {
+                                result = true;
+                            }
+                        }
+                        break;
+                    case DialogResult.Cancel:
+                        result = false;
+                        break;
+                }
+            }
+            return dresult;
+        }
+
+
         public static DialogResult Show(string title, string promptText, String defaultText, ref String value)
         {
             var form = new Form();
@@ -82,20 +111,29 @@ namespace MediaApp.Forms.Popups
         public static DialogResult Show(String title, String[] promptText, String[] defaultText, ref List<String> results,Boolean requestConfirmation)
         {
             var dresult = DialogResult.None;
-            var result = false;
-            while (result == false)
+            Boolean? result = null;
+            while (!result.HasValue)
             {
                 dresult = Show(title, promptText, defaultText, ref results);
-                if (dresult != DialogResult.OK) continue;
-                var message = "Are you sure the following information is correct?\n";
-                for (int i = 0; i < promptText.Count(); i++)
+                switch (dresult)
                 {
-                    message += promptText[i] + " " + results[i] + "/n";
-                }
+                    case DialogResult.OK:
+                        {
+                            var message = "Are you sure the following information is correct?\n";
+                            for (var i = 0; i < promptText.Count(); i++)
+                            {
+                                message += promptText[i] + " " + results[i] + "\n";
+                            }
 
-                if (MessageBox.Show(message,"Please Confirm!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                {
-                    result = true;
+                            if (MessageBox.Show(message, @"Please Confirm!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                            {
+                                result = true;
+                            }
+                        }
+                        break;
+                    case DialogResult.Cancel:
+                        result = false;
+                        break;
                 }
             }
             return dresult;

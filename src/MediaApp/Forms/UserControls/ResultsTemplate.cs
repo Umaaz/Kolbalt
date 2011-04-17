@@ -40,7 +40,7 @@ namespace MediaApp.Forms.UserControls
             txtb_Title.Text = Film.Title;
             txtb_director.Text = Film.Director.Name;
             txtb_RunTime.Text = Film.RunTime.ToString();
-            txtb_IMDBURL.Text += Film.IMDBId;
+            txtb_IMDBURL.Text = "Http://www.imdb.com/title/tt" + Film.IMDBId;
             txtb_Synopsis.Text = Film.Synopsis;
             txtb_Keywords.Text = Film.Keywords;
 
@@ -60,7 +60,8 @@ namespace MediaApp.Forms.UserControls
 
         private void Scan(String url)
         {
-            if (Regex.IsMatch(url, @"http://www.IMDB.com/title/tt\d\d\d\d\d\d\d", RegexOptions.IgnoreCase))
+		//maybe$
+            if (Regex.IsMatch(url, @"^http://www.IMDB.com/title/tt\d\d\d\d\d\d\d&", RegexOptions.IgnoreCase))
             {
                 Film = IMDBFilm.GetFilmByUrl(url);
                 populate();
@@ -143,9 +144,12 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
             var prompts = new[] { "Character Name", "Actor IMDB ID", "Actor Name" };
             if (InputBox.Show("Cast details - Unrecommended", prompts, cast, ref value, true) == DialogResult.OK)
             {
-                Film.Cast.Where(x => x.Person.IMDBID == (String) dataGridView1.SelectedRows[0].Cells[1].Value).First().Character = value[0];
-                Film.Cast.Where(x => x.Person.IMDBID == (String) dataGridView1.SelectedRows[0].Cells[1].Value).First().Person.IMDBID = value[1];
-                Film.Cast.Where(x => x.Person.IMDBID == (String) dataGridView1.SelectedRows[0].Cells[1].Value).First().Person.Name = value[2];
+                var role = Film.Cast.Where(x => x.Person.IMDBID == dataGridView1.SelectedRows[0].Cells[1].Value.ToString()).First();
+
+                role.Character = value[0];
+                role.Person.IMDBID = value[1];
+                role.Person.Name = value[2];
+
                 populate();
             }
         }
@@ -154,7 +158,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
         {
             if (Results.Count != 0)
             {
-                var cont = new IMDBResultsList(Results);
+                var cont = new IMDBResultsList(Results, Film.Title);
                 if (cont.ShowDialog() == DialogResult.OK)
                 {
                     Scan("http://www.imdb.com/title/tt" + cont.URL);
@@ -185,17 +189,17 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
             var value = new List<String>();
             var prompts = new[] { "Character Name", "Actor IMDB ID", "Actor Name" };
             var defualts = new[] { "Please enter character name", "Please enter Actor IMDB ID", "Please enter Actor Name" };
-            if(InputBox.Show("Add new cast member - Unrecommended",prompts,defualts,ref value,true) == DialogResult.OK)
+            if (InputBox.Show("Add new cast member - Unrecommended", prompts, defualts, ref value, true) == DialogResult.OK)
             {
                 Film.Cast.Add(new Role
-                                    {
-                                        Character = value[0],
-                                        Person = new Person
-                                                         {
-                                                             IMDBID = value[1],
-                                                             Name = value[2]
-                                                         }
-                                    });
+                {
+                    Character = value[0],
+                    Person = new Person
+                    {
+                        IMDBID = value[1],
+                        Name = value[2]
+                    }
+                });
                 populate();
             }
         }

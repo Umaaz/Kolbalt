@@ -60,9 +60,16 @@ namespace MediaApp.Data.IMDB
             title = HtmlEscapeCharConverter.Decode(title.Remove(title.IndexOf("(")));
             var divs = doc.DocumentNode.SelectNodes(".//div[@class='txt-block']");
             
+            //picurl
+            var picURL = doc.DocumentNode.SelectNodes(".//td[@id='img_primary']").FirstOrDefault().InnerHtml;
+            picURL = picURL.Remove(0, picURL.IndexOf("<img src=") + 10);
+            picURL = picURL.Remove(picURL.IndexOf("\""));
+
+
             //genres
             var inline = doc.DocumentNode.SelectNodes(".//div[@class='see-more inline canwrap']");
             HtmlNodeCollection gen = null;
+            if(inline != null)
             foreach (var node in inline.Where(node => node.InnerText.Contains("Genres")))
             {
                 gen = node.SelectNodes(".//a");
@@ -149,7 +156,8 @@ namespace MediaApp.Data.IMDB
                            ReleaseDate = d,
                            Genre = genres,
                            Director = directors,
-                           Cast = cast
+                           Cast = cast,
+                           PicURL = picURL
                        };
         }
     }

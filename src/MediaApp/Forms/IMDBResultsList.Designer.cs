@@ -47,6 +47,7 @@
             this.listView1.Size = new System.Drawing.Size(435, 322);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.MouseHover += new System.EventHandler(this.listView1_MouseHover);
             // 
             // btn_cancel
             // 

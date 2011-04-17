@@ -4,6 +4,12 @@ namespace MediaApp.Data.IMDB
 {
     public class IMDBResult
     {
+
+        public IMDBResult()
+        {
+            
+        }
+
         public IMDBResult(String title, String url, String year, String picUrl)
         {
             Url = url;
@@ -11,6 +17,7 @@ namespace MediaApp.Data.IMDB
             Year = year;
             PicUrl = picUrl;
         }
+
 
         public string PicUrl { get; set; }
 

@@ -14,7 +14,7 @@ namespace MediaApp.Domain
 
         public virtual Guid Id { get; set; }
         public virtual string IMDBId { get; set; }
-
+        public virtual String PicURL { get; set; }
         public virtual string Title { get; set; }
         public virtual Person Director { get; set; }
         public virtual int RunTime { get; set; }

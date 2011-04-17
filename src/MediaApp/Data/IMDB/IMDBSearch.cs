@@ -58,9 +58,10 @@ namespace MediaApp.Data.IMDB
                     var u = s.Substring(0, s.IndexOf("\""));
                     s = s.Remove(0,s.IndexOf(";\">")+3);
                     var t = s.Substring(0, s.IndexOf(("</td>")));
+                    var y = t.Remove(t.IndexOf(")") + 1);
+                    y = y.Remove(0, y.IndexOf("("));
                     t = t.Remove(t.IndexOf("</a>"));
                     s = s.Remove(0, s.IndexOf("</td>") + 5);
-                    var y = s.Substring(0, s.IndexOf("<"));
                     results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t), u, HtmlEscapeCharConverter.Decode(y), p));
                 }
             }
@@ -76,9 +77,10 @@ namespace MediaApp.Data.IMDB
                     var u = s.Substring(0, s.IndexOf("\""));
                     s = s.Remove(0, s.IndexOf(";\">") + 3);
                     var t = s.Substring(0, s.IndexOf(("</td>")));
+                    var y = t.Remove(t.IndexOf(")") + 1);
+                    y = y.Remove(0, y.IndexOf("("));
                     t = t.Remove(t.IndexOf("</a>"));
                     s = s.Remove(0, s.IndexOf("</td>") + 5);
-                    var y = s.Substring(0, s.IndexOf("<"));
                     results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t), u, HtmlEscapeCharConverter.Decode(y), p));
                 }
             }
@@ -88,15 +90,16 @@ namespace MediaApp.Data.IMDB
                 s = s.Remove(s.IndexOf("<p><b>"));
                 while (s.Contains("</a> "))
                 {
-                    s = s.Remove(0, s.IndexOf("<img src=\"")+10);
+                    s = s.Remove(0, s.IndexOf("<img src=\"") + 10);
                     var p = s.Substring(0, s.IndexOf(("\"")));
                     s = s.Remove(0, s.IndexOf("href=\"/title/tt") + 15);
                     var u = s.Substring(0, s.IndexOf("\""));
-                    s = s.Remove(0,s.IndexOf(";\">")+3);
+                    s = s.Remove(0, s.IndexOf(";\">") + 3);
                     var t = s.Substring(0, s.IndexOf(("</td>")));
+                    var y = t.Remove(t.IndexOf(")") + 1);
+                    y = y.Remove(0, y.IndexOf("("));
                     t = t.Remove(t.IndexOf("</a>"));
                     s = s.Remove(0, s.IndexOf("</td>") + 5);
-                    var y = s.Substring(0, s.IndexOf("<"));
                     results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t), u, HtmlEscapeCharConverter.Decode(y), p));
                 }
             }
@@ -106,15 +109,16 @@ namespace MediaApp.Data.IMDB
                 s = s.Remove(s.IndexOf("<p><b>"));
                 while (s.Contains("</a> "))
                 {
-                    s = s.Remove(0, s.IndexOf("<img src=\"")+10);
+                    s = s.Remove(0, s.IndexOf("<img src=\"") + 10);
                     var p = s.Substring(0, s.IndexOf(("\"")));
                     s = s.Remove(0, s.IndexOf("href=\"/title/tt") + 15);
                     var u = s.Substring(0, s.IndexOf("\""));
-                    s = s.Remove(0,s.IndexOf(";\">")+3);
+                    s = s.Remove(0, s.IndexOf(";\">") + 3);
                     var t = s.Substring(0, s.IndexOf(("</td>")));
+                    var y = t.Remove(t.IndexOf(")") + 1);
+                    y = y.Remove(0, y.IndexOf("("));
                     t = t.Remove(t.IndexOf("</a>"));
                     s = s.Remove(0, s.IndexOf("</td>") + 5);
-                    var y = s.Substring(0, s.IndexOf("<"));
                     results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t), u, HtmlEscapeCharConverter.Decode(y), p));
                 }
             }

@@ -9,6 +9,7 @@ namespace MediaApp.Mappings
         {
             Id(x => x.Id).GeneratedBy.Guid();
             Map(x => x.IMDBId).Unique();
+            Map(x => x.PicURL);
             Map(x => x.Title);
             Map(x => x.RunTime);
             Map(x => x.ReleaseDate);
