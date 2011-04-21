@@ -12,7 +12,7 @@ namespace MediaApp.Mappings
             Map(x => x.PicURL);
             Map(x => x.Title);
             Map(x => x.RunTime);
-            Map(x => x.ReleaseDate);
+            Map(x => x.ReleaseYear);
             Map(x => x.FilmPath);
             Map(x => x.Synopsis).Length(4000);
             Map(x => x.Keywords);

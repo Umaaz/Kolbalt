@@ -19,13 +19,9 @@ namespace MediaApp.Forms
             InitializeComponent();
             _films = filmstolist;
             _results = results;
-        }
-
-        private void Results_Load(object sender, EventArgs e)
-        {
+            var il = new ImageList();
             var count = 0;
             listView1.View = View.Tile;
-            var il = new ImageList();
             il.ImageSize = new Size(32, 32);
             listView1.LargeImageList = il;
             foreach (var film in _films)
@@ -36,12 +32,11 @@ namespace MediaApp.Forms
                     var pic = new Data.DownloadImage(film.PicURL);
                     pic.Download();
                     il.Images.Add(pic.GetImage());
-                    item = new ListViewItem(new[] {film.Title, film.ReleaseDate.ToShortDateString()})
-                               {ImageIndex = count++};
+                    item = new ListViewItem(new[] { film.Title, film.ReleaseYear }) { ImageIndex = count++ };
                 }
                 else
                 {
-                    item = new ListViewItem(new[] {film.Title, film.ReleaseDate.ToShortDateString()});
+                    item = new ListViewItem(new[] { film.Title, film.ReleaseYear });
                 }
                 listView1.Items.Add(item);
             }
@@ -49,11 +44,10 @@ namespace MediaApp.Forms
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _films[_currentIndex] = _cont.Film ?? _films[_currentIndex];
+            _films[_currentIndex] = _cont.getFilm() ?? _films[_currentIndex];
             panel1.Controls.Clear();
             if (listView1.SelectedIndices.Count > 0)
             {
-                var t = listView1.Items.IndexOf(listView1.SelectedItems[0]);
                 _cont = new ResultsTemplate(_films[listView1.SelectedIndices[0]], _results[listView1.SelectedIndices[0]]);
                 panel1.Controls.Add(_cont);
                 _cont.Dock = DockStyle.Fill;

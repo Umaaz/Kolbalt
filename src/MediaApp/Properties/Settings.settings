@@ -2,48 +2,14 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MediaApp.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="MediaConnectionString" Type="(Connection string)" Scope="Application">
-      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=|DataDirectory|\Media.sdf&lt;/ConnectionString&gt;
-  &lt;ProviderName&gt;Microsoft.SqlServerCe.Client.3.5&lt;/ProviderName&gt;
-&lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=|DataDirectory|\Media.sdf</Value>
-    </Setting>
     <Setting Name="playlistShow" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="filmApproxMatches" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="filmDisplayResults" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="filmExactMatches" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="filmPartialMatches" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="filmPopTitles" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="filmTakeFirst" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="filmAll" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="FilmDirectories" Type="System.String" Scope="User">
+    <Setting Name="FilmDirectories" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="MediaConnectionString1" Type="(Connection string)" Scope="Application">
-      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=BEN-PC;Initial Catalog=Media;Integrated Security=True&lt;/ConnectionString&gt;
-  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
-&lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=BEN-PC;Initial Catalog=Media;Integrated Security=True</Value>
     </Setting>
     <Setting Name="selectedFilmDetailsShow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -65,6 +31,14 @@
     </Setting>
     <Setting Name="resultsCastEditable" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="MediaConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=|DataDirectory|\Media.sdf&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;Microsoft.SqlServerCe.Client.3.5&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=|DataDirectory|\Media.sdf</Value>
     </Setting>
   </Settings>
 </SettingsFile>

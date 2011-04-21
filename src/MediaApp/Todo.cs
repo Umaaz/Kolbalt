@@ -1,2 +1,3 @@
 ﻿//todo IMDBResults title
-//todo results gui bugs
+//todo Need option to remain files
+//todo save current file name

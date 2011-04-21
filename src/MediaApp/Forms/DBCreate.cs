@@ -62,35 +62,25 @@ namespace MediaApp.Forms
         private void PopulateList()
         {
             lisb_films.Items.Clear();
-            var films = Properties.Settings.Default.FilmDirectories.Split('|');
-            foreach (var film in films.Where(film => !film.Equals("")))
+            foreach (var filmDirectory in Properties.Settings.Default.FilmDirectories)
             {
-                lisb_films.Items.Add(film);
+                lisb_films.Items.Add(filmDirectory.ToString());
             }
         }
 
         private void btn_Addfilm_Click(object sender, EventArgs e)
         {
-            if (folderBrowserDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
-            var nfilm = folderBrowserDialog1.SelectedPath;
-            Properties.Settings.Default.FilmDirectories += nfilm + "|";
-            Properties.Settings.Default.Save();
-            lisb_films.Items.Clear();
-            var films = Properties.Settings.Default.FilmDirectories.Split('|');
-            foreach (var film in films)
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                lisb_films.Items.Add(film);
+                Properties.Settings.Default.FilmDirectories.Add(folderBrowserDialog1.SelectedPath);
             }
+            PopulateList();
         }
 
         private void btn_RemoveFilm_Click(object sender, EventArgs e)
         {
-            if (!lisb_films.SelectedItem.Equals(""))
-            {
-                Properties.Settings.Default.FilmDirectories = Properties.Settings.Default.FilmDirectories.Replace(lisb_films.SelectedItem.ToString() + "|", "");
-                Properties.Settings.Default.Save();
-                lisb_films.Items.RemoveAt(lisb_films.SelectedIndex);
-            }
+            Properties.Settings.Default.FilmDirectories.Remove(lisb_films.SelectedItem.ToString());
+            PopulateList();
         }
         #endregion
 
@@ -102,29 +92,40 @@ namespace MediaApp.Forms
         {
             if (MessageBox.Show("This will delete all entries in the current database!\nWould you like to continue?", "Warning!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                //todo delete all films
-                var films = NhSession.Query<Film>();
-                foreach (var film in films)
+                using (var tx = NhSession.BeginTransaction())
                 {
-                    NhSession.Delete(film);
+                    lbl_Current.Text = "Clearing database...";
+                    lbl_Current.Visible = true;
+                    var films = NhSession.Query<Film>();
+                    foreach (var film in films)
+                    {
+                        NhSession.Delete(film);
+                    }
+                    build();
+                    tx.Commit();
                 }
-                build();
             }
         }
 
         private void build()
         {
+            var backgroundWorker1 = new BackgroundWorker();
+            if (GetFilms().Count == 0)
+            {
+                MessageBox.Show("No Films where found in the listed directories", "Error - No Films",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             progressBar1.Maximum = 100;
             lbl_Current.Text = "Scanning...";
             lbl_Current.Visible = true;
             lbl_TR.Visible = true;
             lbl_TRemaing.Visible = true;
             backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.WorkerSupportsCancellation = true;
             timer1.Enabled = true;
             backgroundWorker1.ProgressChanged += (o, args) =>
             {
-                if (args.ProgressPercentage == 99)
-                    BringToFront();
                 progressBar1.Value = args.ProgressPercentage;
                 if (args.UserState.ToString().Length <= 80)
                     lbl_Current.Text = (string)args.UserState;
@@ -143,16 +144,33 @@ namespace MediaApp.Forms
                 lbl_Current.Visible = false;
                 lbl_TR.Visible = false;
                 lbl_TRemaing.Visible = false;
-
+                if (Properties.Settings.Default.filmDisplayResults)
+                {
+                    var dr = new Results(filmstoreallyadd, realResults);
+                    if (dr.ShowDialog(this) == DialogResult.OK)
+                    {
+                        lbl_Current.Visible = true;
+                        SaveFilms(filmstoreallyadd);
+                        UpdateIndex();
+                    }
+                }
+                else
+                {
+                    lbl_Current.Visible = true;
+                    SaveFilms(filmstoreallyadd);
+                    UpdateIndex();
+                }
+                lbl_Current.Visible = false;
                 MessageBox.Show("done");
             };
             backgroundWorker1.RunWorkerAsync();
         }
 
-
+        private IList<Film> filmstoreallyadd = new List<Film>();
+        private IList<IList<IMDBResult>> realResults = new List<IList<IMDBResult>>();
         private void Execute(object sender, DoWorkEventArgs e)
-        {
-            IList<Film> filmstoadd = new List<Film>();
+        { 
+            var filmstoadd = new List<Film>();
             var worker = sender as BackgroundWorker;
             var films = GetFilms();
             var count = 1;
@@ -168,9 +186,7 @@ namespace MediaApp.Forms
                 worker.ReportProgress(per - 1, film);
                 count++;
             }
-            IList<Film> filmstoreallyadd = new List<Film>();
-            IList<IList<IMDBResult>> realResults = new List<IList<IMDBResult>>();
-            for (int i = 0; i < filmstoadd.Count; i++)
+            for (var i = 0; i < filmstoadd.Count; i++)
             {
                 var inc = false;
                 foreach (var film in filmstoreallyadd)
@@ -186,34 +202,13 @@ namespace MediaApp.Forms
                     realResults.Add(_results[i]);
                 }
             }
-            if (Properties.Settings.Default.filmDisplayResults)
-            {
-                var dr = new Results(filmstoreallyadd, realResults);
-                worker.ReportProgress(98, "Awaiting user verification!");
-                if (dr.ShowDialog() == DialogResult.OK)
-                {
-                    worker.ReportProgress(98, "Commiting to database");
-                    SaveFilms(filmstoreallyadd);
-                    worker.ReportProgress(98, "Indexing...");
-                    UpdateIndex();
-                }
-                worker.ReportProgress(99,"");
-            }
-            else
-            {
-                worker.ReportProgress(98, "Commiting to database");
-                SaveFilms(filmstoreallyadd);
-                worker.ReportProgress(98, "Indexing...");
-                UpdateIndex();
-            }
-            
-            worker.ReportProgress(100, "");
+            worker.ReportProgress(100, "Commiting and Indexing...");
         }
         
         private List<String> GetFilms()
         {
             var files = new List<string>();
-            foreach (string s in lisb_films.Items)
+            foreach (string s in Properties.Settings.Default.FilmDirectories)
             {
                 if(!Directory.Exists(s)) continue;
                 string[] types = {"*.avi", "*.mkv", "*.wmv"};
@@ -257,8 +252,8 @@ namespace MediaApp.Forms
         {
             var title = film.Remove(0, film.LastIndexOf("\\")+1);
             title = title.Remove(title.Length - 4);
-            Film newFilm = new Film();
-            newFilm = IMDBFilm.GetFilmByName(title);
+            var newFilm = IMDBFilm.GetFilmByName(title);
+            newFilm.FilmPath = film;
             GetIMDBResults(title);
            
             return newFilm;
@@ -280,7 +275,7 @@ namespace MediaApp.Forms
                     {
                         realNewFilm.FilmPath = film.FilmPath;
                         realNewFilm.IMDBId = film.IMDBId;
-                        realNewFilm.ReleaseDate = film.ReleaseDate;
+                        realNewFilm.ReleaseYear = film.ReleaseYear;
                         realNewFilm.RunTime = film.RunTime;
                         realNewFilm.Synopsis = film.Synopsis;
                         realNewFilm.Title = film.Title;

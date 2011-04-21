@@ -48,7 +48,6 @@
             this.btn_ok = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tp_film.SuspendLayout();
@@ -251,10 +250,6 @@
             // 
             this.folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.WorkerReportsProgress = true;
-            // 
             // timer1
             // 
             this.timer1.Interval = 1000;
@@ -301,7 +296,6 @@
         private System.Windows.Forms.CheckBox chk_DisplayFilmResults;
         private System.Windows.Forms.Label lbl_Current;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label lbl_TR;

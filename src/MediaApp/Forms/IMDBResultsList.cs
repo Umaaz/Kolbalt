@@ -59,5 +59,10 @@ namespace MediaApp.Forms
                 listView1.SelectedItems[0].ToolTipText = tip;
             }
         }
+
+        private void IMDBResultsList_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

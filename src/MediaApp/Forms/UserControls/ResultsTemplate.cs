@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -12,8 +13,9 @@ namespace MediaApp.Forms.UserControls
 {
     public partial class ResultsTemplate : UserControl
     {
-        public Film Film { get; set; }
+        public static Film Film { get; set; }
         private IList<IMDBResult> Results { get; set; }
+        
         public ResultsTemplate()
         {
             Film = null;
@@ -25,6 +27,7 @@ namespace MediaApp.Forms.UserControls
             InitializeComponent();
             Film = film;
             populate();
+            lbl_filepath.Text = Film.FilmPath;
         }
 
         public ResultsTemplate(Film film, IList<IMDBResult> results)
@@ -33,6 +36,7 @@ namespace MediaApp.Forms.UserControls
             Film = film;
             Results = results;
             populate();
+            lbl_filepath.Text = Film.FilmPath;
         }
 
         private void populate()
@@ -43,10 +47,8 @@ namespace MediaApp.Forms.UserControls
             txtb_IMDBURL.Text = "Http://www.imdb.com/title/tt" + Film.IMDBId;
             txtb_Synopsis.Text = Film.Synopsis;
             txtb_Keywords.Text = Film.Keywords;
+            txtb_Year.Text = Film.ReleaseYear;
 
-            dateTimePicker1.Value = Film.ReleaseDate;
-
-            lbl_filepath.Text = Film.FilmPath;
             var data = Film.Cast.Select(x => new { x.Character, PersonIMDBID = x.Person.IMDBID, x.Person.Name }).ToList();
             dataGridView1.DataSource = data.ToArray();
             
@@ -58,13 +60,37 @@ namespace MediaApp.Forms.UserControls
             Scan(txtb_IMDBURL.Text);
         }
 
+        public Film getFilm()
+        {
+            return Film;
+        }
+
         private void Scan(String url)
         {
-		//maybe$
-            if (Regex.IsMatch(url, @"^http://www.IMDB.com/title/tt\d\d\d\d\d\d\d&", RegexOptions.IgnoreCase))
+
+            if (Regex.IsMatch(url, @"^http://www.IMDB.com/title/tt\d\d\d\d\d\d\d$", RegexOptions.IgnoreCase) || Regex.IsMatch(url, @"^http://www.IMDB.com/title/tt\d\d\d\d\d\d\d/$", RegexOptions.IgnoreCase))
             {
-                Film = IMDBFilm.GetFilmByUrl(url);
-                populate();
+                var bg = new BackgroundWorker();
+                bg.WorkerReportsProgress = true;
+                panel1.Enabled = false;
+                panel2.Visible = true;
+                bg.DoWork += (s, ee) =>
+                                 {
+                                     var worker = s as BackgroundWorker;
+                                     worker.ReportProgress(100, IMDBFilm.GetFilmByUrl(url));
+                                 };
+                bg.ProgressChanged += (s, ee) =>
+                                          {
+                                              Film = (Film)ee.UserState;
+                                          };
+                bg.RunWorkerCompleted += (s, ee) =>
+                                             {
+                                                 populate();
+                                                 panel1.Enabled = true;
+                                                 panel2.Visible = false;
+                                             };
+                    
+                bg.RunWorkerAsync();
             }
             else
             {
@@ -74,7 +100,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
                     "Error - Input mismatch!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        
         private void txtb_Title_TextChanged(object sender, System.EventArgs e)
         {
             Film.Title = txtb_Title.Text;
@@ -101,38 +127,19 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
             string value = null;  
             if(InputBox.Show("New Genre","Please enter the new genre","example: 'comedy'",ref value) == DialogResult.OK)
             {
-                if (char.IsLetter(value[0]))
-                {
-                    var chars = value.ToCharArray();
-                    chars[0] = char.ToUpper(chars[0]);
-                    lstb_genres.Items.Add(chars.ToString());
-                }
-                else
-                {
-                    lstb_genres.Items.Add(value);
-                }
+                Film.Genre.Add(new FilmType
+                                        {
+                                            Type = value
+                                        });
             }
+            populate();
         }
 
         private void btn_delete_Click(object sender, System.EventArgs e)
         {
-            lstb_genres.Items.RemoveAt(lstb_genres.SelectedIndex);
-        }
-        
-        private void dateTimePicker1_ValueChanged(object sender, System.EventArgs e)
-        {
-            Film.ReleaseDate = dateTimePicker1.Value.Date;
-        }
-
-        private void button1_Click(object sender, System.EventArgs e)
-        {
-            var value = new List<string>();
-            var director = new[] {Film.Director.IMDBID.ToString(), Film.Director.Name};
-            var prompts = new[] {"Director IMDB ID", "Director Name"};
-            if(InputBox.Show("Director details",prompts,director, ref value) == DialogResult.OK)
+            if (lstb_genres.SelectedIndices.Count > 0)
             {
-                Film.Director.IMDBID = value[0];
-                Film.Director.Name = value[1];
+                Film.Genre.RemoveAt(lstb_genres.SelectedIndex);
                 populate();
             }
         }
@@ -151,22 +158,6 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
                 role.Person.Name = value[2];
 
                 populate();
-            }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (Results.Count != 0)
-            {
-                var cont = new IMDBResultsList(Results, Film.Title);
-                if (cont.ShowDialog() == DialogResult.OK)
-                {
-                    Scan("http://www.imdb.com/title/tt" + cont.URL);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Sorry there are no other results!", "Sorry", MessageBoxButtons.OK);
             }
         }
 
@@ -200,6 +191,45 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
                         Name = value[2]
                     }
                 });
+                populate();
+            }
+        }
+
+        private void txtb_Year_TextChanged(object sender, EventArgs e)
+        {
+            if(Regex.IsMatch(txtb_Year.Text,@"^\d\d\d\d$"))
+            {
+                Film.ReleaseYear = txtb_Year.Text;
+            }
+        }
+
+        private void btn_otherresults_Click(object sender, EventArgs e)
+        {
+            if (Results.Count != 0)
+            {
+                var cont = new IMDBResultsList(Results, Film.Title);
+                Enabled = false;
+                if (cont.ShowDialog() == DialogResult.OK)
+                {
+                    Scan("http://www.imdb.com/title/tt" + cont.URL);
+                }
+                Enabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Sorry there are no other results!", "Sorry", MessageBoxButtons.OK);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var value = new List<string>();
+            var director = new[] { Film.Director.IMDBID.ToString(), Film.Director.Name };
+            var prompts = new[] { "Director IMDB ID", "Director Name" };
+            if (InputBox.Show("Director details", prompts, director, ref value) == DialogResult.OK)
+            {
+                Film.Director.IMDBID = value[0];
+                Film.Director.Name = value[1];
                 populate();
             }
         }

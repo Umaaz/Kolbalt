@@ -49,22 +49,35 @@ namespace MediaApp.Data.IMDB
         public static Film GetFilmByUrl(string url)
         {
             var cast = new List<Role>();
-            String title = "", director = "";
-            // what if there is no property listed..
-            //the top search is not always returning correct film, due to the way IMDB lists the films. need to check acuracy of the search.
+            //todo what if there is no property listed..
             var hw = new HtmlWeb();
             var doc = hw.Load(url);
+            
+            //imdb ID
             var IMDBFilmId = url.Remove(0, url.LastIndexOf("tt") + 2);
             IMDBFilmId = IMDBFilmId.Replace("/", "");
-            title = doc.DocumentNode.SelectSingleNode(".//h1[@class='header']").InnerText.Trim();
-            title = HtmlEscapeCharConverter.Decode(title.Remove(title.IndexOf("(")));
+            if (IMDBFilmId.Contains("?"))
+                IMDBFilmId = IMDBFilmId.Remove(IMDBFilmId.IndexOf("?"));
+
+            //title
+            if(do)
+            var titleNode = doc.DocumentNode.SelectNodes(".//h1[@class='header']").FirstOrDefault();
+            string title = null;
+            if(titleNode != null)
+            {
+                title = titleNode.InnerText.Trim();
+                title = HtmlEscapeCharConverter.Decode(title.Remove(title.IndexOf("(")));
+            }
+            
             var divs = doc.DocumentNode.SelectNodes(".//div[@class='txt-block']");
             
             //picurl
             var picURL = doc.DocumentNode.SelectNodes(".//td[@id='img_primary']").FirstOrDefault().InnerHtml;
-            picURL = picURL.Remove(0, picURL.IndexOf("<img src=") + 10);
-            picURL = picURL.Remove(picURL.IndexOf("\""));
-
+            if (picURL.Contains("<img src="))
+            {
+                picURL = picURL.Remove(0, picURL.IndexOf("<img src=") + 10);
+                picURL = picURL.Remove(picURL.IndexOf("\""));
+            }
 
             //genres
             var inline = doc.DocumentNode.SelectNodes(".//div[@class='see-more inline canwrap']");
@@ -84,7 +97,7 @@ namespace MediaApp.Data.IMDB
             }
             
             //Director
-            director = divs.First().SelectSingleNode(".//a").InnerText.Trim();
+            var director = divs.First().SelectSingleNode(".//a").InnerText.Trim();
             var dirnum = divs.First().InnerHtml;
             var dirNum = dirnum.Remove(0, dirnum.IndexOf("nm") + 2);
             dirNum = dirNum.Remove(7);
@@ -94,12 +107,14 @@ namespace MediaApp.Data.IMDB
             var dateString = divs
                 .Where(x => x.SelectNodes(".//h4") != null)
                 .Where(x => x.SelectNodes(".//h4").First().InnerText.Trim().Contains("Release Date"))
-                .Single().InnerText;
-            DateTime d = DateTime.Now;
+                .SingleOrDefault();
+            string d = null;
             if (dateString != null)
             {
-                var td = dateString.Remove(dateString.IndexOf("(")).Replace("Release Date:", "");
-                d = DateTime.Parse(td);
+                var td = dateString.InnerText.Remove(dateString.InnerText.IndexOf("(")).Replace("Release Date:", "");
+                //var dd = DateTime.Parse(td);
+                d = td.Replace("\n","");
+                d = d.Remove(0, d.Length - 4);
             }
             
             //RunTime get run time from film file..
@@ -120,11 +135,20 @@ namespace MediaApp.Data.IMDB
             var u =
                 doc.DocumentNode.SelectNodes(".//div[@class='article']").Where(
                     x => x.SelectNodes(".//h2") != null && x.SelectNodes(".//h2").First().InnerText == "Storyline").
-                    First();
-            var story = HtmlEscapeCharConverter.Decode(u.SelectNodes(".//p").First().InnerText);
+                    FirstOrDefault();
+            HtmlNode storyNode = null;
+            String story = null;
+            if (u.InnerText.Contains("<p>"))
+                storyNode = u.SelectNodes(".//p").FirstOrDefault();
+            if (storyNode != null)
+            {
+                story = storyNode.InnerText;
+                story = HtmlEscapeCharConverter.Decode(story);
+            }
 
             //Cast
-            var tab = doc.DocumentNode.SelectNodes(".//table[@class='cast_list']//tr");
+            var tab = doc.DocumentNode.SelectNodes(".//table[@class='cast_list']//tr").DefaultIfEmpty();
+            if(tab != null)
             foreach (var htmlNode in tab.Skip(1))
             {
                 if (htmlNode.InnerText.Contains("Rest of cast")) break; 
@@ -153,7 +177,7 @@ namespace MediaApp.Data.IMDB
                            Synopsis = story,
                            RunTime = rt,
                            IMDBId = IMDBFilmId,
-                           ReleaseDate = d,
+                           ReleaseYear = d,
                            Genre = genres,
                            Director = directors,
                            Cast = cast,

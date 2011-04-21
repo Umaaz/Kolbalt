@@ -23,16 +23,6 @@ namespace MediaApp.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\Media.sdf")]
-        public string MediaConnectionString {
-            get {
-                return ((string)(this["MediaConnectionString"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
@@ -42,18 +32,6 @@ namespace MediaApp.Properties {
             }
             set {
                 this["playlistShow"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool filmApproxMatches {
-            get {
-                return ((bool)(this["filmApproxMatches"]));
-            }
-            set {
-                this["filmApproxMatches"] = value;
             }
         }
         
@@ -71,83 +49,12 @@ namespace MediaApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool filmExactMatches {
+        public global::System.Collections.Specialized.StringCollection FilmDirectories {
             get {
-                return ((bool)(this["filmExactMatches"]));
-            }
-            set {
-                this["filmExactMatches"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool filmPartialMatches {
-            get {
-                return ((bool)(this["filmPartialMatches"]));
-            }
-            set {
-                this["filmPartialMatches"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool filmPopTitles {
-            get {
-                return ((bool)(this["filmPopTitles"]));
-            }
-            set {
-                this["filmPopTitles"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool filmTakeFirst {
-            get {
-                return ((bool)(this["filmTakeFirst"]));
-            }
-            set {
-                this["filmTakeFirst"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool filmAll {
-            get {
-                return ((bool)(this["filmAll"]));
-            }
-            set {
-                this["filmAll"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FilmDirectories {
-            get {
-                return ((string)(this["FilmDirectories"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["FilmDirectories"]));
             }
             set {
                 this["FilmDirectories"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=BEN-PC;Initial Catalog=Media;Integrated Security=True")]
-        public string MediaConnectionString1 {
-            get {
-                return ((string)(this["MediaConnectionString1"]));
             }
         }
         
@@ -232,6 +139,16 @@ namespace MediaApp.Properties {
             }
             set {
                 this["resultsCastEditable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\Media.sdf")]
+        public string MediaConnectionString {
+            get {
+                return ((string)(this["MediaConnectionString"]));
             }
         }
     }

@@ -98,6 +98,7 @@ namespace MediaApp
                     Properties.Settings.Default.TreeSelectionindex = e.Node.Text;
                     Properties.Settings.Default.Save();
                     var fl = new FilmLibrary();
+                    fl.Visible = true;
                     SC_LibraryNavLibrary.Panel2.Controls.Clear();
                     SC_LibraryNavLibrary.Panel2.Controls.Add(fl);
                     fl.Dock = DockStyle.Fill;
@@ -106,8 +107,8 @@ namespace MediaApp
 
                     Properties.Settings.Default.TreeSelectionindex = e.Node.Text;
                     Properties.Settings.Default.Save();
-                    PN_TVLibrary.Visible = true;
-                    PN_TVLibrary.Dock = DockStyle.Fill;
+                   // PN_TVLibrary.Visible = true;
+                   // PN_TVLibrary.Dock = DockStyle.Fill;
                     break;
                 case "Local Media":
 

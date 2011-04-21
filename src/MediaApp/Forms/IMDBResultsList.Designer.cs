@@ -78,8 +78,13 @@
             this.Controls.Add(this.btn_fetch);
             this.Controls.Add(this.btn_cancel);
             this.Controls.Add(this.listView1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "IMDBResultsList";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "IMDBResultsList";
+            this.Load += new System.EventHandler(this.IMDBResultsList_Load);
             this.ResumeLayout(false);
 
         }
