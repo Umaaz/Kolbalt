@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using MediaApp.Domain;
+using MediaApp.Domain.Model;
 
 namespace MediaApp.Data.IMDB
 {
@@ -60,7 +61,6 @@ namespace MediaApp.Data.IMDB
                 IMDBFilmId = IMDBFilmId.Remove(IMDBFilmId.IndexOf("?"));
 
             //title
-            if(do)
             var titleNode = doc.DocumentNode.SelectNodes(".//h1[@class='header']").FirstOrDefault();
             string title = null;
             if(titleNode != null)
@@ -91,9 +91,9 @@ namespace MediaApp.Data.IMDB
             if (gen != null)
             {
                 genres = gen.Select(g => new FilmType
-                                                             {
-                                                                 Type = HtmlEscapeCharConverter.Decode(g.InnerText.Trim())
-                                                             }).ToList();
+                                                  {
+                                                      Type = HtmlEscapeCharConverter.Decode(g.InnerText.Trim())
+                                                  }).ToList();
             }
             
             //Director

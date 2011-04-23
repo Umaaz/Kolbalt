@@ -1,5 +1,5 @@
 ﻿using FluentNHibernate.Mapping;
-using MediaApp.Domain;
+using MediaApp.Domain.Model;
 
 namespace MediaApp.Mappings
 {
@@ -8,14 +8,18 @@ namespace MediaApp.Mappings
         public FilmMap()
         {
             Id(x => x.Id).GeneratedBy.Guid();
-            Map(x => x.IMDBId).Unique();
-            Map(x => x.PicURL);
-            Map(x => x.Title);
+            Map(x => x.IMDBId).Unique().Length(7);
+            Map(x => x.PicURL).Length(263);
+            Map(x => x.Title).Length(300);
             Map(x => x.RunTime);
-            Map(x => x.ReleaseYear);
+            Map(x => x.ReleaseYear).Length(4);
             Map(x => x.FilmPath);
             Map(x => x.Synopsis).Length(4000);
             Map(x => x.Keywords);
+            Map(x => x.OnExternalMedia);
+            Map(x => x.SoundTrack);
+            Map(x => x.Writers);
+            Map(x => x.TrailerLink).Length(263);
             References(x => x.Director).Cascade.All(); 
 
             HasManyToMany(x => x.Genre)

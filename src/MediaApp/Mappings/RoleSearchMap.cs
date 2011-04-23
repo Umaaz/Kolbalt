@@ -1,5 +1,6 @@
 ﻿using FluentNHibernate.Search.Mapping;
 using MediaApp.Domain;
+using MediaApp.Domain.Model;
 
 namespace MediaApp.Mappings
 {

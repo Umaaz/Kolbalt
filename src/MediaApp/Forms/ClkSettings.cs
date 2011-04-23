@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using MediaApp.Data;
 using MediaApp.Domain;
+using MediaApp.Domain.Model;
 using NHibernate;
 using NHibernate.Linq;
 using ListViewItem = MediaApp.Data.AlarmListViewItem;

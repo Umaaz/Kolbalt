@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using MediaApp.Data;
 using MediaApp.Data.IMDB;
 using MediaApp.Domain;
+using MediaApp.Domain.Commands;
+using MediaApp.Domain.Model;
 using NHibernate;
 using NHibernate.Linq;
 
@@ -37,20 +39,9 @@ namespace MediaApp.Forms
         }
 
         #region film
-        private readonly Dictionary<string, Person> _people = new Dictionary<string, Person>();
         private double _time;
 
-        Person GetPersonFromCache(string IMDB)
-        {
-            Person temp;
-            _people.TryGetValue(IMDB, out temp);
-            return temp;
-        }
-        void AddPersonToCache(Person person)
-        {
-            if (!_people.ContainsKey(person.IMDBID))
-                _people[person.IMDBID] = person;
-        }
+
 
         private void BuildFilm()
         {
@@ -266,51 +257,16 @@ namespace MediaApp.Forms
 
         private void SaveFilms(IList<Film> films)
         {
-            using (var tx = NhSession.BeginTransaction())
+            var command = new AddFilmsCommand();
+            command.Films = films;
+            if(command.Execute())
             {
-                foreach (var film in films)
-                {
-                    var realNewFilm = new Film();
-                    if (!NhSession.Query<Film>().Where(x => x.IMDBId == film.IMDBId).Any())
-                    {
-                        realNewFilm.FilmPath = film.FilmPath;
-                        realNewFilm.IMDBId = film.IMDBId;
-                        realNewFilm.ReleaseYear = film.ReleaseYear;
-                        realNewFilm.RunTime = film.RunTime;
-                        realNewFilm.Synopsis = film.Synopsis;
-                        realNewFilm.Title = film.Title;
-                        realNewFilm.Director = GetPersonFromCache(film.Director.IMDBID)
-                                               ??
-                                               NhSession.Query<Person>().Where(x => x.IMDBID == film.Director.IMDBID).
-                                                   SingleOrDefault()
-                                               ?? film.Director;
-                        AddPersonToCache(realNewFilm.Director);
-                        foreach (var filmType in film.Genre)
-                        {
-                            var type =
-                                NhSession.Query<FilmType>().Where(x => x.Type == filmType.Type).
-                                    SingleOrDefault();
-                            realNewFilm.Genre.Add(type ?? filmType);
-                        }
-                        foreach (var role in film.Cast)
-                        {
-                            var actor = GetPersonFromCache(role.Person.IMDBID)
-                                        ??
-                                        NhSession.Query<Person>().Where(x => x.IMDBID == role.Person.IMDBID).
-                                            SingleOrDefault()
-                                        ?? role.Person;
-                            AddPersonToCache(actor);
-                            var role2 = new Role
-                                            {
-                                                Character = role.Character,
-                                                Person = actor
-                                            };
-                            realNewFilm.Cast.Add(role2);
-                        }
-                        NhSession.Save(realNewFilm);
-                    }
-                }
-                tx.Commit();
+                //I saved
+            }
+            else
+            {
+                //Screw you
+                var errors = command.ValidationErrors;
             }
         }
         

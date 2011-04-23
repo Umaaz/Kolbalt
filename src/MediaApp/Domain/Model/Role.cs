@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MediaApp.Domain
+namespace MediaApp.Domain.Model
 {
     public class Role
     {

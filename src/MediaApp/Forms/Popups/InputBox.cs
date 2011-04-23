@@ -141,7 +141,7 @@ namespace MediaApp.Forms.Popups
 
         public static DialogResult Show(String title, String[] promptText, String[] defaultText, ref List<String> results)
         {
-            if(promptText.Count() != defaultText.Count())
+            if (promptText.Length != defaultText.Length)
             {
                 throw new ArgumentOutOfRangeException(@"promptText",@"promptText.count() must equal defaultText.count()");
             }

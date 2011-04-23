@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using MediaApp.Data;
 using MediaApp.Domain;
+using MediaApp.Domain.Model;
 using MediaApp.Forms;
 using MediaApp.Forms.UserControls;
 using NHibernate;

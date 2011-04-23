@@ -7,6 +7,7 @@ using Lucene.Net.QueryParsers;
 using MediaApp.Data;
 using MediaApp.Data.Items;
 using MediaApp.Domain;
+using MediaApp.Domain.Model;
 using NHibernate;
 using NHibernate.Linq;
 using ListViewItem = System.Windows.Forms.ListViewItem;

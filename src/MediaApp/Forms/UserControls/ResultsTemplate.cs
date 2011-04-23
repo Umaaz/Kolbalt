@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using MediaApp.Data.IMDB;
 using MediaApp.Data.Items;
 using MediaApp.Domain;
+using MediaApp.Domain.Model;
 using MediaApp.Forms.Popups;
 
 namespace MediaApp.Forms.UserControls
@@ -58,11 +59,6 @@ namespace MediaApp.Forms.UserControls
         private void btn_rescan_Click(object sender, System.EventArgs e)
         {
             Scan(txtb_IMDBURL.Text);
-        }
-
-        public Film getFilm()
-        {
-            return Film;
         }
 
         private void Scan(String url)

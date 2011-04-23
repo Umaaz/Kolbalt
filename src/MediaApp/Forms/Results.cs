@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using MediaApp.Domain;
+using MediaApp.Domain.Model;
 using MediaApp.Forms.UserControls;
 using MediaApp.Data.IMDB;
 
@@ -44,7 +45,7 @@ namespace MediaApp.Forms
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _films[_currentIndex] = _cont.getFilm() ?? _films[_currentIndex];
+            _films[_currentIndex] = ResultsTemplate.Film ?? _films[_currentIndex];
             panel1.Controls.Clear();
             if (listView1.SelectedIndices.Count > 0)
             {

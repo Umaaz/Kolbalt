@@ -1,7 +1,6 @@
 ﻿using System;
-using FluentNHibernate.Mapping;
 
-namespace MediaApp.Domain
+namespace MediaApp.Domain.Model
 {
     public class Person
     {

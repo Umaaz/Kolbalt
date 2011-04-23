@@ -5,6 +5,7 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Search;
 using FluentNHibernate.Search.Cfg;
+using MediaApp.Domain.Model;
 using MediaApp.Mappings;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
@@ -39,8 +40,8 @@ namespace MediaApp.Data
                                 .Listeners(ListenerConfiguration.Default)
                                 .MappingClass<SearchMap>()
                             )
-                        .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Domain.Film>()
-                        .Conventions.AddFromAssemblyOf<Domain.Film>()
+                        .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Film>()
+                        .Conventions.AddFromAssemblyOf<Film>()
                         );
 
             if (!File.Exists(dbPath))

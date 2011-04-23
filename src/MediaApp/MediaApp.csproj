@@ -58,6 +58,9 @@
     <Reference Include="FluentNHibernate.Search">
       <HintPath>..\..\lib\nhibernate\FluentNHibernate.Search.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\..\lib\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\..\lib\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -117,6 +120,8 @@
   <ItemGroup>
     <Compile Include="Data\DownloadImage.cs" />
     <Compile Include="Data\Items\ComboBoxItem.cs" />
+    <Compile Include="Domain\Commands\AddFilmsCommand.cs" />
+    <Compile Include="Domain\Validations\FilmValidator.cs" />
     <Compile Include="Forms\ClkSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,11 +135,11 @@
     <Compile Include="Forms\DBCreate.Designer.cs">
       <DependentUpon>DBCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Domain\Alarms.cs" />
-    <Compile Include="Domain\Film.cs" />
-    <Compile Include="Domain\FilmType.cs" />
-    <Compile Include="Domain\Person.cs" />
-    <Compile Include="Domain\Role.cs" />
+    <Compile Include="Domain\Model\Alarms.cs" />
+    <Compile Include="Domain\Model\Film.cs" />
+    <Compile Include="Domain\Model\FilmType.cs" />
+    <Compile Include="Domain\Model\Person.cs" />
+    <Compile Include="Domain\Model\Role.cs" />
     <Compile Include="Forms\FullScreanVideo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -196,6 +201,12 @@
     <Compile Include="Forms\UserControls\Volume.xaml.cs">
       <DependentUpon>Volume.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ValidationErrors.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ValidationErrors.Designer.cs">
+      <DependentUpon>ValidationErrors.cs</DependentUpon>
+    </Compile>
     <Compile Include="Mappings\AlarmsMap.cs" />
     <Compile Include="Mappings\Conventions\ColumnConventions.cs" />
     <Compile Include="Mappings\Conventions\ForeignKeyConstraintNameConvention.cs" />
@@ -204,7 +215,7 @@
     <Compile Include="Mappings\FilmSearchMap.cs" />
     <Compile Include="Mappings\FilmTypeMap.cs" />
     <Compile Include="Mappings\PersonMap.cs" />
-    <Compile Include="Mappings\RoleMap.cs" />
+    <Compile Include="Forms\RoleMap.cs" />
     <Compile Include="Mappings\RoleSearchMap.cs" />
     <Compile Include="Mappings\SearchMap.cs" />
     <Compile Include="MediaDataSet.Designer.cs">
@@ -341,6 +352,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
