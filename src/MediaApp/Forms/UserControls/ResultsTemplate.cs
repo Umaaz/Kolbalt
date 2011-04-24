@@ -77,7 +77,13 @@ namespace MediaApp.Forms.UserControls
                                  };
                 bg.ProgressChanged += (s, ee) =>
                                           {
-                                              Film = (Film)ee.UserState;
+                                              if((Film)ee.UserState != null)
+                                                  Film = (Film)ee.UserState;
+                                              else
+                                                  if(MessageBox.Show("No film found!\n Check URL!", "Error", MessageBoxButtons.RetryCancel,MessageBoxIcon.Error,MessageBoxDefaultButton.Button2) == DialogResult.Retry)
+                                                  {
+                                                      Scan(url);
+                                                  }
                                           };
                 bg.RunWorkerCompleted += (s, ee) =>
                                              {

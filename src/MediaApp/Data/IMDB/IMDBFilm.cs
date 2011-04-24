@@ -26,6 +26,8 @@ namespace MediaApp.Data.IMDB
             {
                 return null;
             }
+            if (response.StatusCode != HttpStatusCode.OK)
+                return null;
             var sr = new StreamReader(response.GetResponseStream());
             var source = sr.ReadToEnd();
             IMDBResult result = null;
@@ -53,6 +55,8 @@ namespace MediaApp.Data.IMDB
             //todo what if there is no property listed..
             var hw = new HtmlWeb();
             var doc = hw.Load(url);
+            if (hw.StatusCode != HttpStatusCode.OK)
+                return null;
             
             //imdb ID
             var IMDBFilmId = url.Remove(0, url.LastIndexOf("tt") + 2);
@@ -112,12 +116,11 @@ namespace MediaApp.Data.IMDB
             if (dateString != null)
             {
                 var td = dateString.InnerText.Remove(dateString.InnerText.IndexOf("(")).Replace("Release Date:", "");
-                //var dd = DateTime.Parse(td);
                 d = td.Replace("\n","");
                 d = d.Remove(0, d.Length - 4);
             }
             
-            //RunTime get run time from film file..
+            //RunTime
             string shouldBeRuntime = null;
             if(divs.Where(x=> x.SelectNodes(".//h4") != null && x.SelectNodes(".//h4").First().InnerText.Trim() == "Runtime:").ToList().Count > 0)
             {

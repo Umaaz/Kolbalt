@@ -108,8 +108,6 @@ namespace MediaApp
 
                     Properties.Settings.Default.TreeSelectionindex = e.Node.Text;
                     Properties.Settings.Default.Save();
-                   // PN_TVLibrary.Visible = true;
-                   // PN_TVLibrary.Dock = DockStyle.Fill;
                     break;
                 case "Local Media":
 

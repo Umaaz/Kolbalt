@@ -244,9 +244,12 @@ namespace MediaApp.Forms
             var title = film.Remove(0, film.LastIndexOf("\\")+1);
             title = title.Remove(title.Length - 4);
             var newFilm = IMDBFilm.GetFilmByName(title);
-            newFilm.FilmPath = film;
-            GetIMDBResults(title);
-           
+            if (newFilm != null)
+            {
+                newFilm.FilmPath = film;
+                GetIMDBResults(title);
+            }
+
             return newFilm;
         }
 
