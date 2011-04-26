@@ -11,16 +11,28 @@ namespace MediaApp.Domain.Validations
         {
             RoleErrors = new Dictionary<int, IList<ValidationFailure>>();
 
-            RuleFor(x => x.Title).NotEmpty().Length(300).WithMessage("Must specify a title less than 300 characters long.");
+            RuleFor(x => x.Title).NotNull().NotEmpty().Must(BeLessThan300).WithMessage("Must specify a title less than 300 characters long.");
             RuleFor(x => x.RunTime).LessThanOrEqualTo(999).WithMessage("Runtime must be between 0 - 999 minutes long");
             RuleFor(x => x.FilmPath).NotEmpty().When(x => x.OnExternalMedia == false).WithMessage("Must specify path to file if not on external media");
-            RuleFor(x => x.Synopsis).Length(4000).WithMessage("Synopsis must be less than 4000 characters long");
+            RuleFor(x => x.Synopsis).Must(BeLessThan4000).WithMessage("Synopsis must be less than 4000 characters long");
             RuleFor(x => x.IMDBId).Must(BeEmptyOr7Digits).WithMessage("IMDB ID must be empty or 7 digits long");
             RuleFor(x => x.Cast).Must(Roles).WithMessage("Invalid Roles");
             
         }
 
         public Dictionary<int, IList<ValidationFailure>> RoleErrors { get; set; } 
+
+        private bool BeLessThan4000(string synopsis)
+        {
+            if (synopsis != null)
+                return synopsis.Length <= 4000;
+            return true;
+        }
+
+        private bool BeLessThan300(string title)
+        {
+            return title.Length <= 300;
+        }
 
         private bool BeEmptyOr7Digits(string imdbId)
         {

@@ -18,9 +18,12 @@ namespace MediaApp.Mappings
             Map(x => x.Keywords);
             Map(x => x.OnExternalMedia);
             Map(x => x.SoundTrack);
-            Map(x => x.Writers);
             Map(x => x.TrailerLink).Length(263);
-            References(x => x.Director).Cascade.All(); 
+
+            //References(x => x.Writers).Cascade.All();
+            HasMany(x => x.Writers).AsBag().Cascade.All();
+            HasMany(x => x.Director).AsBag().Cascade.All();
+            //References(x => x.Director).Cascade.All(); 
 
             HasManyToMany(x => x.Genre)
                 .AsBag()

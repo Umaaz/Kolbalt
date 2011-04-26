@@ -9,6 +9,8 @@ namespace MediaApp.Domain.Model
         {
             Cast = new List<Role>();
             Genre = new List<FilmType>();
+            Director = new List<Person>();
+            Writers = new List<Person>();
         }
         //required
         public virtual Guid Id { get; set; }
@@ -21,7 +23,7 @@ namespace MediaApp.Domain.Model
         //optional
         public virtual String IMDBId { get; set; }
         public virtual String PicURL { get; set; }
-        public virtual Person Director { get; set; }
+        public virtual IList<Person> Director { get; set; }
         public virtual int RunTime { get; set; }
         public virtual String ReleaseYear { get; set; }
         public virtual IList<Role> Cast { get; set; }
@@ -29,7 +31,7 @@ namespace MediaApp.Domain.Model
         public virtual String Synopsis { get; set; }
         public virtual String Keywords { get; set; }
         public virtual String TrailerLink { get; set; }
-        public virtual String Writers { get; set; }
+        public virtual IList<Person> Writers { get; set; }
         public virtual String SoundTrack { get; set; }
     }
 }

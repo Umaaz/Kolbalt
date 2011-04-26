@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MediaApp.Data.IMDB;
 using MediaApp.Data.Items;
-using MediaApp.Domain;
 using MediaApp.Domain.Model;
 using MediaApp.Forms.Popups;
 
@@ -43,7 +42,7 @@ namespace MediaApp.Forms.UserControls
         private void populate()
         {
             txtb_Title.Text = Film.Title;
-            txtb_director.Text = Film.Director.Name;
+            //txtb_director.Text = Film.Director.First().Name;
             txtb_RunTime.Text = Film.RunTime.ToString();
             txtb_IMDBURL.Text = "Http://www.imdb.com/title/tt" + Film.IMDBId;
             txtb_Synopsis.Text = Film.Synopsis;
@@ -226,12 +225,12 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
         private void button1_Click(object sender, EventArgs e)
         {
             var value = new List<string>();
-            var director = new[] { Film.Director.IMDBID.ToString(), Film.Director.Name };
+            var director = new[] { Film.Director.First().IMDBID.ToString(), Film.Director.First().Name };
             var prompts = new[] { "Director IMDB ID", "Director Name" };
             if (InputBox.Show("Director details", prompts, director, ref value) == DialogResult.OK)
             {
-                Film.Director.IMDBID = value[0];
-                Film.Director.Name = value[1];
+                Film.Director.First().IMDBID = value[0];
+                Film.Director.First().Name = value[1];
                 populate();
             }
         }

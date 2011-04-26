@@ -51,12 +51,12 @@ namespace MediaApp.Domain.Commands
                         realNewFilm.RunTime = film.RunTime;
                         realNewFilm.Synopsis = film.Synopsis;
                         realNewFilm.Title = film.Title;
-                        realNewFilm.Director = GetPersonFromCache(film.Director.IMDBID)
-                                               ??
-                                               nhSession.Query<Person>().Where(x => x.IMDBID == film.Director.IMDBID).
-                                                   SingleOrDefault()
-                                               ?? film.Director;
-                        AddPersonToCache(realNewFilm.Director);
+                        //realNewFilm.Director = GetPersonFromCache(film.Director.IMDBID)
+                        //                       ??
+                        //                       nhSession.Query<Person>().Where(x => x.IMDBID == film.Director.IMDBID).
+                        //                           SingleOrDefault()
+                        //                       ?? film.Director;
+                        //AddPersonToCache(realNewFilm.Director);
                         foreach (var filmType in film.Genre)
                         {
                             var type =

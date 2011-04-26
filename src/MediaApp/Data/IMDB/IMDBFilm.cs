@@ -182,7 +182,7 @@ namespace MediaApp.Data.IMDB
                            IMDBId = IMDBFilmId,
                            ReleaseYear = d,
                            Genre = genres,
-                           Director = directors,
+                          // Director = directors,
                            Cast = cast,
                            PicURL = picURL
                        };

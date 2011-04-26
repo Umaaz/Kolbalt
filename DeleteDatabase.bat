@@ -1,0 +1,1 @@
+del C:\repo\Kolbalt\Kolbalt\src\MediaApp\bin\Debug\Media.sdf

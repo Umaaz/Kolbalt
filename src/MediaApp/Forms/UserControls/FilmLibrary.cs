@@ -79,18 +79,19 @@ namespace MediaApp.Forms.UserControls
         private IList<ListBoxItem> FillDirector()
         {
             var films = GetFilms();
-            var directors =
-                films.OrderBy(o => o.Director.Name).Select(d => new ListBoxItem(d.Director.Id, d.Director.Name)).ToList();
+            var directors = films.SelectMany(film => film.Director).ToList();
+            //var directors =
+              //  films.OrderBy(o => o.Director.First().Name).Select(d => new ListBoxItem(d.Director.First().Id, d.Director.First().Name)).ToList();
             IList<ListBoxItem> dList = new List<ListBoxItem>();
-            foreach (var listBoxItem in directors)
+            foreach (var person in directors)
             {
                 var inc = false;
-                foreach (var boxItem in dList.Where(boxItem => listBoxItem.Id == boxItem.Id))
+                foreach (var boxItem in dList.Where(boxItem => person.Id == boxItem.Id))
                 {
                     inc = true;
                 }
                 if (!inc)
-                    dList.Add(listBoxItem);
+                    dList.Add(new ListBoxItem(person.Id, person.Name));
             }
             return dList;
         }
@@ -106,7 +107,7 @@ namespace MediaApp.Forms.UserControls
             ActorList.DataSource = defaultListBoxItem.Union(FillActors()).ToList();
             GenreList.DataSource = defaultListBoxItem.Union(FillGenres()).ToList();
             DirectorList.DataSource = defaultListBoxItem.Union(FillDirector()).ToList();
-            DGV_Films.DataSource = GetFilms().OrderBy(x => x.Title).Select(x => new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, ReleaseDate = x.ReleaseYear })
+            DGV_Films.DataSource = GetFilms().OrderBy(x => x.Title).Select(x => new { x.Id, x.Title, x.RunTime, ReleaseDate = x.ReleaseYear })
                 .ToList();
             if (DGV_Films != null)
             {
@@ -196,8 +197,8 @@ namespace MediaApp.Forms.UserControls
                 GenreList.DataSource = defaultListBoxItem.Union(gList).ToList();
 
                 var directors =
-                    films.Where(f => f.Cast.Any(r => r.Person.Id == ID)).OrderBy(o => o.Director.Name).Select(
-                        d => new ListBoxItem(d.Director.Id, d.Director.Name)).ToList();
+                    films.Where(f => f.Cast.Any(r => r.Person.Id == ID)).OrderBy(o => o.Director.First().Name).Select(
+                        d => new ListBoxItem(d.Director.First().Id, d.Director.First().Name)).ToList();
                 IList<ListBoxItem> dList = new List<ListBoxItem>();
                 foreach (var listBoxItem in directors)
                 {
@@ -210,7 +211,7 @@ namespace MediaApp.Forms.UserControls
                         dList.Add(listBoxItem);
                 }
                 DirectorList.DataSource = defaultListBoxItem.Union(dList).ToList();
-                DGV_Films.DataSource = GetFilms().Where(f => f.Cast.Any(r => r.Person.Id == ID)).Select(x => new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, ReleaseDate = x.ReleaseYear })
+                DGV_Films.DataSource = GetFilms().Where(f => f.Cast.Any(r => r.Person.Id == ID)).Select(x => new { x.Id, x.Title, Director = x.Director.First().Name, x.RunTime, ReleaseDate = x.ReleaseYear })
                 .ToList();
                 if (DGV_Films != null)
                 {
@@ -241,7 +242,7 @@ namespace MediaApp.Forms.UserControls
                         g => g.Genre.Any(t => t.Id == genreID));
             }
             var directors =
-                films.OrderBy(o => o.Director.Name).Select(d => new ListBoxItem(d.Director.Id, d.Director.Name)).
+                films.OrderBy(o => o.Director.First().Name).Select(d => new ListBoxItem(d.Director.First().Id, d.Director.First().Name)).
                     ToList();
             IList<ListBoxItem> dList = new List<ListBoxItem>();
             foreach (var listBoxItem in directors)
@@ -257,7 +258,7 @@ namespace MediaApp.Forms.UserControls
             var defaultListBoxItem = new[] { new ListBoxItem(Guid.Empty, "All") };
             DirectorList.DataSource = defaultListBoxItem.Union(dList).ToList();
             DGV_Films.DataSource =
-                films.Select(x => new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, ReleaseDate = x.ReleaseYear }).ToList();
+                films.Select(x => new { x.Id, x.Title, Director = x.Director.First().Name, x.RunTime, ReleaseDate = x.ReleaseYear }).ToList();
             if (DGV_Films != null)
                 DGV_Films.Columns["Id"].Visible = false;
         }
@@ -278,26 +279,26 @@ namespace MediaApp.Forms.UserControls
                 var films = GetFilms();
                 if (aItem.Id == Guid.Empty && gItem.Id == Guid.Empty)
                 {
-                    films = films.Where(f => f.Director.Id == directorID);
+                    films = films.Where(f => f.Director.First().Id == directorID);
                 }
                 else if (aItem.Id == Guid.Empty && gItem.Id != Guid.Empty)
                 {
-                    films = films.Where(f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.Id == directorID);
+                    films = films.Where(f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.First().Id == directorID);
                 }
                 else if (aItem.Id != Guid.Empty && gItem.Id == Guid.Empty)
                 {
                     films =
                         films.Where(f => f.Cast.Any(r => r.Person.Id == aItem.Id)).Where(
-                            f => f.Director.Id == directorID);
+                            f => f.Director.First().Id == directorID);
                 }
                 else if (aItem.Id != Guid.Empty && gItem.Id != Guid.Empty)
                 {
                     films =
                         films.Where(f => f.Cast.Any(r => r.Person.Id == aItem.Id)).Where(
-                            f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.Id == directorID);
+                            f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.First().Id == directorID);
                 }
                 DGV_Films.DataSource =
-                films.Select(x => new { x.Id, x.Title, Director = x.Director.Name, x.RunTime, ReleaseDate = x.ReleaseYear }).ToList();
+                films.Select(x => new { x.Id, x.Title, Director = x.Director.First().Name, x.RunTime, ReleaseDate = x.ReleaseYear }).ToList();
                 if (DGV_Films != null)
                     DGV_Films.Columns["Id"].Visible = false;
             }
