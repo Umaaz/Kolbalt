@@ -23,7 +23,7 @@ namespace MediaApp.Forms.Popups
                         {
                             var message = "Are you sure the following information is correct?\n";
                             message += promptText + ": " + value;
-
+                            defaultText = value;
                             if (MessageBox.Show(message, @"Please Confirm!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                             {
                                 result = true;
@@ -124,7 +124,7 @@ namespace MediaApp.Forms.Popups
                             {
                                 message += promptText[i] + " " + results[i] + "\n";
                             }
-
+                            defaultText = results.ToArray();
                             if (MessageBox.Show(message, @"Please Confirm!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                             {
                                 result = true;
@@ -172,8 +172,6 @@ namespace MediaApp.Forms.Popups
             buttonOk.DialogResult = DialogResult.OK;
             buttonCancel.DialogResult = DialogResult.Cancel;
 
-            
-
             form.ClientSize = new Size(396, 107 + ((promptText.Count()-1) * _textBoxStartpoint.Y));
             form.Controls.AddRange(new Control[] {buttonOk, buttonCancel});
             form.ClientSize = new Size(Math.Max(300, right + 10), form.ClientSize.Height);
@@ -187,6 +185,7 @@ namespace MediaApp.Forms.Popups
             buttonCancel.SetBounds(form.ClientSize.Width - 160, form.ClientSize.Height - 33, 75, 23);
 
             var dialogResult = form.ShowDialog();
+            results = new List<string>();
             results.AddRange(textBoxes.Select(textBox => textBox.Text));
             return dialogResult;
         }

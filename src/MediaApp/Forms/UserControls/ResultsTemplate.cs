@@ -42,9 +42,9 @@ namespace MediaApp.Forms.UserControls
         private void populate()
         {
             txtb_Title.Text = Film.Title;
-            //txtb_director.Text = Film.Director.First().Name;
+
             txtb_RunTime.Text = Film.RunTime.ToString();
-            txtb_IMDBURL.Text = "Http://www.imdb.com/title/tt" + Film.IMDBId;
+            txtb_IMDBURL.Text = "http://www.imdb.com/title/tt" + Film.IMDBId;
             txtb_Synopsis.Text = Film.Synopsis;
             txtb_Keywords.Text = Film.Keywords;
             txtb_Year.Text = Film.ReleaseYear;
@@ -53,6 +53,7 @@ namespace MediaApp.Forms.UserControls
             dataGridView1.DataSource = data.ToArray();
             
             lstb_genres.DataSource = Film.Genre.Select(x => new ListBoxItem(x.Id, x.Type)).ToList();
+            lstb_Directors.DataSource = Film.Director.Select(x => new ListBoxItem(x.Id, x.Name)).ToList();
         }
 
         private void btn_rescan_Click(object sender, System.EventArgs e)
@@ -125,6 +126,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
 
         private void btn_add_Click(object sender, System.EventArgs e)
         {
+            //add genre
             string value = null;  
             if(InputBox.Show("New Genre","Please enter the new genre","example: 'comedy'",ref value) == DialogResult.OK)
             {
@@ -138,6 +140,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
 
         private void btn_delete_Click(object sender, System.EventArgs e)
         {
+            //delete genre
             if (lstb_genres.SelectedIndices.Count > 0)
             {
                 Film.Genre.RemoveAt(lstb_genres.SelectedIndex);
@@ -231,6 +234,31 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
             {
                 Film.Director.First().IMDBID = value[0];
                 Film.Director.First().Name = value[1];
+                populate();
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //delete director
+            if(lstb_Directors.SelectedIndices.Count > 0)
+            {
+                Film.Director.RemoveAt(lstb_Directors.SelectedIndex);
+                populate();
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //add director
+            List<String> value = null;
+            if(InputBox.Show("New Director",new [] {"IMDB ID", "Director Name"},new []{"Example \"0012487\"","Example \"Joe Bloggs\""},ref value,true) == DialogResult.OK)
+            {
+                Film.Director.Add(new Person
+                                      {
+                                          IMDBID = value[0],
+                                          Name = value[1]
+                                      });
                 populate();
             }
         }

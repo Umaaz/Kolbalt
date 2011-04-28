@@ -3,6 +3,7 @@
 Thumbs.db
 *.obj
 *.user
+*.bat
 *.suo
 obj/
 _ReSharper*/

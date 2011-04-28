@@ -31,6 +31,19 @@ namespace MediaApp.Domain.Commands
                 _people[person.IMDBID] = person;
         }
 
+        private readonly Dictionary<string, FilmType> _types = new Dictionary<string, FilmType>();
+        FilmType GetTypeFromCache(string ftype)
+        {
+            FilmType type;
+            _types.TryGetValue(ftype, out type);
+            return type;
+        }
+        void AddTypeToCache(FilmType type)
+        {
+            if (!_types.ContainsKey(type.Type))
+                _types[type.Type] = type;
+        }
+
         public bool Execute()
         {
             var mayCommit = true;
@@ -51,19 +64,25 @@ namespace MediaApp.Domain.Commands
                         realNewFilm.RunTime = film.RunTime;
                         realNewFilm.Synopsis = film.Synopsis;
                         realNewFilm.Title = film.Title;
-                        //realNewFilm.Director = GetPersonFromCache(film.Director.IMDBID)
-                        //                       ??
-                        //                       nhSession.Query<Person>().Where(x => x.IMDBID == film.Director.IMDBID).
-                        //                           SingleOrDefault()
-                        //                       ?? film.Director;
-                        //AddPersonToCache(realNewFilm.Director);
-                        foreach (var filmType in film.Genre)
+
+                        foreach (var person in film.Director)
                         {
-                            var type =
-                                nhSession.Query<FilmType>().Where(x => x.Type == filmType.Type).
-                                    SingleOrDefault();
-                            realNewFilm.Genre.Add(type ?? filmType);
+                            var director = GetPersonFromCache(person.IMDBID) ??
+                                           nhSession.Query<Person>().Where(x => x.IMDBID == person.IMDBID).
+                                               SingleOrDefault() ?? person;
+                            AddPersonToCache(director);
+                            realNewFilm.Director.Add(director);
                         }
+
+                        foreach (var genre in film.Genre)
+                        {
+                            var type = GetTypeFromCache(genre.Type) ??
+                                           nhSession.Query<FilmType>().Where(x => x.Type == genre.Type).
+                                               SingleOrDefault() ?? genre;
+                            AddTypeToCache(type);
+                            realNewFilm.Genre.Add(type);
+                        }
+
                         foreach (var role in film.Cast)
                         {
                             var actor = GetPersonFromCache(role.Person.IMDBID)

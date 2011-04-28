@@ -101,11 +101,26 @@ namespace MediaApp.Data.IMDB
             }
             
             //Director
-            var director = divs.First().SelectSingleNode(".//a").InnerText.Trim();
-            var dirnum = divs.First().InnerHtml;
-            var dirNum = dirnum.Remove(0, dirnum.IndexOf("nm") + 2);
-            dirNum = dirNum.Remove(7);
-            var directors = new Person {IMDBID = dirNum,Name = director};
+            IList<Person> director = new List<Person>();
+            var directors = divs.Where(x => x.InnerText.Contains("Directors:")).FirstOrDefault() ?? divs.Where(x => x.InnerText.Contains("Director:")).FirstOrDefault();
+            var dnames = directors.SelectNodes(".//a");
+            foreach (var dname in dnames)
+            {
+                var matches = Regex.Matches(dname.OuterHtml, @"/nm\d\d\d\d\d\d\d/");
+                var match1 = matches[0].Value;
+                if(matches.Count > 0)
+                    director.Add(new Person
+                                     {
+                                         IMDBID = matches[0].Value.Replace("/","").Replace("nm", ""),
+                                         Name = dname.InnerText
+                                     });
+            }
+
+            //var director = divs.First().SelectSingleNode(".//a").InnerText.Trim();
+            //var dirnum = divs.First().InnerHtml;
+            //var dirNum = dirnum.Remove(0, dirnum.IndexOf("nm") + 2);
+            //dirNum = dirNum.Remove(7);
+            //var directors = new Person {IMDBID = dirNum,Name = director};
             
             //Release date
             var dateString = divs
@@ -182,7 +197,7 @@ namespace MediaApp.Data.IMDB
                            IMDBId = IMDBFilmId,
                            ReleaseYear = d,
                            Genre = genres,
-                          // Director = directors,
+                           Director = director,
                            Cast = cast,
                            PicURL = picURL
                        };
