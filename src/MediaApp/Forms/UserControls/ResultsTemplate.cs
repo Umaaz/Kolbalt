@@ -54,6 +54,7 @@ namespace MediaApp.Forms.UserControls
             
             lstb_genres.DataSource = Film.Genre.Select(x => new ListBoxItem(x.Id, x.Type)).ToList();
             lstb_Directors.DataSource = Film.Director.Select(x => new ListBoxItem(x.Id, x.Name)).ToList();
+            lstb_Writers.DataSource = Film.Writers.Select(x => new ListBoxItem(x.Id, x.Name)).ToList();
         }
 
         private void btn_rescan_Click(object sender, System.EventArgs e)
@@ -66,42 +67,52 @@ namespace MediaApp.Forms.UserControls
 
             if (Regex.IsMatch(url, @"^http://www.IMDB.com/title/tt\d\d\d\d\d\d\d$", RegexOptions.IgnoreCase) || Regex.IsMatch(url, @"^http://www.IMDB.com/title/tt\d\d\d\d\d\d\d/$", RegexOptions.IgnoreCase))
             {
-                var bg = new BackgroundWorker();
-                bg.WorkerReportsProgress = true;
-                panel1.Enabled = false;
-                panel2.Visible = true;
-                bg.DoWork += (s, ee) =>
-                                 {
-                                     var worker = s as BackgroundWorker;
-                                     worker.ReportProgress(100, IMDBFilm.GetFilmByUrl(url));
-                                 };
-                bg.ProgressChanged += (s, ee) =>
-                                          {
-                                              if((Film)ee.UserState != null)
-                                                  Film = (Film)ee.UserState;
-                                              else
-                                                  if(MessageBox.Show("No film found!\n Check URL!", "Error", MessageBoxButtons.RetryCancel,MessageBoxIcon.Error,MessageBoxDefaultButton.Button2) == DialogResult.Retry)
-                                                  {
-                                                      Scan(url);
-                                                  }
-                                          };
-                bg.RunWorkerCompleted += (s, ee) =>
-                                             {
-                                                 populate();
-                                                 panel1.Enabled = true;
-                                                 panel2.Visible = false;
-                                             };
-                    
-                bg.RunWorkerAsync();
+                ExecuteScan(url);
+            }
+            else if(Regex.IsMatch(url,@"\d\d\d\d\d\d\d"))
+            {
+                ExecuteScan("http://www.IMDB.com/title/tt" +url);
             }
             else
             {
                 MessageBox.Show(
                     @"Mismatch in IMDB URL!
-Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
+Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just a 7 digit number!",
                     "Error - Input mismatch!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void ExecuteScan(string url)
+        {
+            var bg = new BackgroundWorker();
+            bg.WorkerReportsProgress = true;
+            panel1.Enabled = false;
+            panel2.Visible = true;
+            bg.DoWork += (s, ee) =>
+            {
+                var worker = s as BackgroundWorker;
+                worker.ReportProgress(100, IMDBFilm.GetFilmByUrl(url));
+            };
+            bg.ProgressChanged += (s, ee) =>
+            {
+                if ((Film)ee.UserState != null)
+                    Film = (Film)ee.UserState;
+                else
+                    if (MessageBox.Show("No film found!\n Check URL!", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
+                    {
+                        Scan(url);
+                    }
+            };
+            bg.RunWorkerCompleted += (s, ee) =>
+            {
+                populate();
+                panel1.Enabled = true;
+                panel2.Visible = false;
+            };
+
+            bg.RunWorkerAsync();
+        }
+
         
         private void txtb_Title_TextChanged(object sender, System.EventArgs e)
         {
@@ -225,19 +236,6 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var value = new List<string>();
-            var director = new[] { Film.Director.First().IMDBID.ToString(), Film.Director.First().Name };
-            var prompts = new[] { "Director IMDB ID", "Director Name" };
-            if (InputBox.Show("Director details", prompts, director, ref value) == DialogResult.OK)
-            {
-                Film.Director.First().IMDBID = value[0];
-                Film.Director.First().Name = value[1];
-                populate();
-            }
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             //delete director
@@ -259,6 +257,31 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 6 digit number!",
                                           IMDBID = value[0],
                                           Name = value[1]
                                       });
+                populate();
+            }
+        }
+
+        private void btn_addWriter_Click(object sender, EventArgs e)
+        {
+            //add Writer
+            List<String> value = null;
+            if(InputBox.Show("New Writer", new string[] {"IMDB ID","Writer Name"}, new string[]{"Example \"0012487\"","Example \"Joe Bloggs\""},ref value, true) == DialogResult.OK)
+            {
+                Film.Writers.Add(new Person
+                                     {
+                                         IMDBID = value[0],
+                                         Name = value[1]
+                                     });
+                populate();
+            }
+        }
+
+        private void btn_deleteWriter_Click(object sender, EventArgs e)
+        {
+            //delete Writer
+            if(lstb_Writers.SelectedIndices.Count > 0)
+            {
+                Film.Writers.RemoveAt(lstb_Writers.SelectedIndex);
                 populate();
             }
         }

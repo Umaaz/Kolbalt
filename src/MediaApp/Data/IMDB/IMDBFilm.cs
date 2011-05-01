@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
-using MediaApp.Domain;
 using MediaApp.Domain.Model;
 
 namespace MediaApp.Data.IMDB
@@ -52,7 +51,6 @@ namespace MediaApp.Data.IMDB
         public static Film GetFilmByUrl(string url)
         {
             var cast = new List<Role>();
-            //todo what if there is no property listed..
             var hw = new HtmlWeb();
             var doc = hw.Load(url);
             if (hw.StatusCode != HttpStatusCode.OK)
@@ -99,7 +97,7 @@ namespace MediaApp.Data.IMDB
                                                       Type = HtmlEscapeCharConverter.Decode(g.InnerText.Trim())
                                                   }).ToList();
             }
-            
+ 
             //Director
             IList<Person> director = new List<Person>();
             var directors = divs.Where(x => x.InnerText.Contains("Directors:")).FirstOrDefault() ?? divs.Where(x => x.InnerText.Contains("Director:")).FirstOrDefault();
@@ -107,7 +105,6 @@ namespace MediaApp.Data.IMDB
             foreach (var dname in dnames)
             {
                 var matches = Regex.Matches(dname.OuterHtml, @"/nm\d\d\d\d\d\d\d/");
-                var match1 = matches[0].Value;
                 if(matches.Count > 0)
                     director.Add(new Person
                                      {
@@ -116,12 +113,35 @@ namespace MediaApp.Data.IMDB
                                      });
             }
 
-            //var director = divs.First().SelectSingleNode(".//a").InnerText.Trim();
-            //var dirnum = divs.First().InnerHtml;
-            //var dirNum = dirnum.Remove(0, dirnum.IndexOf("nm") + 2);
-            //dirNum = dirNum.Remove(7);
-            //var directors = new Person {IMDBID = dirNum,Name = director};
+            //Writers
+            IList<Person> writer = new List<Person>();
+            var writers = divs.Where(x => x.InnerText.Contains("Writers:")).FirstOrDefault() ??
+                          divs.Where(x => x.InnerText.Contains("Writer:")).FirstOrDefault();
+            var wnames = writers.SelectNodes(".//a");
+            foreach (var wname in wnames)
+            {
+                var matches = Regex.Matches(wname.OuterHtml, @"/nm\d\d\d\d\d\d\d/");
+                if(matches.Count > 0)
+                    writer.Add(new Person
+                                   {
+                                       IMDBID = matches[0].Value.Replace("/", "").Replace("nm", ""),
+                                       Name = wname.InnerText
+                                   });
+            }
             
+            //plot keywords
+            var keywords = "";
+            var kw = doc.DocumentNode.SelectNodes(".//div[@class='see-more inline canwrap']");
+            var keyword = kw.Where(x => x.InnerText.Contains("Plot Keywords:")).FirstOrDefault();
+            if (keyword != null)
+            {
+                var words = keyword.SelectNodes(".//a");
+                foreach (var word in words)
+                {
+                    keywords += word.InnerText + " ";
+                }
+            }
+
             //Release date
             var dateString = divs
                 .Where(x => x.SelectNodes(".//h4") != null)
@@ -156,7 +176,7 @@ namespace MediaApp.Data.IMDB
                     FirstOrDefault();
             HtmlNode storyNode = null;
             String story = null;
-            if (u.InnerText.Contains("<p>"))
+            if(u.InnerHtml.Contains("<p>"))
                 storyNode = u.SelectNodes(".//p").FirstOrDefault();
             if (storyNode != null)
             {
@@ -189,6 +209,15 @@ namespace MediaApp.Data.IMDB
                              });
             }
             
+            //trailer link
+            var tlink = doc.DocumentNode.SelectNodes(".//td[@id='overview-bottom']").FirstOrDefault();
+            String link = null;
+            if (tlink != null && tlink.InnerText.Contains("Watch Trailer"))
+            {
+                link = tlink.InnerHtml.Remove(0, 9);
+                link = link.Remove(link.IndexOf("\""));
+            }
+
             return new Film
                        {
                            Title = title,
@@ -199,7 +228,10 @@ namespace MediaApp.Data.IMDB
                            Genre = genres,
                            Director = director,
                            Cast = cast,
-                           PicURL = picURL
+                           PicURL = picURL,
+                           Writers = writer,
+                           Keywords = keywords,
+                           TrailerLink = link
                        };
         }
     }

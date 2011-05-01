@@ -23,11 +23,15 @@ namespace MediaApp.Forms.UserControls
             var worker = sender as BackgroundWorker;
             var hw = new HtmlWeb();
             var doc = hw.Load(_url + "/trivia");
-            if (!doc.ToString().Contains("class=\"sodatext\""))
-                return;
-            var trivi = doc.DocumentNode.SelectNodes(".//div[@class='sodatext']").ToList();
-            var trivis = HtmlEscapeCharConverter.Decode(trivi[randomNum(0, trivi.Count - 1)].InnerText).Trim().Replace("Link this trivia", "");
-            if (worker != null) worker.ReportProgress(100,trivis);
+            if (doc.DocumentNode.InnerHtml.Contains("class=\"sodatext\""))
+            {
+
+                var trivi = doc.DocumentNode.SelectNodes(".//div[@class='sodatext']").ToList();
+                var trivis =
+                    HtmlEscapeCharConverter.Decode(trivi[randomNum(0, trivi.Count - 1)].InnerText).Trim().Replace(
+                        "Link this trivia", "");
+                worker.ReportProgress(100, trivis);
+            }
         }
 
         private void LoadGoof(object sender, DoWorkEventArgs e)
@@ -36,20 +40,25 @@ namespace MediaApp.Forms.UserControls
             var cc = new HtmlEscapeCharConverter();
             var hw = new HtmlWeb();
             var doc = hw.Load(_url + "/goofs");
-            if (!doc.ToString().Contains("class\"trivia\""))
-                return;
-            var goofs = doc.DocumentNode.SelectNodes(".//ul [@class='trivia']").ToList();
-            IList<String> goo = new List<String>();
-            foreach (var htmlNode in goofs)
+            var f = doc.DocumentNode.InnerHtml.Contains("class=\"trivia\"");
+            if (f)
             {
-                var g = htmlNode.SelectNodes(".//li").ToList();
-                foreach (var node in g)
+                var goofs = doc.DocumentNode.SelectNodes(".//ul [@class='trivia']");
+                if (goofs != null)
                 {
-                    goo.Add(node.InnerText);
+                    IList<String> goo = new List<String>();
+                    foreach (var htmlNode in goofs)
+                    {
+                        var g = htmlNode.SelectNodes(".//li").ToList();
+                        foreach (var node in g)
+                        {
+                            goo.Add(node.InnerText);
+                        }
+                    }
+                    var goof = HtmlEscapeCharConverter.Decode(goo[randomNum(0, goo.Count - 1)].Trim());
+                    worker.ReportProgress(100, goof);
                 }
             }
-            var goof = HtmlEscapeCharConverter.Decode(goo[randomNum(0, goo.Count - 1)].Trim());
-            if (worker != null) worker.ReportProgress(100,goof);
         }
 
         private int randomNum(int min, int max)
@@ -164,13 +173,26 @@ namespace MediaApp.Forms.UserControls
             var worker = sender as BackgroundWorker;
             var hw = new HtmlWeb();
             var doc = hw.Load(_url).DocumentNode.WriteContentTo();
-            var picURL = doc.Remove(0, doc.IndexOf("<img src=\"http://ia.media-IMDB.com") + 10);
-            picURL = picURL.Remove(picURL.IndexOf("\""));
-            var pic = new Data.DownloadImage(picURL);
-            pic.Download();
-            pb_Filmposter.Image = pic.GetImage();
-            pb_Filmposter.SizeMode = PictureBoxSizeMode.StretchImage;
-            if (worker != null) worker.ReportProgress(100);
+            var p = doc.IndexOf("<img src=\"http://ia.media-IMDB.com");
+            var pp = doc.IndexOf("<img src=\"http://ia.media-imdb.com");
+            string picURL = null;
+            if(p != -1)
+            {
+                picURL = doc.Remove(0, p + 10);
+            }
+            else if(pp != -1)
+            {
+                picURL = doc.Remove(0, pp + 10);
+            }
+            if (picURL != null)
+            {
+                picURL = picURL.Remove(picURL.IndexOf("\""));
+                var pic = new Data.DownloadImage(picURL);
+                pic.Download();
+                pb_Filmposter.Image = pic.GetImage();
+                pb_Filmposter.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+            worker.ReportProgress(100);
         }
         
         private void UCFilmBase_Load(object sender, EventArgs e)
@@ -183,17 +205,21 @@ namespace MediaApp.Forms.UserControls
                     case 10:
                         llbl_title.Text = args.UserState.ToString();
                         llbl_title.Click += (s, ee) => System.Diagnostics.Process.Start(_url);
+                        llbl_title.Visible = true;
                         break;
                     case 20:
                         llbl_year.Text = args.UserState.ToString();
                         llbl_year.Click += (s, ee) => System.Diagnostics.Process.Start("HTTP://www.IMDB.com/year/" + args.UserState.ToString());
+                        llbl_year.Visible = true;
                         break;
                     case 30:
                         lbl_Frating.Text = args.UserState.ToString();
+                        lbl_Frating.Visible = true;
                         break;
                     case 40:
                         llbl_director.Text = args.UserState.ToString();
                         llbl_director.BringToFront();
+                        llbl_director.Visible = true;
                         break;
                     case 50:
                         llbl_director.Click += (s, ee) => System.Diagnostics.Process.Start("HTTP://www.IMDB.com/name/nm" + args.UserState.ToString());

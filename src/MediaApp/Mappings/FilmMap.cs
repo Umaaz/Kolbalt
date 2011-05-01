@@ -15,16 +15,13 @@ namespace MediaApp.Mappings
             Map(x => x.ReleaseYear).Length(4);
             Map(x => x.FilmPath);
             Map(x => x.Synopsis).Length(4000);
-            Map(x => x.Keywords);
             Map(x => x.OnExternalMedia);
-            Map(x => x.SoundTrack);
             Map(x => x.TrailerLink).Length(263);
+            Map(x => x.Keywords);
 
-            //References(x => x.Writers).Cascade.All();
             HasMany(x => x.Writers).AsBag().Cascade.All();
             HasMany(x => x.Director).AsBag().Cascade.All();
-            //References(x => x.Director).Cascade.All(); 
-
+            
             HasManyToMany(x => x.Genre)
                 .AsBag()
                 .Cascade.All();

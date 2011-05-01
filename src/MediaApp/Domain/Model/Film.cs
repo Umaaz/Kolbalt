@@ -32,6 +32,5 @@ namespace MediaApp.Domain.Model
         public virtual String Keywords { get; set; }
         public virtual String TrailerLink { get; set; }
         public virtual IList<Person> Writers { get; set; }
-        public virtual String SoundTrack { get; set; }
     }
 }

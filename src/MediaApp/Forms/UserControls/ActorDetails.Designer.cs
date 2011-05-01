@@ -70,6 +70,8 @@
             // lbl_picloading
             // 
             this.lbl_picloading.AutoSize = true;
+            this.lbl_picloading.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
+            this.lbl_picloading.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_picloading.Location = new System.Drawing.Point(12, 37);
             this.lbl_picloading.Name = "lbl_picloading";
             this.lbl_picloading.Size = new System.Drawing.Size(51, 13);
@@ -78,6 +80,7 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
@@ -88,6 +91,7 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.llbl_page);
             this.panel1.Controls.Add(this.lbl_Born);
@@ -104,6 +108,7 @@
             // 
             this.llbl_page.AutoSize = true;
             this.llbl_page.Dock = System.Windows.Forms.DockStyle.Right;
+            this.llbl_page.LinkColor = System.Drawing.Color.DodgerBlue;
             this.llbl_page.Location = new System.Drawing.Point(497, 0);
             this.llbl_page.Name = "llbl_page";
             this.llbl_page.Size = new System.Drawing.Size(31, 13);
@@ -116,6 +121,7 @@
             // 
             this.lbl_Born.AutoSize = true;
             this.lbl_Born.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lbl_Born.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_Born.Location = new System.Drawing.Point(35, 0);
             this.lbl_Born.Name = "lbl_Born";
             this.lbl_Born.Size = new System.Drawing.Size(35, 13);
@@ -126,6 +132,7 @@
             // lbl_loading
             // 
             this.lbl_loading.AutoSize = true;
+            this.lbl_loading.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_loading.Location = new System.Drawing.Point(227, 29);
             this.lbl_loading.Name = "lbl_loading";
             this.lbl_loading.Size = new System.Drawing.Size(51, 13);
@@ -136,6 +143,7 @@
             // 
             this.lbl_Name.AutoSize = true;
             this.lbl_Name.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lbl_Name.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_Name.Location = new System.Drawing.Point(0, 0);
             this.lbl_Name.Name = "lbl_Name";
             this.lbl_Name.Size = new System.Drawing.Size(35, 13);
@@ -145,7 +153,9 @@
             // 
             // txt_bio
             // 
+            this.txt_bio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
             this.txt_bio.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.txt_bio.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.txt_bio.Location = new System.Drawing.Point(0, 16);
             this.txt_bio.Multiline = true;
             this.txt_bio.Name = "txt_bio";

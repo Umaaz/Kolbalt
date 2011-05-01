@@ -63,6 +63,8 @@
             // 
             this.llbl_moreType.AutoSize = true;
             this.llbl_moreType.Dock = System.Windows.Forms.DockStyle.Right;
+            this.llbl_moreType.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            this.llbl_moreType.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.llbl_moreType.Location = new System.Drawing.Point(259, 0);
             this.llbl_moreType.Name = "llbl_moreType";
             this.llbl_moreType.Size = new System.Drawing.Size(62, 13);
@@ -73,6 +75,7 @@
             // txt_comment
             // 
             this.txt_comment.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
+            this.txt_comment.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txt_comment.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.txt_comment.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.txt_comment.Location = new System.Drawing.Point(0, 22);

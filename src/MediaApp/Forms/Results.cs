@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using MediaApp.Domain;
 using MediaApp.Domain.Model;
 using MediaApp.Forms.UserControls;
 using MediaApp.Data.IMDB;

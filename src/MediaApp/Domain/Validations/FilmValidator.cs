@@ -50,9 +50,9 @@ namespace MediaApp.Domain.Validations
 
         private bool Roles(IList<Role> roles)
         {
-            bool result = true;
+            var result = true;
             var val = new RoleValidator();
-            for (int index = 0; index < roles.Count; index++)
+            for (var index = 0; index < roles.Count; index++)
             {
                 var role = roles[index];
                 var results = val.Validate(role);

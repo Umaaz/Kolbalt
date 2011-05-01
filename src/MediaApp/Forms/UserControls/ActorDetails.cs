@@ -56,13 +56,26 @@ namespace MediaApp.Forms.UserControls
             var worker = sender as BackgroundWorker;
             var hw = new HtmlWeb();
             var doc = hw.Load(_url).DocumentNode.WriteContentTo();
-            var picURL = doc.Remove(0, doc.IndexOf("<img src=\"http://ia.media-IMDB.com") + 10);
-            picURL = picURL.Remove(picURL.IndexOf("\""));
-            var pic = new Data.DownloadImage(picURL);
-            pic.Download();
-            pictureBox1.Image = pic.GetImage();
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            if (worker != null) worker.ReportProgress(100);
+            var p = doc.IndexOf("<img src=\"http://ia.media-IMDB.com");
+            var pp = doc.IndexOf("<img src=\"http://ia.media-imdb.com");
+            string picURL = null;
+            if(p != -1)
+            {
+                picURL = doc.Remove(0, p + 10);
+            }
+            else if(pp != -1)
+            {
+                picURL = doc.Remove(0, pp + 10);
+            }
+            if (picURL != null)
+            {
+                picURL = picURL.Remove(picURL.IndexOf("\""));
+                var pic = new Data.DownloadImage(picURL);
+                pic.Download();
+                pictureBox1.Image = pic.GetImage();
+                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
+            worker.ReportProgress(100);
         }
 
         private void LoadBio(object sender, DoWorkEventArgs e)

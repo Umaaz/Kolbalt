@@ -89,6 +89,8 @@
             // lbl_picloading
             // 
             this.lbl_picloading.AutoSize = true;
+            this.lbl_picloading.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
+            this.lbl_picloading.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_picloading.Location = new System.Drawing.Point(15, 39);
             this.lbl_picloading.Name = "lbl_picloading";
             this.lbl_picloading.Size = new System.Drawing.Size(54, 13);
@@ -97,6 +99,7 @@
             // 
             // pb_Filmposter
             // 
+            this.pb_Filmposter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
             this.pb_Filmposter.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pb_Filmposter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pb_Filmposter.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -119,6 +122,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
             this.splitContainer2.Panel2.Controls.Add(this.lbl_loading);
             this.splitContainer2.Size = new System.Drawing.Size(530, 87);
             this.splitContainer2.SplitterDistance = 232;
@@ -126,6 +130,7 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.panel4);
             this.panel1.Controls.Add(this.panel3);
@@ -138,7 +143,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(232, 87);
             this.panel1.TabIndex = 15;
-            this.panel1.Visible = false;
             // 
             // panel4
             // 
@@ -156,6 +160,7 @@
             // lbl_Directors
             // 
             this.lbl_Directors.AutoSize = true;
+            this.lbl_Directors.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_Directors.Location = new System.Drawing.Point(17, 10);
             this.lbl_Directors.Name = "lbl_Directors";
             this.lbl_Directors.Size = new System.Drawing.Size(50, 13);
@@ -165,6 +170,7 @@
             // lbl_stars
             // 
             this.lbl_stars.AutoSize = true;
+            this.lbl_stars.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_stars.Location = new System.Drawing.Point(30, 23);
             this.lbl_stars.Name = "lbl_stars";
             this.lbl_stars.Size = new System.Drawing.Size(37, 13);
@@ -174,6 +180,7 @@
             // lbl_rating
             // 
             this.lbl_rating.AutoSize = true;
+            this.lbl_rating.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_rating.Location = new System.Drawing.Point(-2, 49);
             this.lbl_rating.Name = "lbl_rating";
             this.lbl_rating.Size = new System.Drawing.Size(69, 13);
@@ -183,6 +190,7 @@
             // lbl_Year
             // 
             this.lbl_Year.AutoSize = true;
+            this.lbl_Year.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_Year.Location = new System.Drawing.Point(32, 36);
             this.lbl_Year.Name = "lbl_Year";
             this.lbl_Year.Size = new System.Drawing.Size(35, 13);
@@ -191,7 +199,7 @@
             // 
             // panel3
             // 
-            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.lbl_Title);
             this.panel3.Controls.Add(this.llbl_title);
@@ -205,6 +213,7 @@
             // 
             this.lbl_Title.AutoSize = true;
             this.lbl_Title.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lbl_Title.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_Title.Location = new System.Drawing.Point(0, 0);
             this.lbl_Title.Name = "lbl_Title";
             this.lbl_Title.Size = new System.Drawing.Size(33, 13);
@@ -214,33 +223,42 @@
             // llbl_title
             // 
             this.llbl_title.AutoSize = true;
+            this.llbl_title.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            this.llbl_title.LinkColor = System.Drawing.Color.DodgerBlue;
             this.llbl_title.Location = new System.Drawing.Point(39, 1);
             this.llbl_title.Name = "llbl_title";
             this.llbl_title.Size = new System.Drawing.Size(105, 13);
             this.llbl_title.TabIndex = 5;
             this.llbl_title.TabStop = true;
             this.llbl_title.Text = "Title of file goes here";
+            this.llbl_title.Visible = false;
             // 
             // llbl_year
             // 
             this.llbl_year.AutoSize = true;
+            this.llbl_year.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            this.llbl_year.LinkColor = System.Drawing.Color.DodgerBlue;
             this.llbl_year.Location = new System.Drawing.Point(74, 53);
             this.llbl_year.Name = "llbl_year";
             this.llbl_year.Size = new System.Drawing.Size(29, 13);
             this.llbl_year.TabIndex = 15;
             this.llbl_year.TabStop = true;
             this.llbl_year.Text = "Year";
+            this.llbl_year.Visible = false;
             this.llbl_year.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llbl_year_LinkClicked);
             // 
             // llbl_director
             // 
             this.llbl_director.AutoSize = true;
+            this.llbl_director.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            this.llbl_director.LinkColor = System.Drawing.Color.DodgerBlue;
             this.llbl_director.Location = new System.Drawing.Point(74, 27);
             this.llbl_director.Name = "llbl_director";
             this.llbl_director.Size = new System.Drawing.Size(145, 13);
             this.llbl_director.TabIndex = 6;
             this.llbl_director.TabStop = true;
             this.llbl_director.Text = "First Director name goes here";
+            this.llbl_director.Visible = false;
             // 
             // panel2
             // 
@@ -255,36 +273,45 @@
             // 
             this.llbl_Star1.AutoSize = true;
             this.llbl_Star1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.llbl_Star1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            this.llbl_Star1.LinkColor = System.Drawing.Color.DodgerBlue;
             this.llbl_Star1.Location = new System.Drawing.Point(30, 0);
             this.llbl_Star1.Name = "llbl_Star1";
             this.llbl_Star1.Size = new System.Drawing.Size(30, 13);
             this.llbl_Star1.TabIndex = 7;
             this.llbl_Star1.TabStop = true;
             this.llbl_Star1.Text = "star1";
+            this.llbl_Star1.Visible = false;
             // 
             // llbl_star2
             // 
             this.llbl_star2.AutoSize = true;
             this.llbl_star2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.llbl_star2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            this.llbl_star2.LinkColor = System.Drawing.Color.DodgerBlue;
             this.llbl_star2.Location = new System.Drawing.Point(0, 0);
             this.llbl_star2.Name = "llbl_star2";
             this.llbl_star2.Size = new System.Drawing.Size(30, 13);
             this.llbl_star2.TabIndex = 10;
             this.llbl_star2.TabStop = true;
             this.llbl_star2.Text = "star2";
+            this.llbl_star2.Visible = false;
             // 
             // lbl_Frating
             // 
             this.lbl_Frating.AutoSize = true;
+            this.lbl_Frating.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_Frating.Location = new System.Drawing.Point(74, 66);
             this.lbl_Frating.Name = "lbl_Frating";
             this.lbl_Frating.Size = new System.Drawing.Size(33, 13);
             this.lbl_Frating.TabIndex = 13;
             this.lbl_Frating.Text = "rating";
+            this.lbl_Frating.Visible = false;
             // 
             // lbl_loading
             // 
             this.lbl_loading.AutoSize = true;
+            this.lbl_loading.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
             this.lbl_loading.Location = new System.Drawing.Point(3, 41);
             this.lbl_loading.Name = "lbl_loading";
             this.lbl_loading.Size = new System.Drawing.Size(54, 13);

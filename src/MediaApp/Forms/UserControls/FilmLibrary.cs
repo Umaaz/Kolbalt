@@ -112,11 +112,23 @@ namespace MediaApp.Forms.UserControls
             {
                 DGV_Films.Columns["Id"].Visible = false;
             }
+            var sumMins = GetFilms().Sum(x => x.RunTime);
+            var stime = TimeSpan.FromMinutes(sumMins);
+            if(sumMins > 60)
+            {
+                //display hours
+                lbl_LibraryDetails.Text = string.Format("{0} Hours {1} Mins",stime.Hours,stime.Minutes);
+            }
+            else if(sumMins > 1440)
+            {
+                //display days
+                lbl_LibraryDetails.Text = string.Format("{0} Days {1} Hours {2} Mins", stime.Days, stime.Hours, stime.Minutes);
+            }
         }
         //initiates extra Film details search
         private void DGV_Films_Click(object sender, EventArgs e)
         {
-            if (!SC_LibraryDetails.Panel2Collapsed && DGV_Films.SelectedRows.Count > 0)
+            if (!Properties.Settings.Default.selectedFilmDetailsShow && DGV_Films.SelectedRows.Count > 0)
             {
                 var id = DGV_Films.SelectedRows[0].Cells[0].Value.ToString();
                 SelectedFilmDetailsPanel.Controls.Clear();
@@ -165,9 +177,24 @@ namespace MediaApp.Forms.UserControls
             Properties.Settings.Default.Save();
             SC_LibraryDetails.Panel2Collapsed = Properties.Settings.Default.selectedFilmDetailsShow;
         }
+
         //builds film list based on search string and selected actor
         private void ActorList_Click(object sender, EventArgs e)
         {
+            var actor = (ListBoxItem)ActorList.SelectedItem;
+            if(!Properties.Settings.Default.selectedFilmDetailsShow && actor.Text != "All")
+            {
+                var a = _nhSession.Get<Person>(new Guid(actor.Id.ToString()));
+                var ad = new ActorDetails(a.IMDBID);
+                SelectedFilmDetailsPanel.Controls.Clear();
+                SelectedFilmDetailsPanel.Controls.Add(ad);
+                ad.Visible = true;
+                ad.Dock = DockStyle.Fill;
+            }
+            else if(Properties.Settings.Default.selectedFilmDetailsShow && ActorList.SelectedItem == "All")
+            {
+                
+            }
             var item = (ListBoxItem)ActorList.SelectedItem;
             if (item.Id == Guid.Empty)
             {
@@ -215,6 +242,18 @@ namespace MediaApp.Forms.UserControls
                 {
                     DGV_Films.Columns["Id"].Visible = false;
                 }
+                var sumMins = GetFilms().Where(x => x.Cast.Any(r => r.Person.Id == ID)).Sum(x => x.RunTime);
+                var stime = TimeSpan.FromMinutes(sumMins);
+                if (sumMins > 60)
+                {
+                    //display hours
+                    lbl_LibraryDetails.Text = string.Format("{0} Hours {1} Mins", stime.Hours, stime.Minutes);
+                }
+                else if (sumMins > 1440)
+                {
+                    //display days
+                    lbl_LibraryDetails.Text = string.Format("{0} Days {1} Hours {2} Mins", stime.Days, stime.Hours, stime.Minutes);
+                }
             }
         }
         //builds film list based on search string and selected actor and/or genre
@@ -259,6 +298,18 @@ namespace MediaApp.Forms.UserControls
                 films.Select(x => new { x.Id, x.Title, x.RunTime, ReleaseDate = x.ReleaseYear }).ToList();
             if (DGV_Films != null)
                 DGV_Films.Columns["Id"].Visible = false;
+            var sumMins = GetFilms().Where(x => x.Cast.Any(r => r.Person.Id == aItem.Id)).Where(x => x.Genre.Any(t => t.Id == genreID)).Sum(x => x.RunTime);
+            var stime = TimeSpan.FromMinutes(sumMins);
+            if (sumMins > 60)
+            {
+                //display hours
+                lbl_LibraryDetails.Text = string.Format("{0} Hours {1} Mins", stime.Hours, stime.Minutes);
+            }
+            else if (sumMins > 1440)
+            {
+                //display days
+                lbl_LibraryDetails.Text = string.Format("{0} Days {1} Hours {2} Mins", stime.Days, stime.Hours, stime.Minutes);
+            }
         }
         //builds film list based on search string and selected actor and/or genre and/or director
         private void DirectorList_Click(object sender, EventArgs e)
@@ -269,36 +320,46 @@ namespace MediaApp.Forms.UserControls
                 GenreList_Click(sender, e);
                 return;
             }
-            else
+            var directorID = item.Id;
+            var aItem = (ListBoxItem)ActorList.SelectedItem;
+            var gItem = (ListBoxItem)GenreList.SelectedItem;
+            var films = GetFilms();
+            if (aItem.Id == Guid.Empty && gItem.Id == Guid.Empty)
             {
-                var directorID = item.Id;
-                var aItem = (ListBoxItem)ActorList.SelectedItem;
-                var gItem = (ListBoxItem)GenreList.SelectedItem;
-                var films = GetFilms();
-                if (aItem.Id == Guid.Empty && gItem.Id == Guid.Empty)
-                {
-                    films = films.Where(f => f.Director.Any(d => d.Id == directorID));
-                }
-                else if (aItem.Id == Guid.Empty && gItem.Id != Guid.Empty)
-                {
-                    films = films.Where(f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.Any(d => d.Id == directorID));
-                }
-                else if (aItem.Id != Guid.Empty && gItem.Id == Guid.Empty)
-                {
-                    films =
-                        films.Where(f => f.Cast.Any(r => r.Person.Id == aItem.Id)).Where(
-                            f => f.Director.Any(d => d.Id == directorID));
-                }
-                else if (aItem.Id != Guid.Empty && gItem.Id != Guid.Empty)
-                {
-                    films =
-                        films.Where(f => f.Cast.Any(r => r.Person.Id == aItem.Id)).Where(
-                            f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.Any(d => d.Id == directorID));
-                }
-                DGV_Films.DataSource =
+                films = films.Where(f => f.Director.Any(d => d.Id == directorID));
+            }
+            else if (aItem.Id == Guid.Empty && gItem.Id != Guid.Empty)
+            {
+                films = films.Where(f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.Any(d => d.Id == directorID));
+            }
+            else if (aItem.Id != Guid.Empty && gItem.Id == Guid.Empty)
+            {
+                films =
+                    films.Where(f => f.Cast.Any(r => r.Person.Id == aItem.Id)).Where(
+                        f => f.Director.Any(d => d.Id == directorID));
+            }
+            else if (aItem.Id != Guid.Empty && gItem.Id != Guid.Empty)
+            {
+                films =
+                    films.Where(f => f.Cast.Any(r => r.Person.Id == aItem.Id)).Where(
+                        f => f.Genre.Any(t => t.Id == gItem.Id)).Where(f => f.Director.Any(d => d.Id == directorID));
+            }
+            DGV_Films.DataSource =
                 films.Select(x => new { x.Id, x.Title, x.RunTime, ReleaseDate = x.ReleaseYear }).ToList();
-                if (DGV_Films != null)
-                    DGV_Films.Columns["Id"].Visible = false;
+            if (DGV_Films != null)
+                DGV_Films.Columns["Id"].Visible = false;
+
+            var sumMins = films.Sum(x => x.RunTime);
+            var stime = TimeSpan.FromMinutes(sumMins);
+            if (sumMins > 60)
+            {
+                //display hours
+                lbl_LibraryDetails.Text = string.Format("{0} Hours {1} Mins", stime.Hours, stime.Minutes);
+            }
+            else if (sumMins > 1440)
+            {
+                //display days
+                lbl_LibraryDetails.Text = string.Format("{0} Days {1} Hours {2} Mins", stime.Days, stime.Hours, stime.Minutes);
             }
         }
     }
