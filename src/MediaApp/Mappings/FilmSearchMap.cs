@@ -18,6 +18,23 @@ namespace MediaApp.Mappings
                 .Index().Tokenized()
                 .Store().Yes();
 
+            Map(x => x.PersonIndexing)
+                .Index().Tokenized()
+                .Store().Yes();
+            Map(x => x.CharIndexing)
+                .Index().Tokenized()
+                .Store().Yes();
+            Map(x => x.GenreIndexing)
+                .Index().Tokenized()
+                .Store().Yes();
+            Map(x => x.DirectorIndexing)
+                .Index().Tokenized()
+                .Store().Yes();
+
+            Map(x => x.Keywords)
+                .Index().Tokenized()
+                .Store().Yes();
+
             //Embedded(x => x.Director).AsCollection().Mappings(y => y.Map(z => z[0].Name));
             //Embedded(x => x.Director)
             //    .Mappings(m =>
@@ -30,7 +47,7 @@ namespace MediaApp.Mappings
 
             // Old fluent NH website, has more info: http://fnhsearch.codeplex.com/
             // If you wanna inspect what exactly is in the search index files, use this tool http://www.getopt.org/luke/
-            Embedded(x => x.Cast).AsCollection();
+            //Embedded(x => x.Cast).AsCollection();
         }
     }
 }

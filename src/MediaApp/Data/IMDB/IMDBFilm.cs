@@ -218,6 +218,25 @@ namespace MediaApp.Data.IMDB
                 link = link.Remove(link.IndexOf("\""));
             }
 
+            //indexing
+            var directorindexing = "";
+            foreach (var person in director)
+            {
+                directorindexing += person.Name + " ";
+            }
+            var genreIndexing = "";
+            foreach (var filmType in genres)
+            {
+                genreIndexing += filmType.Type + " ";
+            }
+            var charIndexing = "";
+            var personIndexing = "";
+            foreach (var role in cast)
+            {
+                charIndexing += role.Character + " ";
+                personIndexing += role.Person.Name + " ";
+            }
+
             return new Film
                        {
                            Title = title,
@@ -231,7 +250,11 @@ namespace MediaApp.Data.IMDB
                            PicURL = picURL,
                            Writers = writer,
                            Keywords = keywords,
-                           TrailerLink = link
+                           TrailerLink = link,
+                           DirectorIndexing = directorindexing,
+                           GenreIndexing = genreIndexing,
+                           CharIndexing = charIndexing,
+                           PersonIndexing = personIndexing
                        };
         }
     }

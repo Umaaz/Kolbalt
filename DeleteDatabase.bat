@@ -1,1 +1,1 @@
-del e:\repo\Kolbalt\Kolbalt\src\MediaApp\bin\Debug\Media.sdf
+del c:\repo\Kolbalt\Kolbalt\src\MediaApp\bin\Debug\Media.sdf

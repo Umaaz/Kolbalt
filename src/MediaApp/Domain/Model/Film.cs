@@ -32,5 +32,11 @@ namespace MediaApp.Domain.Model
         public virtual String Keywords { get; set; }
         public virtual String TrailerLink { get; set; }
         public virtual IList<Person> Writers { get; set; }
+
+        //indexing
+        public virtual String DirectorIndexing { get; set; }
+        public virtual String GenreIndexing { get; set; }
+        public virtual String CharIndexing { get; set; }
+        public virtual String PersonIndexing { get; set; }
     }
 }

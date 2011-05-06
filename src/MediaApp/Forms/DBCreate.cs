@@ -290,10 +290,6 @@ namespace MediaApp.Forms
                 {
                     session.Index(thing);
                 }
-                //foreach (var thing in session.CreateCriteria(typeof(Role)).List<Role>())
-                //{
-                //    session.Index(thing);
-                //}
                 trans.Commit();
             }
         }
@@ -321,6 +317,11 @@ namespace MediaApp.Forms
         private void button1_Click(object sender, EventArgs e)
         {
             build();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            UpdateIndex();
         }
     }
 }

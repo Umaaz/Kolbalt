@@ -29,6 +29,11 @@ namespace MediaApp.Mappings
             HasManyToMany(x => x.Cast)
                 .AsBag()
                 .Cascade.All();
+
+            Map(x => x.DirectorIndexing);
+            Map(x => x.CharIndexing);
+            Map(x => x.GenreIndexing);
+            Map(x => x.PersonIndexing);
         }
     }
 }

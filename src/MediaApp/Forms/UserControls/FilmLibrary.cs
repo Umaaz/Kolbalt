@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -28,13 +29,14 @@ namespace MediaApp.Forms.UserControls
         private IQueryable<Film> GetFilms()
         {
             var query = txtb_Search.Text;
-            if (string.IsNullOrWhiteSpace(query))
+            if (string.IsNullOrWhiteSpace(query)||!char.IsLetterOrDigit(query[0]))
                 return _nhSession.Query<Film>();
             var parser = new MultiFieldQueryParser(Lucene.Net.Util.Version.LUCENE_CURRENT,
-                new[] { "Title", "Synopsis", "Director", "Cast" }, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT));
+                new[] { "Title", "Synopsis", "Keywords", "DirectorIndexing", "CharIndexing", "GenreIndexing", "PersonIndexing" }, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT));
             var searchSession = NHibernate.Search.Search.CreateFullTextSession(_nhSession);
-            return searchSession.CreateFullTextQuery(parser.Parse(query), new[] { typeof(Film) }).List<Film>().AsQueryable();
+            return searchSession.CreateFullTextQuery(parser.Parse(query + "*"), new[] { typeof(Film) }).List<Film>().AsQueryable();
         }
+
         //builds actor list based on above films
         private IList<ListBoxItem> FillActors()
         {
@@ -112,6 +114,8 @@ namespace MediaApp.Forms.UserControls
             {
                 DGV_Films.Columns["Id"].Visible = false;
             }
+            if (DGV_Films.Rows.Count == 0)
+                return;
             var sumMins = GetFilms().Sum(x => x.RunTime);
             var stime = TimeSpan.FromMinutes(sumMins);
             if(sumMins > 60)

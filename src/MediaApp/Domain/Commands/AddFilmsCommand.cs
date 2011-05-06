@@ -64,6 +64,11 @@ namespace MediaApp.Domain.Commands
                         realNewFilm.RunTime = film.RunTime;
                         realNewFilm.Synopsis = film.Synopsis;
                         realNewFilm.Title = film.Title;
+                        realNewFilm.Keywords = film.Keywords; // check for duplicates
+                        realNewFilm.DirectorIndexing = film.DirectorIndexing;
+                        realNewFilm.GenreIndexing = film.GenreIndexing;
+                        realNewFilm.CharIndexing = film.CharIndexing;
+                        realNewFilm.PersonIndexing = film.PersonIndexing; //check for duplicates
 
                         foreach (var person in film.Director)
                         {
