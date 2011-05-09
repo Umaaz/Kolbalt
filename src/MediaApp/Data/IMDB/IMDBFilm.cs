@@ -326,7 +326,8 @@ namespace MediaApp.Data.IMDB
                 story = storyNode.InnerText;
                 story = HtmlEscapeCharConverter.Decode(story);
             }
-            return story;
+            
+            return (story.Contains("Written by ")) ? story.Remove(story.LastIndexOf("Written by ")) : story;
         }
     
         private static List<Role> GetCast(HtmlDocument doc)
