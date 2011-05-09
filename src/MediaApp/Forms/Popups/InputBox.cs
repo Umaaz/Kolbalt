@@ -10,7 +10,7 @@ namespace MediaApp.Forms.Popups
 {
     public class InputBox
     {
-        public static DialogResult Show(string title, string promptText, String defaultText, ref String value, Boolean confirmation)
+        public static DialogResult Show( string title, string promptText, String defaultText, ref String value, Boolean confirmation)
         {
             Boolean? result = null;
             var dresult = DialogResult.None;
@@ -46,7 +46,7 @@ namespace MediaApp.Forms.Popups
             var textBox = new TextBox();
             var buttonOk = new Button();
             var buttonCancel = new Button();
-
+            form.StartPosition = FormStartPosition.CenterParent;
             form.Text = title;
             label.Text = promptText;
             textBox.Text = defaultText;
@@ -58,8 +58,8 @@ namespace MediaApp.Forms.Popups
 
             label.SetBounds(9, 20, 372, 13);
             textBox.SetBounds(12, 36, 372, 20);
-            buttonOk.SetBounds(228, 72, 75, 23);
-            buttonCancel.SetBounds(309, 72, 75, 23);
+            buttonOk.SetBounds(309, 72, 75, 23);
+            buttonCancel.SetBounds(228, 72, 75, 23);
 
             label.AutoSize = true;
             textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
@@ -77,7 +77,7 @@ namespace MediaApp.Forms.Popups
             form.CancelButton = buttonCancel;
 
             var dialogResult = form.ShowDialog();
-            value = textBox.Text;
+            value = textBox.Text.Trim();
             return dialogResult;
         }
         static Point _labelStartpoint = new Point(18, 25);
@@ -150,7 +150,7 @@ namespace MediaApp.Forms.Popups
             var textBoxes = new List<TextBox>();
             var buttonOk = new Button();
             var buttonCancel = new Button();
-
+            form.StartPosition = FormStartPosition.CenterParent;
             for (int i = 0; i < promptText.Count(); i++)
             {
                 var alabel = NewLabel(promptText[i], i);
@@ -186,7 +186,7 @@ namespace MediaApp.Forms.Popups
 
             var dialogResult = form.ShowDialog();
             results = new List<string>();
-            results.AddRange(textBoxes.Select(textBox => textBox.Text));
+            results.AddRange(textBoxes.Select(textBox => textBox.Text.Trim()));
             return dialogResult;
         }
 
