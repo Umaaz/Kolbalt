@@ -9,9 +9,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MediaApp.Data;
-using MediaApp.Data.IMDB;
+using MediaApp.Data.Web.IMDB;
 using MediaApp.Domain.Commands;
 using MediaApp.Domain.Model;
+using MediaApp.Forms.Popups;
 using NHibernate;
 using NHibernate.Linq;
 

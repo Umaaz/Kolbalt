@@ -118,9 +118,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\DownloadImage.cs" />
+    <Compile Include="Data\Web\DownloadImage.cs" />
     <Compile Include="Data\Items\ComboBoxItem.cs" />
-    <Compile Include="Data\StringExtensions.cs" />
     <Compile Include="Domain\Commands\AddFilmsCommand.cs" />
     <Compile Include="Domain\Validations\FilmValidator.cs" />
     <Compile Include="Forms\ClkSettings.cs">
@@ -130,76 +129,70 @@
       <DependentUpon>ClkSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\NhContext.cs" />
-    <Compile Include="Forms\DBCreate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DBCreate.Designer.cs">
-      <DependentUpon>DBCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Domain\Model\Alarms.cs" />
     <Compile Include="Domain\Model\Film.cs" />
     <Compile Include="Domain\Model\FilmType.cs" />
     <Compile Include="Domain\Model\Person.cs" />
     <Compile Include="Domain\Model\Role.cs" />
-    <Compile Include="Forms\FullScreanVideo.cs">
+    <Compile Include="Forms\PlayBack\FullScreanVideo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FullScreanVideo.Designer.cs">
+    <Compile Include="Forms\PlayBack\FullScreanVideo.Designer.cs">
       <DependentUpon>FullScreanVideo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\IMDBResultsList.cs">
+    <Compile Include="Forms\Popups\IMDBResultsList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\IMDBResultsList.Designer.cs">
+    <Compile Include="Forms\Popups\IMDBResultsList.Designer.cs">
       <DependentUpon>IMDBResultsList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MainFrm.cs">
+    <Compile Include="Forms\MainForms\MainFrm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MainFrm.Designer.cs">
+    <Compile Include="Forms\MainForms\MainFrm.Designer.cs">
       <DependentUpon>MainFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\HTMLescapeCharConverter.cs" />
-    <Compile Include="Data\IMDB\IMDBFilm.cs" />
-    <Compile Include="Data\IMDB\IMDBResult.cs" />
-    <Compile Include="Data\IMDB\IMDBSearch.cs" />
+    <Compile Include="Data\Web\HTMLescapeCharConverter.cs" />
+    <Compile Include="Data\Web\IMDB\IMDBFilm.cs" />
+    <Compile Include="Data\Web\IMDB\IMDBResult.cs" />
+    <Compile Include="Data\Web\IMDB\IMDBSearch.cs" />
     <Compile Include="Data\Items\ListBoxItem.cs" />
     <Compile Include="Data\AlarmListViewItem.cs" />
     <Compile Include="Forms\Popups\InputBox.cs" />
-    <Compile Include="Forms\Results.cs">
+    <Compile Include="Forms\Popups\Results.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Results.Designer.cs">
+    <Compile Include="Forms\Popups\Results.Designer.cs">
       <DependentUpon>Results.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Settings.cs">
+    <Compile Include="Forms\MainForms\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Settings.Designer.cs">
+    <Compile Include="Forms\MainForms\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControls\ActorDetails.cs">
+    <Compile Include="Forms\UserControls\FilmControls\ActorDetails.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UserControls\ActorDetails.Designer.cs">
+    <Compile Include="Forms\UserControls\FilmControls\ActorDetails.Designer.cs">
       <DependentUpon>ActorDetails.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControls\ExtraFilmDetails.cs">
+    <Compile Include="Forms\UserControls\FilmControls\ExtraFilmDetails.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UserControls\ExtraFilmDetails.Designer.cs">
+    <Compile Include="Forms\UserControls\FilmControls\ExtraFilmDetails.Designer.cs">
       <DependentUpon>ExtraFilmDetails.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControls\FilmLibrary.cs">
+    <Compile Include="Forms\UserControls\FilmControls\FilmLibrary.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UserControls\FilmLibrary.Designer.cs">
+    <Compile Include="Forms\UserControls\FilmControls\FilmLibrary.Designer.cs">
       <DependentUpon>FilmLibrary.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControls\ResultsTemplate.cs">
+    <Compile Include="Forms\UserControls\Settings\ResultsTemplate.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UserControls\ResultsTemplate.Designer.cs">
+    <Compile Include="Forms\UserControls\Settings\ResultsTemplate.Designer.cs">
       <DependentUpon>ResultsTemplate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\UserControls\Settings\FilmDatabase.cs">
@@ -208,10 +201,10 @@
     <Compile Include="Forms\UserControls\Settings\FilmDatabase.Designer.cs">
       <DependentUpon>FilmDatabase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControls\Slider.xaml.cs">
+    <Compile Include="Forms\UserControls\WPFControls\Slider.xaml.cs">
       <DependentUpon>Slider.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserControls\Volume.xaml.cs">
+    <Compile Include="Forms\UserControls\WPFControls\Volume.xaml.cs">
       <DependentUpon>Volume.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\ValidationErrors.cs">
@@ -228,7 +221,7 @@
     <Compile Include="Mappings\FilmSearchMap.cs" />
     <Compile Include="Mappings\FilmTypeMap.cs" />
     <Compile Include="Mappings\PersonMap.cs" />
-    <Compile Include="Forms\RoleMap.cs" />
+    <Compile Include="Mappings\RoleMap.cs" />
     <Compile Include="Mappings\RoleSearchMap.cs" />
     <Compile Include="Mappings\SearchMap.cs" />
     <Compile Include="MediaDataSet.Designer.cs">
@@ -238,45 +231,42 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\UserControls\FilmDetails.cs">
+    <Compile Include="Forms\UserControls\FilmControls\FilmDetails.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\UserControls\FilmDetails.Designer.cs">
+    <Compile Include="Forms\UserControls\FilmControls\FilmDetails.Designer.cs">
       <DependentUpon>FilmDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="Todo.cs" />
     <EmbeddedResource Include="Forms\ClkSettings.resx">
       <DependentUpon>ClkSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DBCreate.resx">
-      <DependentUpon>DBCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FullScreanVideo.resx">
+    <EmbeddedResource Include="Forms\PlayBack\FullScreanVideo.resx">
       <DependentUpon>FullScreanVideo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\IMDBResultsList.resx">
+    <EmbeddedResource Include="Forms\Popups\IMDBResultsList.resx">
       <DependentUpon>IMDBResultsList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainFrm.resx">
+    <EmbeddedResource Include="Forms\MainForms\MainFrm.resx">
       <DependentUpon>MainFrm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Results.resx">
+    <EmbeddedResource Include="Forms\Popups\Results.resx">
       <DependentUpon>Results.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Settings.resx">
+    <EmbeddedResource Include="Forms\MainForms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControls\ActorDetails.resx">
+    <EmbeddedResource Include="Forms\UserControls\FilmControls\ActorDetails.resx">
       <DependentUpon>ActorDetails.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControls\ExtraFilmDetails.resx">
+    <EmbeddedResource Include="Forms\UserControls\FilmControls\ExtraFilmDetails.resx">
       <DependentUpon>ExtraFilmDetails.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControls\FilmLibrary.resx">
+    <EmbeddedResource Include="Forms\UserControls\FilmControls\FilmLibrary.resx">
       <DependentUpon>FilmLibrary.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControls\ResultsTemplate.resx">
+    <EmbeddedResource Include="Forms\UserControls\Settings\ResultsTemplate.resx">
       <DependentUpon>ResultsTemplate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControls\Settings\FilmDatabase.resx">
@@ -292,7 +282,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Forms\UserControls\FilmDetails.resx">
+    <EmbeddedResource Include="Forms\UserControls\FilmControls\FilmDetails.resx">
       <DependentUpon>FilmDetails.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
@@ -362,11 +352,11 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Forms\UserControls\Slider.xaml">
+    <Page Include="Forms\UserControls\WPFControls\Slider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\UserControls\Volume.xaml">
+    <Page Include="Forms\UserControls\WPFControls\Volume.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
