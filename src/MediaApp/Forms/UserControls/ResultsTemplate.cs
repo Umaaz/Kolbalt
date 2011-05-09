@@ -14,27 +14,16 @@ namespace MediaApp.Forms.UserControls
     public partial class ResultsTemplate : UserControl
     {
         public static Film Film { get; set; }
-        private IList<IMDBResult> Results { get; set; }
         
         public ResultsTemplate()
         {
             Film = null;
-            Results = null;
         }
         
         public ResultsTemplate(Film film)
         {
             InitializeComponent();
             Film = film;
-            populate();
-            lbl_filepath.Text = Film.FilmPath;
-        }
-
-        public ResultsTemplate(Film film, IList<IMDBResult> results)
-        {
-            InitializeComponent();
-            Film = film;
-            Results = results;
             populate();
             lbl_filepath.Text = Film.FilmPath;
         }
@@ -224,20 +213,40 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
 
         private void btn_otherresults_Click(object sender, EventArgs e)
         {
-            if (Results.Count != 0)
-            {
-                var cont = new IMDBResultsList(Results, Film.Title);
-                Enabled = false;
-                if (cont.ShowDialog() == DialogResult.OK)
-                {
-                    Scan("http://www.imdb.com/title/tt" + cont.URL);
-                }
-                Enabled = true;
-            }
-            else
-            {
-                MessageBox.Show("Sorry there are no other results!", "Sorry", MessageBoxButtons.OK);
-            }
+            var results = new List<IMDBResult>();
+            var bgw = new BackgroundWorker();
+            bgw.WorkerReportsProgress = true;
+            panel1.Enabled = false;
+            panel2.Visible = true;
+            bgw.ProgressChanged += (o, args) =>
+                                       {
+                                           results = (List<IMDBResult>)args.UserState;
+                                       };
+            bgw.DoWork += (o, args) =>
+                              {
+                                  var worker = o as BackgroundWorker;
+                                  worker.ReportProgress(100,IMDBSearch.SearchIMDBByTitle(Film.Title));
+                              };
+            bgw.RunWorkerCompleted += (o, args) =>
+                                          {
+                                              if (results.Count != 0)
+                                              {
+                                                  var cont = new IMDBResultsList(results, Film.Title);
+                                                  Enabled = false;
+                                                  if (cont.ShowDialog() == DialogResult.OK)
+                                                  {
+                                                      Scan("http://www.imdb.com/title/tt" + cont.URL);
+                                                  }
+                                                  Enabled = true;
+                                              }
+                                              else
+                                              {
+                                                  MessageBox.Show("Sorry there are no other results!", "Sorry", MessageBoxButtons.OK);
+                                              }
+                                              panel1.Enabled = true;
+                                              panel2.Visible = false;
+                                          };
+            bgw.RunWorkerAsync();
         }
 
         private void button2_Click(object sender, EventArgs e)

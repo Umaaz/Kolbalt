@@ -47,7 +47,7 @@
             // btn_ok
             // 
             this.btn_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btn_ok.Location = new System.Drawing.Point(797, 301);
+            this.btn_ok.Location = new System.Drawing.Point(905, 301);
             this.btn_ok.Name = "btn_ok";
             this.btn_ok.Size = new System.Drawing.Size(75, 23);
             this.btn_ok.TabIndex = 1;
@@ -57,7 +57,7 @@
             // btn_cancel
             // 
             this.btn_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_cancel.Location = new System.Drawing.Point(878, 301);
+            this.btn_cancel.Location = new System.Drawing.Point(986, 301);
             this.btn_cancel.Name = "btn_cancel";
             this.btn_cancel.Size = new System.Drawing.Size(75, 23);
             this.btn_cancel.TabIndex = 2;
@@ -70,7 +70,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(778, 295);
+            this.panel1.Size = new System.Drawing.Size(866, 295);
             this.panel1.TabIndex = 3;
             // 
             // label1
@@ -109,8 +109,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(965, 295);
-            this.splitContainer1.SplitterDistance = 183;
+            this.splitContainer1.Size = new System.Drawing.Size(1073, 295);
+            this.splitContainer1.SplitterDistance = 203;
             this.splitContainer1.TabIndex = 9;
             // 
             // listView1
@@ -122,7 +122,7 @@
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(183, 295);
+            this.listView1.Size = new System.Drawing.Size(203, 295);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
@@ -132,7 +132,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(965, 330);
+            this.ClientSize = new System.Drawing.Size(1073, 330);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.btn_cancel);
             this.Controls.Add(this.label2);

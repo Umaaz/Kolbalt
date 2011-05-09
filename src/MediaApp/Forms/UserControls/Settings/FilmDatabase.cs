@@ -124,7 +124,7 @@ namespace MediaApp.Forms.UserControls.Settings
 
         private void UserVerification()
         {
-            var results = new Results(_foundFilms, _foundFilmsResults,_possibleErrors,_possibleErrorsResults);
+            var results = new Results(_foundFilms,_possibleErrors);
             if (results.ShowDialog(this) != DialogResult.OK)
                 return;
             var bgw = Newbgw();
@@ -193,9 +193,7 @@ namespace MediaApp.Forms.UserControls.Settings
             }
         }
         private List<Film> _foundFilms = new List<Film>();
-        private List<IList<IMDBResult>> _foundFilmsResults = new List<IList<IMDBResult>>();
         private List<Film> _possibleErrors = new List<Film>();
-        private List<IList<IMDBResult>>  _possibleErrorsResults = new List<IList<IMDBResult>>();
         private void Execute (object sender, DoWorkEventArgs args)
         {
             var worker = sender as BackgroundWorker;
@@ -209,11 +207,11 @@ namespace MediaApp.Forms.UserControls.Settings
             worker.ReportProgress(2, "Scanning Files...");
             var ffilms = FilterFilms(files);
             worker.ReportProgress(3, "Searching...");
-            GrapFilms(sender,ffilms,  _foundFilms,  _foundFilmsResults,  _possibleErrors, _possibleErrorsResults);
+            GrapFilms(sender,ffilms);
             worker.ReportProgress(99, "Awaiting user verification...");
         }
         
-        private void GrapFilms(object sender, List<PossibleFilm> films,  List<Film> foundFilms,  List<IList<IMDBResult>> foundFilmsResults,  List<Film> possibleErrors,  List<IList<IMDBResult>> possibleErrosResults )
+        private void GrapFilms(object sender, List<PossibleFilm> films)
         {
             var worker = sender as BackgroundWorker;
             var numFilms = films.Count;
@@ -228,13 +226,11 @@ namespace MediaApp.Forms.UserControls.Settings
                     newFilm.FilmPath = film.Path;
                     if(Regex.IsMatch(newFilm.Title,film.Title.Trim(),RegexOptions.IgnoreCase))
                     {
-                        foundFilms.Add(newFilm);
-                        foundFilmsResults.Add(IMDBSearch.SearchIMDBByTitle(film.Title));
+                        _foundFilms.Add(newFilm);
                     }
                     else
                     {
-                        possibleErrors.Add(newFilm);
-                        possibleErrosResults.Add(IMDBSearch.SearchIMDBByTitle(film.Title));
+                        _possibleErrors.Add(newFilm);
                     }
                 }
             }

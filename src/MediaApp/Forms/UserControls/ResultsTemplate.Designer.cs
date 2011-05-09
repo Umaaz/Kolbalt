@@ -30,6 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btn_deleteWriter = new System.Windows.Forms.Button();
+            this.btn_addWriter = new System.Windows.Forms.Button();
+            this.lstb_Writers = new System.Windows.Forms.ListBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -63,10 +67,6 @@
             this.btn_addGenre = new System.Windows.Forms.Button();
             this.lbl_Genres = new System.Windows.Forms.Label();
             this.lstb_genres = new System.Windows.Forms.ListBox();
-            this.lstb_Writers = new System.Windows.Forms.ListBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btn_deleteWriter = new System.Windows.Forms.Button();
-            this.btn_addWriter = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -110,14 +110,53 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(778, 295);
+            this.panel1.Size = new System.Drawing.Size(866, 295);
             this.panel1.TabIndex = 0;
+            // 
+            // btn_deleteWriter
+            // 
+            this.btn_deleteWriter.Image = global::MediaApp.Properties.Resources.Delete;
+            this.btn_deleteWriter.Location = new System.Drawing.Point(437, 239);
+            this.btn_deleteWriter.Name = "btn_deleteWriter";
+            this.btn_deleteWriter.Size = new System.Drawing.Size(24, 23);
+            this.btn_deleteWriter.TabIndex = 13;
+            this.toolTip1.SetToolTip(this.btn_deleteWriter, "Remove selected writer.");
+            this.btn_deleteWriter.UseVisualStyleBackColor = true;
+            this.btn_deleteWriter.Click += new System.EventHandler(this.btn_deleteWriter_Click);
+            // 
+            // btn_addWriter
+            // 
+            this.btn_addWriter.Image = global::MediaApp.Properties.Resources.Add;
+            this.btn_addWriter.Location = new System.Drawing.Point(437, 210);
+            this.btn_addWriter.Name = "btn_addWriter";
+            this.btn_addWriter.Size = new System.Drawing.Size(24, 23);
+            this.btn_addWriter.TabIndex = 12;
+            this.toolTip1.SetToolTip(this.btn_addWriter, "Add a new writer.");
+            this.btn_addWriter.UseVisualStyleBackColor = true;
+            this.btn_addWriter.Click += new System.EventHandler(this.btn_addWriter_Click);
+            // 
+            // lstb_Writers
+            // 
+            this.lstb_Writers.FormattingEnabled = true;
+            this.lstb_Writers.Location = new System.Drawing.Point(300, 190);
+            this.lstb_Writers.Name = "lstb_Writers";
+            this.lstb_Writers.Size = new System.Drawing.Size(131, 69);
+            this.lstb_Writers.TabIndex = 11;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(298, 174);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(43, 13);
+            this.label5.TabIndex = 72;
+            this.label5.Text = "Writers:";
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.progressBar1);
-            this.panel2.Location = new System.Drawing.Point(266, 133);
+            this.panel2.Location = new System.Drawing.Point(310, 133);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(246, 29);
             this.panel2.TabIndex = 70;
@@ -144,36 +183,38 @@
             // btn_deleteDirector
             // 
             this.btn_deleteDirector.Image = global::MediaApp.Properties.Resources.Delete;
-            this.btn_deleteDirector.Location = new System.Drawing.Point(349, 148);
+            this.btn_deleteDirector.Location = new System.Drawing.Point(437, 151);
             this.btn_deleteDirector.Name = "btn_deleteDirector";
             this.btn_deleteDirector.Size = new System.Drawing.Size(24, 23);
-            this.btn_deleteDirector.TabIndex = 71;
+            this.btn_deleteDirector.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.btn_deleteDirector, "Remove selected director.");
             this.btn_deleteDirector.UseVisualStyleBackColor = true;
             this.btn_deleteDirector.Click += new System.EventHandler(this.button2_Click);
             // 
             // lstb_Directors
             // 
             this.lstb_Directors.FormattingEnabled = true;
-            this.lstb_Directors.Location = new System.Drawing.Point(259, 102);
+            this.lstb_Directors.Location = new System.Drawing.Point(300, 102);
             this.lstb_Directors.Name = "lstb_Directors";
-            this.lstb_Directors.Size = new System.Drawing.Size(84, 69);
-            this.lstb_Directors.TabIndex = 70;
+            this.lstb_Directors.Size = new System.Drawing.Size(131, 69);
+            this.lstb_Directors.TabIndex = 8;
             // 
             // btn_otherresults
             // 
             this.btn_otherresults.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_otherresults.Location = new System.Drawing.Point(317, 267);
+            this.btn_otherresults.Location = new System.Drawing.Point(404, 265);
             this.btn_otherresults.Name = "btn_otherresults";
             this.btn_otherresults.Size = new System.Drawing.Size(57, 23);
-            this.btn_otherresults.TabIndex = 68;
-            this.btn_otherresults.Text = "Other";
+            this.btn_otherresults.TabIndex = 17;
+            this.btn_otherresults.Text = "O&ther";
+            this.toolTip1.SetToolTip(this.btn_otherresults, "View other similiar results.");
             this.btn_otherresults.UseVisualStyleBackColor = true;
             this.btn_otherresults.Click += new System.EventHandler(this.btn_otherresults_Click);
             // 
             // lbl_filepath
             // 
             this.lbl_filepath.AutoSize = true;
-            this.lbl_filepath.Location = new System.Drawing.Point(478, 10);
+            this.lbl_filepath.Location = new System.Drawing.Point(565, 10);
             this.lbl_filepath.Name = "lbl_filepath";
             this.lbl_filepath.Size = new System.Drawing.Size(82, 13);
             this.lbl_filepath.TabIndex = 59;
@@ -183,14 +224,14 @@
             // 
             this.txtb_Year.Location = new System.Drawing.Point(84, 62);
             this.txtb_Year.Name = "txtb_Year";
-            this.txtb_Year.Size = new System.Drawing.Size(167, 20);
-            this.txtb_Year.TabIndex = 69;
+            this.txtb_Year.Size = new System.Drawing.Size(210, 20);
+            this.txtb_Year.TabIndex = 2;
             this.txtb_Year.TextChanged += new System.EventHandler(this.txtb_Year_TextChanged);
             // 
             // lbl_file
             // 
             this.lbl_file.AutoSize = true;
-            this.lbl_file.Location = new System.Drawing.Point(446, 10);
+            this.lbl_file.Location = new System.Drawing.Point(533, 10);
             this.lbl_file.Name = "lbl_file";
             this.lbl_file.Size = new System.Drawing.Size(26, 13);
             this.lbl_file.TabIndex = 58;
@@ -198,18 +239,19 @@
             // 
             // btn_rescan
             // 
-            this.btn_rescan.Location = new System.Drawing.Point(257, 267);
+            this.btn_rescan.Location = new System.Drawing.Point(344, 265);
             this.btn_rescan.Name = "btn_rescan";
             this.btn_rescan.Size = new System.Drawing.Size(57, 23);
-            this.btn_rescan.TabIndex = 62;
-            this.btn_rescan.Text = "Re-Scan";
+            this.btn_rescan.TabIndex = 16;
+            this.btn_rescan.Text = "Re-&Scan";
+            this.toolTip1.SetToolTip(this.btn_rescan, "Scan Url for film data.");
             this.btn_rescan.UseVisualStyleBackColor = true;
             this.btn_rescan.Click += new System.EventHandler(this.btn_rescan_Click);
             // 
             // lbl_cast
             // 
             this.lbl_cast.AutoSize = true;
-            this.lbl_cast.Location = new System.Drawing.Point(377, 10);
+            this.lbl_cast.Location = new System.Drawing.Point(464, 10);
             this.lbl_cast.Name = "lbl_cast";
             this.lbl_cast.Size = new System.Drawing.Size(28, 13);
             this.lbl_cast.TabIndex = 57;
@@ -218,10 +260,11 @@
             // btn_addDirector
             // 
             this.btn_addDirector.Image = global::MediaApp.Properties.Resources.Add;
-            this.btn_addDirector.Location = new System.Drawing.Point(349, 119);
+            this.btn_addDirector.Location = new System.Drawing.Point(437, 122);
             this.btn_addDirector.Name = "btn_addDirector";
             this.btn_addDirector.Size = new System.Drawing.Size(24, 23);
-            this.btn_addDirector.TabIndex = 70;
+            this.btn_addDirector.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.btn_addDirector, "Add a new director.");
             this.btn_addDirector.UseVisualStyleBackColor = true;
             this.btn_addDirector.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -230,23 +273,23 @@
             this.txtb_Synopsis.Location = new System.Drawing.Point(3, 131);
             this.txtb_Synopsis.Multiline = true;
             this.txtb_Synopsis.Name = "txtb_Synopsis";
-            this.txtb_Synopsis.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.txtb_Synopsis.Size = new System.Drawing.Size(248, 127);
-            this.txtb_Synopsis.TabIndex = 66;
+            this.txtb_Synopsis.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtb_Synopsis.Size = new System.Drawing.Size(291, 127);
+            this.txtb_Synopsis.TabIndex = 4;
             this.txtb_Synopsis.TextChanged += new System.EventHandler(this.txtb_Synopsis_TextChanged);
             // 
             // txtb_IMDBURL
             // 
             this.txtb_IMDBURL.Location = new System.Drawing.Point(56, 267);
             this.txtb_IMDBURL.Name = "txtb_IMDBURL";
-            this.txtb_IMDBURL.Size = new System.Drawing.Size(195, 20);
-            this.txtb_IMDBURL.TabIndex = 61;
+            this.txtb_IMDBURL.Size = new System.Drawing.Size(282, 20);
+            this.txtb_IMDBURL.TabIndex = 15;
             this.txtb_IMDBURL.Text = "http://www.IMDB.com/title/tt";
             // 
             // lbl_director
             // 
             this.lbl_director.AutoSize = true;
-            this.lbl_director.Location = new System.Drawing.Point(257, 86);
+            this.lbl_director.Location = new System.Drawing.Point(298, 86);
             this.lbl_director.Name = "lbl_director";
             this.lbl_director.Size = new System.Drawing.Size(47, 13);
             this.lbl_director.TabIndex = 46;
@@ -284,12 +327,12 @@
             this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.ContextMenuStrip = this.contextMenuStrip1;
-            this.dataGridView1.Location = new System.Drawing.Point(380, 32);
+            this.dataGridView1.Location = new System.Drawing.Point(467, 34);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(396, 258);
-            this.dataGridView1.TabIndex = 56;
+            this.dataGridView1.TabIndex = 14;
             // 
             // contextMenuStrip1
             // 
@@ -304,29 +347,32 @@
             // 
             this.EditItem.Name = "EditItem";
             this.EditItem.Size = new System.Drawing.Size(107, 22);
-            this.EditItem.Text = "Edit";
+            this.EditItem.Text = "&Edit";
+            this.EditItem.ToolTipText = "Edit selected role.";
             this.EditItem.Click += new System.EventHandler(this.EditItem_Click);
             // 
             // DeleteItem
             // 
             this.DeleteItem.Name = "DeleteItem";
             this.DeleteItem.Size = new System.Drawing.Size(107, 22);
-            this.DeleteItem.Text = "Delete";
+            this.DeleteItem.Text = "&Delete";
+            this.DeleteItem.ToolTipText = "Delete selected role.";
             this.DeleteItem.Click += new System.EventHandler(this.DeleteItem_Click);
             // 
             // AddItem
             // 
             this.AddItem.Name = "AddItem";
             this.AddItem.Size = new System.Drawing.Size(107, 22);
-            this.AddItem.Text = "Add";
+            this.AddItem.Text = "&Add";
+            this.AddItem.ToolTipText = "Add a new role.";
             this.AddItem.Click += new System.EventHandler(this.AddItem_Click);
             // 
             // txtb_Keywords
             // 
             this.txtb_Keywords.Location = new System.Drawing.Point(71, 88);
             this.txtb_Keywords.Name = "txtb_Keywords";
-            this.txtb_Keywords.Size = new System.Drawing.Size(180, 20);
-            this.txtb_Keywords.TabIndex = 63;
+            this.txtb_Keywords.Size = new System.Drawing.Size(223, 20);
+            this.txtb_Keywords.TabIndex = 3;
             this.toolTip1.SetToolTip(this.txtb_Keywords, "Seperate keywords with an empty space");
             this.txtb_Keywords.TextChanged += new System.EventHandler(this.txtb_Keywords_TextChanged);
             // 
@@ -352,8 +398,8 @@
             // 
             this.txtb_RunTime.Location = new System.Drawing.Point(65, 36);
             this.txtb_RunTime.Name = "txtb_RunTime";
-            this.txtb_RunTime.Size = new System.Drawing.Size(186, 20);
-            this.txtb_RunTime.TabIndex = 51;
+            this.txtb_RunTime.Size = new System.Drawing.Size(229, 20);
+            this.txtb_RunTime.TabIndex = 1;
             this.txtb_RunTime.TextChanged += new System.EventHandler(this.txtb_RunTime_TextChanged);
             // 
             // lbl_title
@@ -368,10 +414,11 @@
             // btn_deleteGenre
             // 
             this.btn_deleteGenre.Image = global::MediaApp.Properties.Resources.Delete;
-            this.btn_deleteGenre.Location = new System.Drawing.Point(349, 59);
+            this.btn_deleteGenre.Location = new System.Drawing.Point(437, 62);
             this.btn_deleteGenre.Name = "btn_deleteGenre";
             this.btn_deleteGenre.Size = new System.Drawing.Size(24, 23);
-            this.btn_deleteGenre.TabIndex = 55;
+            this.btn_deleteGenre.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.btn_deleteGenre, "Remove selected genre.");
             this.btn_deleteGenre.UseVisualStyleBackColor = true;
             this.btn_deleteGenre.Click += new System.EventHandler(this.btn_delete_Click);
             // 
@@ -379,24 +426,25 @@
             // 
             this.txtb_Title.Location = new System.Drawing.Point(39, 10);
             this.txtb_Title.Name = "txtb_Title";
-            this.txtb_Title.Size = new System.Drawing.Size(212, 20);
-            this.txtb_Title.TabIndex = 47;
+            this.txtb_Title.Size = new System.Drawing.Size(255, 20);
+            this.txtb_Title.TabIndex = 0;
             this.txtb_Title.TextChanged += new System.EventHandler(this.txtb_Title_TextChanged);
             // 
             // btn_addGenre
             // 
             this.btn_addGenre.Image = global::MediaApp.Properties.Resources.Add;
-            this.btn_addGenre.Location = new System.Drawing.Point(349, 30);
+            this.btn_addGenre.Location = new System.Drawing.Point(437, 33);
             this.btn_addGenre.Name = "btn_addGenre";
             this.btn_addGenre.Size = new System.Drawing.Size(24, 23);
-            this.btn_addGenre.TabIndex = 54;
+            this.btn_addGenre.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.btn_addGenre, "Add a new genre.");
             this.btn_addGenre.UseVisualStyleBackColor = true;
             this.btn_addGenre.Click += new System.EventHandler(this.btn_add_Click);
             // 
             // lbl_Genres
             // 
             this.lbl_Genres.AutoSize = true;
-            this.lbl_Genres.Location = new System.Drawing.Point(256, 10);
+            this.lbl_Genres.Location = new System.Drawing.Point(297, 10);
             this.lbl_Genres.Name = "lbl_Genres";
             this.lbl_Genres.Size = new System.Drawing.Size(41, 13);
             this.lbl_Genres.TabIndex = 52;
@@ -405,47 +453,10 @@
             // lstb_genres
             // 
             this.lstb_genres.FormattingEnabled = true;
-            this.lstb_genres.Location = new System.Drawing.Point(259, 26);
+            this.lstb_genres.Location = new System.Drawing.Point(300, 26);
             this.lstb_genres.Name = "lstb_genres";
-            this.lstb_genres.Size = new System.Drawing.Size(84, 56);
-            this.lstb_genres.TabIndex = 53;
-            // 
-            // lstb_Writers
-            // 
-            this.lstb_Writers.FormattingEnabled = true;
-            this.lstb_Writers.Location = new System.Drawing.Point(259, 190);
-            this.lstb_Writers.Name = "lstb_Writers";
-            this.lstb_Writers.Size = new System.Drawing.Size(84, 69);
-            this.lstb_Writers.TabIndex = 73;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(257, 174);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(43, 13);
-            this.label5.TabIndex = 72;
-            this.label5.Text = "Writers:";
-            // 
-            // btn_deleteWriter
-            // 
-            this.btn_deleteWriter.Image = global::MediaApp.Properties.Resources.Delete;
-            this.btn_deleteWriter.Location = new System.Drawing.Point(349, 236);
-            this.btn_deleteWriter.Name = "btn_deleteWriter";
-            this.btn_deleteWriter.Size = new System.Drawing.Size(24, 23);
-            this.btn_deleteWriter.TabIndex = 75;
-            this.btn_deleteWriter.UseVisualStyleBackColor = true;
-            this.btn_deleteWriter.Click += new System.EventHandler(this.btn_deleteWriter_Click);
-            // 
-            // btn_addWriter
-            // 
-            this.btn_addWriter.Image = global::MediaApp.Properties.Resources.Add;
-            this.btn_addWriter.Location = new System.Drawing.Point(349, 207);
-            this.btn_addWriter.Name = "btn_addWriter";
-            this.btn_addWriter.Size = new System.Drawing.Size(24, 23);
-            this.btn_addWriter.TabIndex = 74;
-            this.btn_addWriter.UseVisualStyleBackColor = true;
-            this.btn_addWriter.Click += new System.EventHandler(this.btn_addWriter_Click);
+            this.lstb_genres.Size = new System.Drawing.Size(131, 56);
+            this.lstb_genres.TabIndex = 5;
             // 
             // ResultsTemplate
             // 
@@ -453,7 +464,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
             this.Name = "ResultsTemplate";
-            this.Size = new System.Drawing.Size(778, 295);
+            this.Size = new System.Drawing.Size(866, 295);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);

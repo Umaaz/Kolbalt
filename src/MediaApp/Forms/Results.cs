@@ -13,16 +13,12 @@ namespace MediaApp.Forms
         private readonly IList<Film> _films;
         private int _currentIndex;
         private ResultsTemplate _cont = new ResultsTemplate();
-        private IList<IList<IMDBResult>> _results;
-        private IList<IList<IMDBResult>> _possibleresults;
         private readonly IList<Film> _possiblefilms;
 
-        public Results(IList<Film> filmstolist, IList<IList<IMDBResult>> results, IList<Film> possiblefilmstolist, IList<IList<IMDBResult>> possibleresults)
+        public Results(IList<Film> filmstolist, IList<Film> possiblefilmstolist)
         {
             InitializeComponent();
             _films = filmstolist;
-            _results = results;
-            _possibleresults = possibleresults;
             _possiblefilms = possiblefilmstolist;
             PopulateList();
             listView1.Items[0].Selected = true;
@@ -79,11 +75,10 @@ namespace MediaApp.Forms
             }
         }
 
-        public Results(IList<Film> filmstolist, IList<IList<IMDBResult>> results)
+        public Results(IList<Film> filmstolist)
         {
             InitializeComponent();
             _films = filmstolist;
-            _results = results;
             PopulateList();
         }
 
@@ -107,8 +102,7 @@ namespace MediaApp.Forms
             {
                 if (listView1.SelectedIndices[0] < _films.Count)
                 {
-                    _cont = new ResultsTemplate(_films[listView1.SelectedIndices[0]],
-                                                _results[listView1.SelectedIndices[0]]);
+                    _cont = new ResultsTemplate(_films[listView1.SelectedIndices[0]]);
                     panel1.Controls.Add(_cont);
                     _cont.Dock = DockStyle.Fill;
                     _currentIndex = listView1.SelectedIndices[0];
@@ -116,7 +110,7 @@ namespace MediaApp.Forms
                 else
                 {
                     var index = listView1.SelectedIndices[0] - _films.Count;
-                    _cont = new ResultsTemplate(_possiblefilms[index], _possibleresults[index]);
+                    _cont = new ResultsTemplate(_possiblefilms[index]);
                     panel1.Controls.Add(_cont);
                     _cont.Dock = DockStyle.Fill;
                     _currentIndex = listView1.SelectedIndices[0];
