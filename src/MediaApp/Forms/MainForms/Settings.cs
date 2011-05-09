@@ -8,32 +8,36 @@ namespace MediaApp.Forms.MainForms
         public Settings()
         {
             InitializeComponent();
-        }
-
-        private void treeView1_Click(object sender, EventArgs e)
-        {
-            
+            treeView1.SelectedNode = treeView1.TopNode;
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            UserControl cont = null;
+            UserControl cont = new UserControls.Settings.Default();
+            splitContainer1.Panel2.Controls.Clear();
             switch (e.Node.Tag.ToString())
             {
+                case "GeneralSettings":
+                    break;
+                case "ClockSettings":
+                    cont = new UserControls.Settings.ClockSettings();
+                    break;
                 case "FilmSettings":
                     break;
                 case "FilmDatabaseSettings":
                     cont = new UserControls.Settings.FilmDatabase();
-                    splitContainer1.Panel2.Controls.Add(cont);
-                    cont.Dock = DockStyle.Fill;
                     break;
                 case"FilmFileSettings":
                     break;
                 case "TVSettings":
                     break;
                 default:
-                    return;
+                    cont = new UserControls.Settings.Default();
+                    treeView1.SelectedNode = treeView1.TopNode;
+                    break;
             }
+            splitContainer1.Panel2.Controls.Add(cont);
+            cont.Dock = DockStyle.Fill;
         }
     }
 }

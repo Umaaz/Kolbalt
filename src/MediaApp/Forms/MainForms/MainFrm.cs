@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using MediaApp.Data;
 using MediaApp.Domain.Model;
@@ -153,11 +154,6 @@ namespace MediaApp.Forms.MainForms
             }
         }
 
-        private void btn_Settings_MouseClick(object sender, MouseEventArgs e)
-        {
-            CMS_Settings.Show(btn_Settings, e.Location);
-        }
-
         #endregion
 
         #region TV Database Controls
@@ -290,6 +286,11 @@ namespace MediaApp.Forms.MainForms
             }
            
             fs.Dispose();
+        }
+
+        private void btn_Settings_MouseClick(object sender, MouseEventArgs e)
+        {
+            CMS_Settings.Show(btn_Settings, new Point(0, 22));
         }
 
     }

@@ -189,6 +189,18 @@
     <Compile Include="Forms\UserControls\FilmControls\FilmLibrary.Designer.cs">
       <DependentUpon>FilmLibrary.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\UserControls\Settings\ClockSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControls\Settings\ClockSettings.Designer.cs">
+      <DependentUpon>ClockSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControls\Settings\Default.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControls\Settings\Default.Designer.cs">
+      <DependentUpon>Default.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UserControls\Settings\ResultsTemplate.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -265,6 +277,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControls\FilmControls\FilmLibrary.resx">
       <DependentUpon>FilmLibrary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControls\Settings\ClockSettings.resx">
+      <DependentUpon>ClockSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControls\Settings\Default.resx">
+      <DependentUpon>Default.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserControls\Settings\ResultsTemplate.resx">
       <DependentUpon>ResultsTemplate.cs</DependentUpon>
@@ -361,7 +379,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

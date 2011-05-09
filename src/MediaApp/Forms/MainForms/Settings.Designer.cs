@@ -28,17 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Database");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("File Settings");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Film", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("TV");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("General");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Clock settings");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Database");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("File Settings");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Film", new System.Windows.Forms.TreeNode[] {
+            treeNode3,
+            treeNode4});
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("TV");
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.btn_cancel = new System.Windows.Forms.Button();
             this.btn_ok = new System.Windows.Forms.Button();
+            this.btn_cancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -53,25 +55,32 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Node1";
-            treeNode1.Tag = "FilmDatabaseSettings";
-            treeNode1.Text = "Database";
-            treeNode2.Name = "Node3";
-            treeNode2.Tag = "FilmFileSettings";
-            treeNode2.Text = "File Settings";
-            treeNode3.Name = "Node0";
-            treeNode3.Tag = "FilmSettings";
-            treeNode3.Text = "Film";
-            treeNode4.Name = "Node5";
-            treeNode4.Tag = "TVSettings";
-            treeNode4.Text = "TV";
+            treeNode1.Name = "General";
+            treeNode1.Tag = "GeneralSettings";
+            treeNode1.Text = "General";
+            treeNode2.Name = "ClockSettings";
+            treeNode2.Tag = "ClockSettings";
+            treeNode2.Text = "Clock settings";
+            treeNode3.Name = "FilmDatabaseSettings";
+            treeNode3.Tag = "FilmDatabaseSettings";
+            treeNode3.Text = "Database";
+            treeNode4.Name = "FilmFileSettings";
+            treeNode4.Tag = "FilmFileSettings";
+            treeNode4.Text = "File Settings";
+            treeNode5.Name = "FilmSettings";
+            treeNode5.Tag = "FilmSettings";
+            treeNode5.Text = "Film";
+            treeNode6.Name = "TVSettings";
+            treeNode6.Tag = "TVSettings";
+            treeNode6.Text = "TV";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4});
+            treeNode1,
+            treeNode2,
+            treeNode5,
+            treeNode6});
             this.treeView1.Size = new System.Drawing.Size(182, 455);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.treeView1.Click += new System.EventHandler(this.treeView1_Click);
             // 
             // splitContainer1
             // 
@@ -108,16 +117,6 @@
             this.splitContainer2.SplitterDistance = 457;
             this.splitContainer2.TabIndex = 2;
             // 
-            // btn_cancel
-            // 
-            this.btn_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_cancel.Location = new System.Drawing.Point(556, 8);
-            this.btn_cancel.Name = "btn_cancel";
-            this.btn_cancel.Size = new System.Drawing.Size(75, 23);
-            this.btn_cancel.TabIndex = 0;
-            this.btn_cancel.Text = "Cancel";
-            this.btn_cancel.UseVisualStyleBackColor = true;
-            // 
             // btn_ok
             // 
             this.btn_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -127,6 +126,16 @@
             this.btn_ok.TabIndex = 1;
             this.btn_ok.Text = "Ok";
             this.btn_ok.UseVisualStyleBackColor = true;
+            // 
+            // btn_cancel
+            // 
+            this.btn_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btn_cancel.Location = new System.Drawing.Point(556, 8);
+            this.btn_cancel.Name = "btn_cancel";
+            this.btn_cancel.Size = new System.Drawing.Size(75, 23);
+            this.btn_cancel.TabIndex = 0;
+            this.btn_cancel.Text = "Cancel";
+            this.btn_cancel.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 

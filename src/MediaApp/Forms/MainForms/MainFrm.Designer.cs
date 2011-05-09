@@ -18,12 +18,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FRM_Main));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Film", 1, 1);
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Tv");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Local Media", 4, 4, new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Playlists");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Film", 1, 1);
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Tv");
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Local Media", 4, 4, new System.Windows.Forms.TreeNode[] {
+            treeNode5,
+            treeNode6});
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Playlists");
             this.CMS_Settings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CMSI_dataBase = new System.Windows.Forms.ToolStripMenuItem();
             this.CMSI_creatDataBase = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,6 +40,7 @@
             this.elementHost2 = new System.Windows.Forms.Integration.ElementHost();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.btn_rndTV = new System.Windows.Forms.Button();
+            this.btn_PreviousTrack = new System.Windows.Forms.Button();
             this.PN_TimeDateDisplay = new System.Windows.Forms.Panel();
             this.lbl_AlarmStatus = new System.Windows.Forms.Label();
             this.lbl_DayOfWeek = new System.Windows.Forms.Label();
@@ -47,34 +48,22 @@
             this.lbl_Alarm = new System.Windows.Forms.Label();
             this.lbl_Date = new System.Windows.Forms.Label();
             this.lbl_time = new System.Windows.Forms.Label();
+            this.btn_Stop = new System.Windows.Forms.Button();
             this.lbl_runtime = new System.Windows.Forms.Label();
             this.btn_RptToggle = new System.Windows.Forms.Button();
             this.btn_RndFilm = new System.Windows.Forms.Button();
             this.btn_Settings = new System.Windows.Forms.Button();
             this.btn_RndPlaylist = new System.Windows.Forms.Button();
+            this.btn_FF = new System.Windows.Forms.Button();
             this.lbl_CurrentPosition = new System.Windows.Forms.Label();
+            this.btn_PlayPause = new System.Windows.Forms.Button();
+            this.btn_Rewind = new System.Windows.Forms.Button();
+            this.btn_nextTrack = new System.Windows.Forms.Button();
             this.PN_Library = new System.Windows.Forms.Panel();
             this.TBC_Library = new System.Windows.Forms.TabControl();
             this.TBP_MediaLibrary = new System.Windows.Forms.TabPage();
             this.SC_LibraryNavLibrary = new System.Windows.Forms.SplitContainer();
             this.TV_Library = new System.Windows.Forms.TreeView();
-            this.TBP_Video = new System.Windows.Forms.TabPage();
-            this.VLC_Player = new AxAXVLC.AxVLCPlugin2();
-            this.PN_Playlist = new System.Windows.Forms.Panel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.lisv_Playlist = new System.Windows.Forms.ListView();
-            this.clm_title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clm_length = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btn_playlistSettings = new System.Windows.Forms.Button();
-            this.btn_removeFromPlaylist = new System.Windows.Forms.Button();
-            this.btn_AddToPlaylist = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btn_PreviousTrack = new System.Windows.Forms.Button();
-            this.btn_Stop = new System.Windows.Forms.Button();
-            this.btn_FF = new System.Windows.Forms.Button();
-            this.btn_PlayPause = new System.Windows.Forms.Button();
-            this.btn_Rewind = new System.Windows.Forms.Button();
-            this.btn_nextTrack = new System.Windows.Forms.Button();
             this.PN_TVLibrary = new System.Windows.Forms.Panel();
             this.SC_TVLibrarySelectedDetails = new System.Windows.Forms.SplitContainer();
             this.SC_TVDetailsControlLibrary = new System.Windows.Forms.SplitContainer();
@@ -91,6 +80,17 @@
             this.btn_ShowHideTVDetails = new System.Windows.Forms.Button();
             this.btn_TVPlaySelected = new System.Windows.Forms.Button();
             this.btn_TVCreatePlaylist = new System.Windows.Forms.Button();
+            this.TBP_Video = new System.Windows.Forms.TabPage();
+            this.VLC_Player = new AxAXVLC.AxVLCPlugin2();
+            this.PN_Playlist = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.lisv_Playlist = new System.Windows.Forms.ListView();
+            this.clm_title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clm_length = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btn_playlistSettings = new System.Windows.Forms.Button();
+            this.btn_removeFromPlaylist = new System.Windows.Forms.Button();
+            this.btn_AddToPlaylist = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.CMS_Settings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SC_MainPlaylist)).BeginInit();
             this.SC_MainPlaylist.Panel1.SuspendLayout();
@@ -113,13 +113,6 @@
             this.SC_LibraryNavLibrary.Panel1.SuspendLayout();
             this.SC_LibraryNavLibrary.Panel2.SuspendLayout();
             this.SC_LibraryNavLibrary.SuspendLayout();
-            this.TBP_Video.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.VLC_Player)).BeginInit();
-            this.PN_Playlist.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             this.PN_TVLibrary.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SC_TVLibrarySelectedDetails)).BeginInit();
             this.SC_TVLibrarySelectedDetails.Panel1.SuspendLayout();
@@ -144,6 +137,13 @@
             this.SC_TVCastSynopsis.Panel1.SuspendLayout();
             this.SC_TVCastSynopsis.Panel2.SuspendLayout();
             this.SC_TVCastSynopsis.SuspendLayout();
+            this.TBP_Video.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.VLC_Player)).BeginInit();
+            this.PN_Playlist.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // CMS_Settings
@@ -344,6 +344,18 @@
             this.btn_rndTV.Text = "TV Episode";
             this.btn_rndTV.UseVisualStyleBackColor = true;
             // 
+            // btn_PreviousTrack
+            // 
+            this.btn_PreviousTrack.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_PreviousTrack.Image = global::MediaApp.Properties.Resources.Back;
+            this.btn_PreviousTrack.Location = new System.Drawing.Point(53, 66);
+            this.btn_PreviousTrack.Name = "btn_PreviousTrack";
+            this.btn_PreviousTrack.Size = new System.Drawing.Size(23, 23);
+            this.btn_PreviousTrack.TabIndex = 3;
+            this.btn_PreviousTrack.UseVisualStyleBackColor = true;
+            this.btn_PreviousTrack.Click += new System.EventHandler(this.btn_PreviousTrack_Click);
+            // 
             // PN_TimeDateDisplay
             // 
             this.PN_TimeDateDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -420,6 +432,18 @@
             this.lbl_time.TabIndex = 0;
             this.lbl_time.Text = "Time";
             // 
+            // btn_Stop
+            // 
+            this.btn_Stop.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_Stop.Image = global::MediaApp.Properties.Resources.stop;
+            this.btn_Stop.Location = new System.Drawing.Point(136, 66);
+            this.btn_Stop.Name = "btn_Stop";
+            this.btn_Stop.Size = new System.Drawing.Size(23, 23);
+            this.btn_Stop.TabIndex = 7;
+            this.btn_Stop.UseVisualStyleBackColor = true;
+            this.btn_Stop.Click += new System.EventHandler(this.btn_Stop_Click);
+            // 
             // lbl_runtime
             // 
             this.lbl_runtime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -457,7 +481,6 @@
             // 
             this.btn_Settings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_Settings.ContextMenuStrip = this.CMS_Settings;
             this.btn_Settings.Location = new System.Drawing.Point(252, 94);
             this.btn_Settings.Name = "btn_Settings";
             this.btn_Settings.Size = new System.Drawing.Size(71, 22);
@@ -477,6 +500,18 @@
             this.btn_RndPlaylist.Text = "Randomise";
             this.btn_RndPlaylist.UseVisualStyleBackColor = true;
             // 
+            // btn_FF
+            // 
+            this.btn_FF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_FF.Image = global::MediaApp.Properties.Resources.FastFoward;
+            this.btn_FF.Location = new System.Drawing.Point(163, 66);
+            this.btn_FF.Name = "btn_FF";
+            this.btn_FF.Size = new System.Drawing.Size(23, 23);
+            this.btn_FF.TabIndex = 6;
+            this.btn_FF.UseVisualStyleBackColor = true;
+            this.btn_FF.Click += new System.EventHandler(this.btn_FF_Click);
+            // 
             // lbl_CurrentPosition
             // 
             this.lbl_CurrentPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -488,6 +523,42 @@
             this.lbl_CurrentPosition.Size = new System.Drawing.Size(49, 13);
             this.lbl_CurrentPosition.TabIndex = 10;
             this.lbl_CurrentPosition.Text = "00:00:00";
+            // 
+            // btn_PlayPause
+            // 
+            this.btn_PlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_PlayPause.Image = global::MediaApp.Properties.Resources.Play1;
+            this.btn_PlayPause.Location = new System.Drawing.Point(109, 66);
+            this.btn_PlayPause.Name = "btn_PlayPause";
+            this.btn_PlayPause.Size = new System.Drawing.Size(23, 23);
+            this.btn_PlayPause.TabIndex = 8;
+            this.btn_PlayPause.UseVisualStyleBackColor = true;
+            this.btn_PlayPause.Click += new System.EventHandler(this.btn_PlayPause_Click);
+            // 
+            // btn_Rewind
+            // 
+            this.btn_Rewind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_Rewind.Image = global::MediaApp.Properties.Resources.Rewind1;
+            this.btn_Rewind.Location = new System.Drawing.Point(82, 66);
+            this.btn_Rewind.Name = "btn_Rewind";
+            this.btn_Rewind.Size = new System.Drawing.Size(23, 23);
+            this.btn_Rewind.TabIndex = 9;
+            this.btn_Rewind.UseVisualStyleBackColor = true;
+            this.btn_Rewind.Click += new System.EventHandler(this.btn_Rewind_Click);
+            // 
+            // btn_nextTrack
+            // 
+            this.btn_nextTrack.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_nextTrack.Image = global::MediaApp.Properties.Resources.Next;
+            this.btn_nextTrack.Location = new System.Drawing.Point(190, 66);
+            this.btn_nextTrack.Name = "btn_nextTrack";
+            this.btn_nextTrack.Size = new System.Drawing.Size(23, 23);
+            this.btn_nextTrack.TabIndex = 5;
+            this.btn_nextTrack.UseVisualStyleBackColor = true;
+            this.btn_nextTrack.Click += new System.EventHandler(this.btn_nextTrack_Click);
             // 
             // PN_Library
             // 
@@ -549,26 +620,26 @@
             this.TV_Library.ImageList = this.imageList1;
             this.TV_Library.Location = new System.Drawing.Point(0, 0);
             this.TV_Library.Name = "TV_Library";
-            treeNode1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            treeNode1.ImageIndex = 1;
-            treeNode1.Name = "Node1";
-            treeNode1.SelectedImageIndex = 1;
-            treeNode1.Text = "Film";
-            treeNode2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            treeNode2.Name = "Node2";
-            treeNode2.Text = "Tv";
-            treeNode3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            treeNode3.ImageIndex = 4;
-            treeNode3.Name = "Node0";
-            treeNode3.SelectedImageIndex = 4;
-            treeNode3.StateImageKey = "(none)";
-            treeNode3.Text = "Local Media";
-            treeNode4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            treeNode4.Name = "Node3";
-            treeNode4.Text = "Playlists";
+            treeNode5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            treeNode5.ImageIndex = 1;
+            treeNode5.Name = "Node1";
+            treeNode5.SelectedImageIndex = 1;
+            treeNode5.Text = "Film";
+            treeNode6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            treeNode6.Name = "Node2";
+            treeNode6.Text = "Tv";
+            treeNode7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            treeNode7.ImageIndex = 4;
+            treeNode7.Name = "Node0";
+            treeNode7.SelectedImageIndex = 4;
+            treeNode7.StateImageKey = "(none)";
+            treeNode7.Text = "Local Media";
+            treeNode8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            treeNode8.Name = "Node3";
+            treeNode8.Text = "Playlists";
             this.TV_Library.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4});
+            treeNode7,
+            treeNode8});
             this.TV_Library.SelectedImageIndex = 0;
             this.TV_Library.ShowLines = false;
             this.TV_Library.ShowPlusMinus = false;
@@ -577,193 +648,6 @@
             this.TV_Library.TabIndex = 1;
             this.TV_Library.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TV_Library_AfterSelect);
             this.TV_Library.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TV_Library_NodeMouseClick);
-            // 
-            // TBP_Video
-            // 
-            this.TBP_Video.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(152)))), ((int)(((byte)(191)))), ((int)(((byte)(131)))));
-            this.TBP_Video.Controls.Add(this.VLC_Player);
-            this.TBP_Video.Location = new System.Drawing.Point(4, 22);
-            this.TBP_Video.Name = "TBP_Video";
-            this.TBP_Video.Padding = new System.Windows.Forms.Padding(3);
-            this.TBP_Video.Size = new System.Drawing.Size(739, 571);
-            this.TBP_Video.TabIndex = 1;
-            this.TBP_Video.Text = "Video";
-            // 
-            // VLC_Player
-            // 
-            this.VLC_Player.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.VLC_Player.Enabled = true;
-            this.VLC_Player.Location = new System.Drawing.Point(3, 3);
-            this.VLC_Player.Name = "VLC_Player";
-            this.VLC_Player.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("VLC_Player.OcxState")));
-            this.VLC_Player.Size = new System.Drawing.Size(733, 565);
-            this.VLC_Player.TabIndex = 0;
-            // 
-            // PN_Playlist
-            // 
-            this.PN_Playlist.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.PN_Playlist.Controls.Add(this.splitContainer1);
-            this.PN_Playlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PN_Playlist.Location = new System.Drawing.Point(0, 0);
-            this.PN_Playlist.Name = "PN_Playlist";
-            this.PN_Playlist.Size = new System.Drawing.Size(253, 730);
-            this.PN_Playlist.TabIndex = 0;
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.lisv_Playlist);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.btn_playlistSettings);
-            this.splitContainer1.Panel2.Controls.Add(this.btn_removeFromPlaylist);
-            this.splitContainer1.Panel2.Controls.Add(this.btn_AddToPlaylist);
-            this.splitContainer1.Size = new System.Drawing.Size(249, 726);
-            this.splitContainer1.SplitterDistance = 697;
-            this.splitContainer1.TabIndex = 0;
-            // 
-            // lisv_Playlist
-            // 
-            this.lisv_Playlist.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
-            this.lisv_Playlist.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.clm_title,
-            this.clm_length});
-            this.lisv_Playlist.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lisv_Playlist.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lisv_Playlist.Location = new System.Drawing.Point(0, 0);
-            this.lisv_Playlist.MultiSelect = false;
-            this.lisv_Playlist.Name = "lisv_Playlist";
-            this.lisv_Playlist.Size = new System.Drawing.Size(249, 697);
-            this.lisv_Playlist.TabIndex = 0;
-            this.lisv_Playlist.UseCompatibleStateImageBehavior = false;
-            this.lisv_Playlist.View = System.Windows.Forms.View.Details;
-            // 
-            // clm_title
-            // 
-            this.clm_title.Text = "Title";
-            this.clm_title.Width = 197;
-            // 
-            // clm_length
-            // 
-            this.clm_length.Text = "Length";
-            this.clm_length.Width = 48;
-            // 
-            // btn_playlistSettings
-            // 
-            this.btn_playlistSettings.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btn_playlistSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_playlistSettings.Location = new System.Drawing.Point(60, 0);
-            this.btn_playlistSettings.Name = "btn_playlistSettings";
-            this.btn_playlistSettings.Size = new System.Drawing.Size(30, 25);
-            this.btn_playlistSettings.TabIndex = 2;
-            this.btn_playlistSettings.Text = "♫";
-            this.btn_playlistSettings.UseVisualStyleBackColor = true;
-            // 
-            // btn_removeFromPlaylist
-            // 
-            this.btn_removeFromPlaylist.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btn_removeFromPlaylist.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_removeFromPlaylist.Location = new System.Drawing.Point(30, 0);
-            this.btn_removeFromPlaylist.Name = "btn_removeFromPlaylist";
-            this.btn_removeFromPlaylist.Size = new System.Drawing.Size(30, 25);
-            this.btn_removeFromPlaylist.TabIndex = 1;
-            this.btn_removeFromPlaylist.Text = "-";
-            this.btn_removeFromPlaylist.UseVisualStyleBackColor = true;
-            // 
-            // btn_AddToPlaylist
-            // 
-            this.btn_AddToPlaylist.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btn_AddToPlaylist.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_AddToPlaylist.Location = new System.Drawing.Point(0, 0);
-            this.btn_AddToPlaylist.Name = "btn_AddToPlaylist";
-            this.btn_AddToPlaylist.Size = new System.Drawing.Size(30, 25);
-            this.btn_AddToPlaylist.TabIndex = 0;
-            this.btn_AddToPlaylist.Text = "+";
-            this.btn_AddToPlaylist.UseVisualStyleBackColor = true;
-            // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // btn_PreviousTrack
-            // 
-            this.btn_PreviousTrack.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_PreviousTrack.Image = global::MediaApp.Properties.Resources.Back;
-            this.btn_PreviousTrack.Location = new System.Drawing.Point(53, 66);
-            this.btn_PreviousTrack.Name = "btn_PreviousTrack";
-            this.btn_PreviousTrack.Size = new System.Drawing.Size(23, 23);
-            this.btn_PreviousTrack.TabIndex = 3;
-            this.btn_PreviousTrack.UseVisualStyleBackColor = true;
-            this.btn_PreviousTrack.Click += new System.EventHandler(this.btn_PreviousTrack_Click);
-            // 
-            // btn_Stop
-            // 
-            this.btn_Stop.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_Stop.Image = global::MediaApp.Properties.Resources.stop;
-            this.btn_Stop.Location = new System.Drawing.Point(136, 66);
-            this.btn_Stop.Name = "btn_Stop";
-            this.btn_Stop.Size = new System.Drawing.Size(23, 23);
-            this.btn_Stop.TabIndex = 7;
-            this.btn_Stop.UseVisualStyleBackColor = true;
-            this.btn_Stop.Click += new System.EventHandler(this.btn_Stop_Click);
-            // 
-            // btn_FF
-            // 
-            this.btn_FF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_FF.Image = global::MediaApp.Properties.Resources.FastFoward;
-            this.btn_FF.Location = new System.Drawing.Point(163, 66);
-            this.btn_FF.Name = "btn_FF";
-            this.btn_FF.Size = new System.Drawing.Size(23, 23);
-            this.btn_FF.TabIndex = 6;
-            this.btn_FF.UseVisualStyleBackColor = true;
-            this.btn_FF.Click += new System.EventHandler(this.btn_FF_Click);
-            // 
-            // btn_PlayPause
-            // 
-            this.btn_PlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_PlayPause.Image = global::MediaApp.Properties.Resources.Play1;
-            this.btn_PlayPause.Location = new System.Drawing.Point(109, 66);
-            this.btn_PlayPause.Name = "btn_PlayPause";
-            this.btn_PlayPause.Size = new System.Drawing.Size(23, 23);
-            this.btn_PlayPause.TabIndex = 8;
-            this.btn_PlayPause.UseVisualStyleBackColor = true;
-            this.btn_PlayPause.Click += new System.EventHandler(this.btn_PlayPause_Click);
-            // 
-            // btn_Rewind
-            // 
-            this.btn_Rewind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_Rewind.Image = global::MediaApp.Properties.Resources.Rewind1;
-            this.btn_Rewind.Location = new System.Drawing.Point(82, 66);
-            this.btn_Rewind.Name = "btn_Rewind";
-            this.btn_Rewind.Size = new System.Drawing.Size(23, 23);
-            this.btn_Rewind.TabIndex = 9;
-            this.btn_Rewind.UseVisualStyleBackColor = true;
-            this.btn_Rewind.Click += new System.EventHandler(this.btn_Rewind_Click);
-            // 
-            // btn_nextTrack
-            // 
-            this.btn_nextTrack.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_nextTrack.Image = global::MediaApp.Properties.Resources.Next;
-            this.btn_nextTrack.Location = new System.Drawing.Point(190, 66);
-            this.btn_nextTrack.Name = "btn_nextTrack";
-            this.btn_nextTrack.Size = new System.Drawing.Size(23, 23);
-            this.btn_nextTrack.TabIndex = 5;
-            this.btn_nextTrack.UseVisualStyleBackColor = true;
-            this.btn_nextTrack.Click += new System.EventHandler(this.btn_nextTrack_Click);
             // 
             // PN_TVLibrary
             // 
@@ -968,6 +852,121 @@
             this.btn_TVCreatePlaylist.Text = "Create Playlist";
             this.btn_TVCreatePlaylist.UseVisualStyleBackColor = true;
             // 
+            // TBP_Video
+            // 
+            this.TBP_Video.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(152)))), ((int)(((byte)(191)))), ((int)(((byte)(131)))));
+            this.TBP_Video.Controls.Add(this.VLC_Player);
+            this.TBP_Video.Location = new System.Drawing.Point(4, 22);
+            this.TBP_Video.Name = "TBP_Video";
+            this.TBP_Video.Padding = new System.Windows.Forms.Padding(3);
+            this.TBP_Video.Size = new System.Drawing.Size(739, 571);
+            this.TBP_Video.TabIndex = 1;
+            this.TBP_Video.Text = "Video";
+            // 
+            // VLC_Player
+            // 
+            this.VLC_Player.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.VLC_Player.Enabled = true;
+            this.VLC_Player.Location = new System.Drawing.Point(3, 3);
+            this.VLC_Player.Name = "VLC_Player";
+            this.VLC_Player.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("VLC_Player.OcxState")));
+            this.VLC_Player.Size = new System.Drawing.Size(733, 565);
+            this.VLC_Player.TabIndex = 0;
+            // 
+            // PN_Playlist
+            // 
+            this.PN_Playlist.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.PN_Playlist.Controls.Add(this.splitContainer1);
+            this.PN_Playlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PN_Playlist.Location = new System.Drawing.Point(0, 0);
+            this.PN_Playlist.Name = "PN_Playlist";
+            this.PN_Playlist.Size = new System.Drawing.Size(253, 730);
+            this.PN_Playlist.TabIndex = 0;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.lisv_Playlist);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.btn_playlistSettings);
+            this.splitContainer1.Panel2.Controls.Add(this.btn_removeFromPlaylist);
+            this.splitContainer1.Panel2.Controls.Add(this.btn_AddToPlaylist);
+            this.splitContainer1.Size = new System.Drawing.Size(249, 726);
+            this.splitContainer1.SplitterDistance = 697;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // lisv_Playlist
+            // 
+            this.lisv_Playlist.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
+            this.lisv_Playlist.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.clm_title,
+            this.clm_length});
+            this.lisv_Playlist.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lisv_Playlist.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lisv_Playlist.Location = new System.Drawing.Point(0, 0);
+            this.lisv_Playlist.MultiSelect = false;
+            this.lisv_Playlist.Name = "lisv_Playlist";
+            this.lisv_Playlist.Size = new System.Drawing.Size(249, 697);
+            this.lisv_Playlist.TabIndex = 0;
+            this.lisv_Playlist.UseCompatibleStateImageBehavior = false;
+            this.lisv_Playlist.View = System.Windows.Forms.View.Details;
+            // 
+            // clm_title
+            // 
+            this.clm_title.Text = "Title";
+            this.clm_title.Width = 197;
+            // 
+            // clm_length
+            // 
+            this.clm_length.Text = "Length";
+            this.clm_length.Width = 48;
+            // 
+            // btn_playlistSettings
+            // 
+            this.btn_playlistSettings.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btn_playlistSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_playlistSettings.Location = new System.Drawing.Point(60, 0);
+            this.btn_playlistSettings.Name = "btn_playlistSettings";
+            this.btn_playlistSettings.Size = new System.Drawing.Size(30, 25);
+            this.btn_playlistSettings.TabIndex = 2;
+            this.btn_playlistSettings.Text = "♫";
+            this.btn_playlistSettings.UseVisualStyleBackColor = true;
+            // 
+            // btn_removeFromPlaylist
+            // 
+            this.btn_removeFromPlaylist.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btn_removeFromPlaylist.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_removeFromPlaylist.Location = new System.Drawing.Point(30, 0);
+            this.btn_removeFromPlaylist.Name = "btn_removeFromPlaylist";
+            this.btn_removeFromPlaylist.Size = new System.Drawing.Size(30, 25);
+            this.btn_removeFromPlaylist.TabIndex = 1;
+            this.btn_removeFromPlaylist.Text = "-";
+            this.btn_removeFromPlaylist.UseVisualStyleBackColor = true;
+            // 
+            // btn_AddToPlaylist
+            // 
+            this.btn_AddToPlaylist.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btn_AddToPlaylist.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_AddToPlaylist.Location = new System.Drawing.Point(0, 0);
+            this.btn_AddToPlaylist.Name = "btn_AddToPlaylist";
+            this.btn_AddToPlaylist.Size = new System.Drawing.Size(30, 25);
+            this.btn_AddToPlaylist.TabIndex = 0;
+            this.btn_AddToPlaylist.Text = "+";
+            this.btn_AddToPlaylist.UseVisualStyleBackColor = true;
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // FRM_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1004,13 +1003,6 @@
             this.SC_LibraryNavLibrary.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SC_LibraryNavLibrary)).EndInit();
             this.SC_LibraryNavLibrary.ResumeLayout(false);
-            this.TBP_Video.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.VLC_Player)).EndInit();
-            this.PN_Playlist.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
             this.PN_TVLibrary.ResumeLayout(false);
             this.SC_TVLibrarySelectedDetails.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SC_TVLibrarySelectedDetails)).EndInit();
@@ -1037,6 +1029,13 @@
             this.SC_TVCastSynopsis.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SC_TVCastSynopsis)).EndInit();
             this.SC_TVCastSynopsis.ResumeLayout(false);
+            this.TBP_Video.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.VLC_Player)).EndInit();
+            this.PN_Playlist.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
