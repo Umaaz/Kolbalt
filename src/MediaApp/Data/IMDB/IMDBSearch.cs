@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace MediaApp.Data.IMDB
 {
@@ -15,12 +16,12 @@ namespace MediaApp.Data.IMDB
 
         public static IMDBResult TopResultBySource(String source)
         {
-            return SearchIMDBBySource(source)[0];
+            return Regex.IsMatch(source, "no matches",RegexOptions.IgnoreCase) ? null : SearchIMDBBySource(source)[0];
         }
 
         public static IList<IMDBResult> SearchIMDBByTitle(String title)
         {
-            var url = "http://www.IMDB.com/find?s=all&q=" + title;
+            var url = "http://www.IMDB.com/find?s=tt&q=" + title;
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Proxy = null;
             HttpWebResponse response;

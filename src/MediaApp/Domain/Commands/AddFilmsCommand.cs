@@ -117,7 +117,7 @@ namespace MediaApp.Domain.Commands
                     }
                     else
                     {
-                        ValidationErrors.Add(newFilm.FilmPath, results.Errors);
+                        ValidationErrors.Add(newFilm.IMDBId, results.Errors);
                         mayCommit = false;
                     }
                 }

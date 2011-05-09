@@ -14,13 +14,30 @@ namespace MediaApp.Forms
         private int _currentIndex;
         private ResultsTemplate _cont = new ResultsTemplate();
         private IList<IList<IMDBResult>> _results;
-        public Results(IList<Film> filmstolist, IList<IList<IMDBResult>> results)
+        private IList<IList<IMDBResult>> _possibleresults;
+        private readonly IList<Film> _possiblefilms;
+
+        public Results(IList<Film> filmstolist, IList<IList<IMDBResult>> results, IList<Film> possiblefilmstolist, IList<IList<IMDBResult>> possibleresults)
         {
             InitializeComponent();
             _films = filmstolist;
             _results = results;
+            _possibleresults = possibleresults;
+            _possiblefilms = possiblefilmstolist;
+            PopulateList();
+            listView1.Items[0].Selected = true;
+            listView1.EnsureVisible(0);
+            Build();
+        }
+
+        public void PopulateList()
+        {
+            listView1.Groups.Clear();
+            listView1.Items.Clear();
             var il = new ImageList();
             var count = 0;
+            listView1.Groups.Add(new ListViewGroup("Films"));
+            listView1.Groups.Add(new ListViewGroup("Possible Errors"));
             listView1.View = View.Tile;
             il.ImageSize = new Size(32, 32);
             listView1.LargeImageList = il;
@@ -31,6 +48,25 @@ namespace MediaApp.Forms
                 {
                     var pic = new Data.DownloadImage(film.PicURL);
                     pic.Download();
+                    var picture = pic.GetImage();
+                    if(picture != null)
+                        il.Images.Add(picture);
+                    item = new ListViewItem(new[] { film.Title, film.ReleaseYear }) { ImageIndex = count++ };
+                }
+                else
+                {
+                    item = new ListViewItem(new[] { film.Title, film.ReleaseYear });
+                }
+                item.Group = listView1.Groups[0];
+                listView1.Items.Add(item);
+            }
+            foreach (var film in _possiblefilms)
+            {
+                ListViewItem item;
+                if (film.PicURL != "/images/b.gif" && !string.IsNullOrEmpty(film.PicURL))
+                {
+                    var pic = new Data.DownloadImage(film.PicURL);
+                    pic.Download();
                     il.Images.Add(pic.GetImage());
                     item = new ListViewItem(new[] { film.Title, film.ReleaseYear }) { ImageIndex = count++ };
                 }
@@ -38,21 +74,62 @@ namespace MediaApp.Forms
                 {
                     item = new ListViewItem(new[] { film.Title, film.ReleaseYear });
                 }
+                item.Group = listView1.Groups[1];
                 listView1.Items.Add(item);
             }
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        public Results(IList<Film> filmstolist, IList<IList<IMDBResult>> results)
         {
-            _films[_currentIndex] = ResultsTemplate.Film ?? _films[_currentIndex];
+            InitializeComponent();
+            _films = filmstolist;
+            _results = results;
+            PopulateList();
+        }
+
+        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+
+        }
+        private void Build()
+        {
+            if (_currentIndex >= _films.Count)
+            {
+                _possiblefilms[_currentIndex - _films.Count] = ResultsTemplate.Film ??
+                                                               _possiblefilms[_currentIndex - _films.Count];
+            }
+            else
+            {
+                _films[_currentIndex] = ResultsTemplate.Film ?? _films[_currentIndex];
+            }
             panel1.Controls.Clear();
             if (listView1.SelectedIndices.Count > 0)
             {
-                _cont = new ResultsTemplate(_films[listView1.SelectedIndices[0]], _results[listView1.SelectedIndices[0]]);
-                panel1.Controls.Add(_cont);
-                _cont.Dock = DockStyle.Fill;
-                _currentIndex = listView1.SelectedIndices[0];
+                if (listView1.SelectedIndices[0] < _films.Count)
+                {
+                    _cont = new ResultsTemplate(_films[listView1.SelectedIndices[0]],
+                                                _results[listView1.SelectedIndices[0]]);
+                    panel1.Controls.Add(_cont);
+                    _cont.Dock = DockStyle.Fill;
+                    _currentIndex = listView1.SelectedIndices[0];
+                }
+                else
+                {
+                    var index = listView1.SelectedIndices[0] - _films.Count;
+                    _cont = new ResultsTemplate(_possiblefilms[index], _possibleresults[index]);
+                    panel1.Controls.Add(_cont);
+                    _cont.Dock = DockStyle.Fill;
+                    _currentIndex = listView1.SelectedIndices[0];
+                }
             }
+        }
+
+        private void listView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            Build();
+            PopulateList();
+            listView1.Items[_currentIndex].Selected = true;
+            listView1.EnsureVisible(_currentIndex);
         }
     }
 }

@@ -81,8 +81,6 @@ namespace MediaApp.Forms.UserControls
         {
             var films = GetFilms();
             var directors = films.SelectMany(film => film.Director).ToList();
-            //var directors =
-              //  films.OrderBy(o => o.Director.First().Name).Select(d => new ListBoxItem(d.Director.First().Id, d.Director.First().Name)).ToList();
             IList<ListBoxItem> dList = new List<ListBoxItem>();
             foreach (var person in directors)
             {

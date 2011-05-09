@@ -96,7 +96,11 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             bg.ProgressChanged += (s, ee) =>
             {
                 if ((Film)ee.UserState != null)
-                    Film = (Film)ee.UserState;
+                {
+                    var path = Film.FilmPath;
+                    Film = (Film) ee.UserState;
+                    Film.FilmPath = path;
+                }
                 else
                     if (MessageBox.Show("No film found!\n Check URL!", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
                     {

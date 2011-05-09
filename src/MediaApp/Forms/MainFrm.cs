@@ -143,7 +143,7 @@ namespace MediaApp
         
         private void creatDataBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var DBC = new DbCreate();
+            var DBC = new Settings();
             if (DBC.ShowDialog() == DialogResult.OK)
             {
                 var fl = new FilmLibrary();

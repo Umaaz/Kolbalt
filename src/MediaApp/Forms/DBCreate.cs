@@ -213,30 +213,36 @@ namespace MediaApp.Forms
 
         private static String FilterFilms(String file)
         {
-            var filter = new[] {"xvid", "divx", "dvdrip","ac3","hdtv","repack", "proper", "mp3"};
+            var filter = new[] {"xvid", "divx", "dvdrip","ac3", "mp3"};
 
             if (file.Contains("\\extras\\") || file.Contains("\\EXTRAS\\") || file.Contains("\\extra\\") || file.Contains("\\EXTRA\\"))
                 return null;
 
-            var f = file.Replace("."," ").Replace("_"," ").Replace("-","");
+            var f = file.Replace("."," ").Replace("_"," ").Replace("-"," ");
             f = Regex.Replace(f, @"\dch",""); //may need re worked to include 5.1 7.1 2.0 2 etc
             foreach (var s in filter)
             {
-                f = f.Replace(s, "");
+                f = Regex.Replace(f, s, "", RegexOptions.IgnoreCase);
             }
-            if (f.IndexOf("(") > 0 && f.IndexOf(")") > 0)
-                f = f.Remove(f.IndexOf("("), f.IndexOf(")") - f.IndexOf("(") - 1);
-            if (f.IndexOf("[") > 0 && f.IndexOf("]") > 0)
-                f = f.Remove(f.IndexOf("["), f.IndexOf("]") - f.IndexOf("[") - 1);
-            if (f.IndexOf("{") > 0 && f.IndexOf("}") > 0)
-                f = f.Remove(f.IndexOf("{"), f.IndexOf("}") - f.IndexOf("{") - 1);
-            f = Regex.Replace(f, @"Part\s\d", "", RegexOptions.IgnoreCase);
-            f = Regex.Replace(f, @"CD\s\d", "", RegexOptions.IgnoreCase);
-            f = Regex.Replace(f, @"Part\d", "", RegexOptions.IgnoreCase);
-            f = Regex.Replace(f, @"CD\d", "", RegexOptions.IgnoreCase);
+            f = Regex.Replace(f, @"(\{.*\}|\(.*\)|\[.*\])", "");
+            f = Regex.Replace(f, @"(cd|part|parts)[\s\d][\s\d]", "", RegexOptions.IgnoreCase);
             f = f.Trim();
-            
-            return f;
+
+            var sf = f.Split(' ');
+            var nsf = sf.Where(x => !MostCapitals(x)).ToList();
+            f = "";
+            foreach (var s in nsf)
+            {
+                f += s + " ";
+            }
+            return f.Trim();
+        }
+
+        private static bool MostCapitals(String s)
+        {
+            var length = s.Length;
+            var passCount = s.Count(c => char.IsUpper(c));
+            return ((passCount/(Double)length)*100) > 80;
         }
 
         private static Film GrapFilm(String film)
@@ -249,7 +255,6 @@ namespace MediaApp.Forms
                 newFilm.FilmPath = film;
                 GetIMDBResults(title);
             }
-
             return newFilm;
         }
 
