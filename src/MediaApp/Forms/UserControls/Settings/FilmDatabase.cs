@@ -102,6 +102,8 @@ namespace MediaApp.Forms.UserControls.Settings
         
         private void Build()
         {
+            progressBar1.Enabled = true;
+            progressBar1.Value = 0;
             var bgw = Newbgw();
             bgw.ProgressChanged += (o, args) =>
                                        {
@@ -115,8 +117,7 @@ namespace MediaApp.Forms.UserControls.Settings
                                           {
                                               progressBar1.Enabled = false;
                                               UserVerification();
-                                              lbl_Current.Text = "Build Coimplete.";
-                                              lbl_Current.Visible = true;
+                                              
                                           };
             bgw.RunWorkerAsync();
         }
@@ -152,7 +153,9 @@ namespace MediaApp.Forms.UserControls.Settings
             bgw.DoWork += UpdateIndex;
             bgw.RunWorkerCompleted += (o, args) =>
                                           {
-                                              lbl_Current.Visible = false;
+                                              lbl_Current.Text = "Build Coimplete.";
+                                              lbl_Current.Visible = true;
+                                              progressBar1.Enabled = false;
                                           };
             bgw.RunWorkerAsync();
         }
@@ -160,7 +163,7 @@ namespace MediaApp.Forms.UserControls.Settings
         private void UpdateIndex(object sender, DoWorkEventArgs args)
         {
             var worker = sender as BackgroundWorker;
-            worker.ReportProgress(6,"Indexing...");
+            worker.ReportProgress(99,"Indexing...");
             var session = NHibernate.Search.Search.CreateFullTextSession(NhSession);
             using (var trans = session.BeginTransaction())
             {
@@ -175,7 +178,7 @@ namespace MediaApp.Forms.UserControls.Settings
         private void SaveFilms(object sender, DoWorkEventArgs args)
         {
             var worker = sender as BackgroundWorker;
-            worker.ReportProgress(5,"Saving films...");
+            worker.ReportProgress(99,"Saving films...");
             var allFilms = new List<Film>(_foundFilms);
             allFilms.AddRange(_possibleErrors);
             var command = new AddFilmsCommand();
@@ -207,15 +210,18 @@ namespace MediaApp.Forms.UserControls.Settings
             var ffilms = FilterFilms(files);
             worker.ReportProgress(3, "Searching...");
             GrapFilms(sender,ffilms,  _foundFilms,  _foundFilmsResults,  _possibleErrors, _possibleErrorsResults);
-            worker.ReportProgress(4, "Awaiting user verification...");
+            worker.ReportProgress(99, "Awaiting user verification...");
         }
         
         private void GrapFilms(object sender, List<PossibleFilm> films,  List<Film> foundFilms,  List<IList<IMDBResult>> foundFilmsResults,  List<Film> possibleErrors,  List<IList<IMDBResult>> possibleErrosResults )
         {
             var worker = sender as BackgroundWorker;
+            var numFilms = films.Count;
+            var count = 1;
             foreach (var film in films)
             {
-                worker.ReportProgress(3,film.Path);
+                var percent = (count++/(double) numFilms)*100;
+                worker.ReportProgress((int)percent,film.Path);
                 var newFilm = IMDBFilm.GetFilmByName(film.Title);
                 if (newFilm != null)
                 {

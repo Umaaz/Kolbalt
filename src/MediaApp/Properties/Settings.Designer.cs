@@ -197,5 +197,17 @@ namespace MediaApp.Properties {
                 this["FilmFileFilter"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FilmEnableWatchedFolders {
+            get {
+                return ((bool)(this["FilmEnableWatchedFolders"]));
+            }
+            set {
+                this["FilmEnableWatchedFolders"] = value;
+            }
+        }
     }
 }

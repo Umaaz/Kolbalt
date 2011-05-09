@@ -37,11 +37,13 @@
             this.chk_DisplayFilmResults = new System.Windows.Forms.CheckBox();
             this.lbl_Current = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
             this.lisb_films = new System.Windows.Forms.ListBox();
             this.btn_Addfilm = new System.Windows.Forms.Button();
             this.btn_RemoveFilm = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chk_EnableWatchedFolders = new System.Windows.Forms.CheckBox();
             this.grpBoxDatabase.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpBoxDatabase
@@ -54,16 +56,16 @@
             this.grpBoxDatabase.Controls.Add(this.chk_DisplayFilmResults);
             this.grpBoxDatabase.Controls.Add(this.lbl_Current);
             this.grpBoxDatabase.Controls.Add(this.progressBar1);
-            this.grpBoxDatabase.Location = new System.Drawing.Point(6, 188);
+            this.grpBoxDatabase.Location = new System.Drawing.Point(6, 226);
             this.grpBoxDatabase.Name = "grpBoxDatabase";
-            this.grpBoxDatabase.Size = new System.Drawing.Size(434, 228);
+            this.grpBoxDatabase.Size = new System.Drawing.Size(446, 228);
             this.grpBoxDatabase.TabIndex = 10;
             this.grpBoxDatabase.TabStop = false;
             this.grpBoxDatabase.Text = "Database";
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(191, 195);
+            this.button2.Location = new System.Drawing.Point(203, 199);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 22);
             this.button2.TabIndex = 14;
@@ -92,7 +94,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(272, 196);
+            this.button1.Location = new System.Drawing.Point(284, 200);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 22);
             this.button1.TabIndex = 11;
@@ -102,7 +104,7 @@
             // 
             // btn_ReBuild
             // 
-            this.btn_ReBuild.Location = new System.Drawing.Point(353, 195);
+            this.btn_ReBuild.Location = new System.Drawing.Point(365, 199);
             this.btn_ReBuild.Name = "btn_ReBuild";
             this.btn_ReBuild.Size = new System.Drawing.Size(75, 23);
             this.btn_ReBuild.TabIndex = 3;
@@ -137,22 +139,13 @@
             this.progressBar1.Enabled = false;
             this.progressBar1.Location = new System.Drawing.Point(6, 111);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(413, 23);
+            this.progressBar1.Size = new System.Drawing.Size(434, 23);
             this.progressBar1.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(165, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Film Directories - Watched folders";
             // 
             // lisb_films
             // 
             this.lisb_films.FormattingEnabled = true;
-            this.lisb_films.Location = new System.Drawing.Point(1, 16);
+            this.lisb_films.Location = new System.Drawing.Point(6, 19);
             this.lisb_films.Name = "lisb_films";
             this.lisb_films.Size = new System.Drawing.Size(201, 134);
             this.lisb_films.TabIndex = 6;
@@ -160,7 +153,7 @@
             // btn_Addfilm
             // 
             this.btn_Addfilm.Image = global::MediaApp.Properties.Resources.Add;
-            this.btn_Addfilm.Location = new System.Drawing.Point(146, 156);
+            this.btn_Addfilm.Location = new System.Drawing.Point(151, 159);
             this.btn_Addfilm.Name = "btn_Addfilm";
             this.btn_Addfilm.Size = new System.Drawing.Size(25, 25);
             this.btn_Addfilm.TabIndex = 9;
@@ -170,28 +163,51 @@
             // btn_RemoveFilm
             // 
             this.btn_RemoveFilm.Image = global::MediaApp.Properties.Resources.Delete;
-            this.btn_RemoveFilm.Location = new System.Drawing.Point(177, 156);
+            this.btn_RemoveFilm.Location = new System.Drawing.Point(182, 159);
             this.btn_RemoveFilm.Name = "btn_RemoveFilm";
             this.btn_RemoveFilm.Size = new System.Drawing.Size(25, 25);
             this.btn_RemoveFilm.TabIndex = 8;
             this.btn_RemoveFilm.UseVisualStyleBackColor = true;
             this.btn_RemoveFilm.Click += new System.EventHandler(this.btn_RemoveFilm_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.chk_EnableWatchedFolders);
+            this.groupBox1.Controls.Add(this.lisb_films);
+            this.groupBox1.Controls.Add(this.btn_RemoveFilm);
+            this.groupBox1.Controls.Add(this.btn_Addfilm);
+            this.groupBox1.Location = new System.Drawing.Point(6, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(433, 217);
+            this.groupBox1.TabIndex = 11;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Film Directories - Watched folders";
+            // 
+            // chk_EnableWatchedFolders
+            // 
+            this.chk_EnableWatchedFolders.AutoSize = true;
+            this.chk_EnableWatchedFolders.Checked = global::MediaApp.Properties.Settings.Default.FilmEnableWatchedFolders;
+            this.chk_EnableWatchedFolders.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::MediaApp.Properties.Settings.Default, "FilmEnableWatchedFolders", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.chk_EnableWatchedFolders.Location = new System.Drawing.Point(213, 19);
+            this.chk_EnableWatchedFolders.Name = "chk_EnableWatchedFolders";
+            this.chk_EnableWatchedFolders.Size = new System.Drawing.Size(143, 17);
+            this.chk_EnableWatchedFolders.TabIndex = 10;
+            this.chk_EnableWatchedFolders.Text = "Enable Watched Folders";
+            this.chk_EnableWatchedFolders.UseVisualStyleBackColor = true;
+            // 
             // FilmDatabase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.grpBoxDatabase);
-            this.Controls.Add(this.btn_Addfilm);
-            this.Controls.Add(this.btn_RemoveFilm);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.lisb_films);
             this.Name = "FilmDatabase";
-            this.Size = new System.Drawing.Size(445, 421);
+            this.Size = new System.Drawing.Size(455, 457);
             this.grpBoxDatabase.ResumeLayout(false);
             this.grpBoxDatabase.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -208,7 +224,8 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btn_Addfilm;
         private System.Windows.Forms.Button btn_RemoveFilm;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListBox lisb_films;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox chk_EnableWatchedFolders;
     }
 }
