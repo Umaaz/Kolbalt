@@ -255,10 +255,23 @@ namespace MediaApp.Data.IMDB
                 var words = keyword.SelectNodes(".//a");
                 foreach (var word in words)
                 {
-                    keywords += word.InnerText + " ";
+                    if (word.InnerText.Contains(" "))
+                    {
+                        var splitWord = word.InnerText.Split(' ');
+                        foreach (var s in splitWord)
+                        {
+                            if (!keywords.Contains(s))
+                                keywords += s + " ";
+                        }
+                    }
+                    else
+                    {
+                        if (!keywords.Contains(word.InnerText))
+                            keywords += word.InnerText + " ";
+                    }
                 }
             }
-            return keywords;
+            return keywords.Replace("See more","");
         }
 
         private static String GetReleaseDate(HtmlDocument doc)
