@@ -15,16 +15,13 @@ namespace MediaApp.Forms.UserControls.Settings
     public partial class ResultsTemplate : UserControl
     {
         public static Film Film { get; set; }
+        private String SearchString { get; set; }
         
-        public ResultsTemplate()
-        {
-            Film = null;
-        }
-        
-        public ResultsTemplate(Film film)
+        public ResultsTemplate(Film film, String searchString)
         {
             InitializeComponent();
             Film = film;
+            SearchString = searchString;
             populate();
             lbl_filepath.Text = Film.FilmPath;
         }
@@ -242,13 +239,13 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             bgw.DoWork += (o, args) =>
                               {
                                   var worker = o as BackgroundWorker;
-                                  worker.ReportProgress(100,IMDBSearch.SearchIMDBByTitle(Film.Title));
+                                  worker.ReportProgress(100,IMDBSearch.SearchIMDBByTitle(SearchString));
                               };
             bgw.RunWorkerCompleted += (o, args) =>
                                           {
                                               if (results.Count != 0)
                                               {
-                                                  var cont = new IMDBResultsList(results, Film.Title);
+                                                  var cont = new IMDBResultsList(results, SearchString);
                                                   Enabled = false;
                                                   if (cont.ShowDialog() == DialogResult.OK)
                                                   {
@@ -258,7 +255,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
                                               }
                                               else
                                               {
-                                                  MessageBox.Show("Sorry there are no other results!", "Sorry", MessageBoxButtons.OK);
+                                                  MessageBox.Show("Sorry no other results where found!\nTry using direct link.", "No other results", MessageBoxButtons.OK);
                                               }
                                               panel1.Enabled = true;
                                               panel2.Visible = false;

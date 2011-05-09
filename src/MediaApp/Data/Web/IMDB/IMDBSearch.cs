@@ -63,7 +63,7 @@ namespace MediaApp.Data.Web.IMDB
                     y = y.Remove(0, y.IndexOf("("));
                     t = t.Remove(t.IndexOf("</a>"));
                     s = s.Remove(0, s.IndexOf("</td>") + 5);
-                    results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t), u, HtmlEscapeCharConverter.Decode(y), p));
+                    results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t.Trim()), u.Trim(), HtmlEscapeCharConverter.Decode(y.Trim()), p.Trim()));
                 }
             }
             if (source.Contains("Titles (Exact Matches)"))
@@ -82,7 +82,7 @@ namespace MediaApp.Data.Web.IMDB
                     y = y.Remove(0, y.IndexOf("("));
                     t = t.Remove(t.IndexOf("</a>"));
                     s = s.Remove(0, s.IndexOf("</td>") + 5);
-                    results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t), u, HtmlEscapeCharConverter.Decode(y), p));
+                    results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t.Trim()), u.Trim(), HtmlEscapeCharConverter.Decode(y.Trim()), p.Trim()));
                 }
             }
             if(source.Contains("<b>Titles (Partial Matches)"))
@@ -101,7 +101,7 @@ namespace MediaApp.Data.Web.IMDB
                     y = y.Remove(0, y.IndexOf("("));
                     t = t.Remove(t.IndexOf("</a>"));
                     s = s.Remove(0, s.IndexOf("</td>") + 5);
-                    results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t), u, HtmlEscapeCharConverter.Decode(y), p));
+                    results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t.Trim()), u.Trim(), HtmlEscapeCharConverter.Decode(y.Trim()), p.Trim()));
                 }
             }
             if (source.Contains("<b>Titles (Approx Matches)"))
@@ -120,7 +120,7 @@ namespace MediaApp.Data.Web.IMDB
                     y = y.Remove(0, y.IndexOf("("));
                     t = t.Remove(t.IndexOf("</a>"));
                     s = s.Remove(0, s.IndexOf("</td>") + 5);
-                    results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t), u, HtmlEscapeCharConverter.Decode(y), p));
+                    results.Add(new IMDBResult(HtmlEscapeCharConverter.Decode(t.Trim()), u.Trim(), HtmlEscapeCharConverter.Decode(y.Trim()), p.Trim()));
                 }
             }
             return results;

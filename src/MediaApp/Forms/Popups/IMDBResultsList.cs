@@ -24,7 +24,7 @@ namespace MediaApp.Forms.Popups
             foreach (var imdbResult in results)
             {
                 ListViewItem item;
-                if (imdbResult.PicUrl != "/images/b.gif")
+                if (imdbResult.PicUrl != "/images/b.gif" && !String.IsNullOrEmpty(imdbResult.PicUrl))
                 {
                     var pic = new DownloadImage(imdbResult.PicUrl);
                     pic.Download();
@@ -33,7 +33,8 @@ namespace MediaApp.Forms.Popups
                 }
                 else
                 {
-                    item = new ListViewItem(new[] {imdbResult.Title, imdbResult.Year});
+                    il.Images.Add(Properties.Resources.no_image);
+                    item = new ListViewItem(new[] {imdbResult.Title, imdbResult.Year}) {ImageIndex = count++};
                 }
                 listView1.Items.Add(item);
             }

@@ -57,6 +57,7 @@ namespace MediaApp.Data.Web.IMDB
             if (hw.StatusCode != HttpStatusCode.OK)
                 return null;
             
+
             //imdb ID
             var IMDBFilmId = url.Remove(0, url.LastIndexOf("tt") + 2);
             IMDBFilmId = IMDBFilmId.Replace("/", "");
@@ -67,7 +68,11 @@ namespace MediaApp.Data.Web.IMDB
             //title
             var title = "";
             if (docString.Contains("class=\"header\""))
+            {
+                if (VideoGame(doc))
+                    return null;
                 title = GetTitle(doc);
+            }
 
             //picurl
             var picURL = "";
@@ -125,11 +130,15 @@ namespace MediaApp.Data.Web.IMDB
             {
                 directorindexing += person.Name + " ";
             }
+            if (directorindexing.Length > 4000)
+                directorindexing.Remove(4000);
             var genreIndexing = "";
             foreach (var filmType in genres)
             {
                 genreIndexing += filmType.Type + " ";
             }
+            if (genreIndexing.Length > 4000)
+                genreIndexing.Remove(4000);
             var charIndexing = "";
             var personIndexing = "";
             foreach (var role in cast)
@@ -137,6 +146,10 @@ namespace MediaApp.Data.Web.IMDB
                 charIndexing += role.Character + " ";
                 personIndexing += role.Person.Name + " ";
             }
+            if (personIndexing.Length > 4000)
+                personIndexing.Remove(4000);
+            if (charIndexing.Length > 4000)
+                charIndexing.Remove(4000);
 
             return new Film
                        {
@@ -159,6 +172,19 @@ namespace MediaApp.Data.Web.IMDB
                        };
         }
 
+        private static bool VideoGame(HtmlDocument doc)
+        {
+            var titleNode = doc.DocumentNode.SelectNodes(".//h1[@class='header']").FirstOrDefault();
+            if(titleNode != null)
+            {
+                if(Regex.IsMatch(titleNode.InnerText,@"\(video game( [0-9]+|)\)",RegexOptions.IgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         private static String GetTitle(HtmlDocument doc)
         {
             var titleNode = doc.DocumentNode.SelectNodes(".//h1[@class='header']").FirstOrDefault();
@@ -326,8 +352,9 @@ namespace MediaApp.Data.Web.IMDB
                 story = storyNode.InnerText;
                 story = HtmlEscapeCharConverter.Decode(story);
             }
-            
-            return (story.Contains("Written by ")) ? story.Remove(story.LastIndexOf("Written by ")) : story;
+            if(story != null)
+                return (story.Contains("Written by ")) ? story.Remove(story.LastIndexOf("Written by ")) : story;
+            return "";
         }
     
         private static List<Role> GetCast(HtmlDocument doc)
@@ -352,7 +379,7 @@ namespace MediaApp.Data.Web.IMDB
                     var per = new Person { IMDBID = actNum, Name = HtmlEscapeCharConverter.Decode(name.Trim()) };
                     cast.Add(new Role
                     {
-                        Character = HtmlEscapeCharConverter.Decode(character),
+                        Character = HtmlEscapeCharConverter.Decode(Regex.Replace(character, @"(\{.*\}|\(.*\)|\[.*\])", "")),
                         Person = per
                     });
                 }
