@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -109,7 +110,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
         
         private void txtb_Title_TextChanged(object sender, System.EventArgs e)
         {
-            Film.Title = txtb_Title.Text;
+            Film.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(txtb_Title.Text);
         }
 
         private void txtb_RunTime_TextChanged(object sender, System.EventArgs e)
@@ -120,7 +121,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
 
         private void txtb_Keywords_TextChanged(object sender, System.EventArgs e)
         {
-            Film.Keywords = txtb_Keywords.Text;
+            Film.Keywords = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(txtb_Keywords.Text);
         }
 
         private void txtb_Synopsis_TextChanged(object sender, System.EventArgs e)
@@ -136,7 +137,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             {
                 Film.Genre.Add(new FilmType
                                         {
-                                            Type = value
+                                            Type = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value)
                                         });
             }
             populate();
@@ -161,9 +162,9 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             {
                 var role = Film.Cast.Where(x => x.Person.IMDBID == dataGridView1.SelectedRows[0].Cells[1].Value.ToString()).First();
 
-                role.Character = value[0];
+                role.Character = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[0]);
                 role.Person.IMDBID = value[1];
-                role.Person.Name = value[2];
+                role.Person.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[2]);
 
                 populate();
             }
@@ -188,24 +189,40 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             var value = new List<String>();
             var prompts = new[] { "Character Name", "Actor IMDB ID", "Actor Name" };
             var defualts = new[] { "Please enter character name", "Please enter Actor IMDB ID", "Please enter Actor Name" };
-            if (InputBox.Show("Add new cast member - Unrecommended", prompts, defualts, ref value, true) == DialogResult.OK)
+            while (true)
             {
-                Film.Cast.Add(new Role
+                if (InputBox.Show("Add new cast member - Unrecommended", prompts, defualts, ref value, true) != DialogResult.OK) 
+                    return;
+                if (Regex.IsMatch(value[1], "^[0-9]{7}$"))
                 {
-                    Character = value[0],
-                    Person = new Person
-                    {
-                        IMDBID = value[1],
-                        Name = value[2]
-                    }
-                });
-                populate();
+                    Film.Cast.Add(new Role
+                                      {
+                                          Character = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[0]),
+                                          Person = new Person
+                                                       {
+                                                           IMDBID = value[1],
+                                                           Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[2])
+                                                       }
+                                      });
+                    populate();
+                    return;
+                }
+                if (MessageBox.Show("Invalid IMDB ID, expected a 7 didigt number.", "IMDB ID - Validation error.", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
+                {
+                    defualts = value.ToArray();
+                }
+                else
+                {
+                    return;
+                }
             }
+            
         }
+
 
         private void txtb_Year_TextChanged(object sender, EventArgs e)
         {
-            if(Regex.IsMatch(txtb_Year.Text,@"^\d\d\d\d$"))
+            if(Regex.IsMatch(txtb_Year.Text,@"^[0-9]{4}$"))
             {
                 Film.ReleaseYear = txtb_Year.Text;
             }
@@ -261,32 +278,45 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
 
         private void button3_Click(object sender, EventArgs e)
         {
-            //add director
-            List<String> value = null;
-            if(InputBox.Show("New Director",new [] {"IMDB ID", "Director Name"},new []{"Example \"0012487\"","Example \"Joe Bloggs\""},ref value,true) == DialogResult.OK)
+            var newDirector = AddPerson(new[] {"IMDB ID", "Director Name"}, "New Director");
+            if(newDirector == null)
+                return;
+            Film.Director.Add(newDirector);
+            populate();
+        }
+
+        private Person AddPerson(string[] prompts, string title)
+        {
+            var defaults = new[] { "Example \"0012487\"", "Example \"Joe Bloggs\"" };
+            var value = new List<string>();
+            while (true)
             {
-                Film.Director.Add(new Person
-                                      {
-                                          IMDBID = value[0],
-                                          Name = value[1]
-                                      });
-                populate();
+                if (InputBox.Show(title, prompts, defaults, ref value, true) != DialogResult.OK)
+                    return null;
+                if(Regex.IsMatch(value[0],"^[0-9]{7}$"))
+                    return new Person
+                               {
+                                   IMDBID = value[0],
+                                   Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[1])
+                                };
+                if (MessageBox.Show("Invalid IMDB ID, expected a 7 digit number.", "IMDB ID - Validation error.", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
+                {
+                    defaults = value.ToArray();
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
         private void btn_addWriter_Click(object sender, EventArgs e)
         {
-            //add Writer
-            List<String> value = null;
-            if(InputBox.Show("New Writer", new string[] {"IMDB ID","Writer Name"}, new string[]{"Example \"0012487\"","Example \"Joe Bloggs\""},ref value, true) == DialogResult.OK)
-            {
-                Film.Writers.Add(new Person
-                                     {
-                                         IMDBID = value[0],
-                                         Name = value[1]
-                                     });
-                populate();
-            }
+            var newWriter = AddPerson(new[] { "IMDB ID", "Writer Name" }, "New Writer");
+            if (newWriter == null)
+                return;
+            Film.Writers.Add(newWriter);
+            populate();
         }
 
         private void btn_deleteWriter_Click(object sender, EventArgs e)
