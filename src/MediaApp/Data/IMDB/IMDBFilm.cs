@@ -288,12 +288,13 @@ namespace MediaApp.Data.IMDB
                     divs.Where(
                         x => x.SelectNodes(".//h4") != null && x.SelectNodes(".//h4").First().InnerText.Trim() == "Runtime:")
                         .Single().InnerText;
-                runtime = Regex.Replace(t, "[^0-9]", "");
+                var matches = Regex.Matches(t, "[0-9]{3} min",RegexOptions.IgnoreCase);
+                if(matches.Count > 0)
+                    runtime = matches[0].Value.Replace(" min","");
             }
             if (string.IsNullOrEmpty(runtime))
                 runtime = "0";
             int rt;
-            
             return (int.TryParse(runtime,out rt)) ? rt : 0;
         }
     
