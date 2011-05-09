@@ -18,6 +18,11 @@ namespace MediaApp.Data.Items
             return Text;
         }
 
+        public virtual String ToolTipText()
+        {
+            return Text;
+        }
+
         public override int GetHashCode()
         {
             return Id.GetHashCode();
@@ -30,4 +35,48 @@ namespace MediaApp.Data.Items
             return a.Id == Id;
         }
     }
+
+    public class GenreListBoxItem : ListBoxItem
+    {
+        public GenreListBoxItem(Guid id, String genre) : base(id,genre)
+        {
+            
+        }
+
+        public override string ToolTipText()
+        {
+            return "Genre: " + base.ToolTipText();
+        }
+    }
+
+    public class PersonListBoxItem : ListBoxItem
+    {
+        public String Imdbid { get; set; }
+
+        public PersonListBoxItem(Guid id, String imdbid, String name) : base(id,name)
+        {
+            Imdbid = imdbid;
+        }
+
+        public override string ToolTipText()
+        {
+            return "Name: " + base.ToolTipText() + "\nIMDB ID: " + Imdbid;
+        }
+    }
+
+    public class RoleListBoxItem : PersonListBoxItem
+    {
+        public String CharName { get; set; }
+
+        public RoleListBoxItem(Guid id, String imdbid, String actorName, String charName) : base(id,imdbid,actorName)
+        {
+            CharName = charName;
+        }
+
+        public override string ToolTipText()
+        {
+            return "Character Name: " + CharName +"\n"+ base.ToolTipText();
+        }
+    }
+
 }

@@ -42,9 +42,9 @@ namespace MediaApp.Forms.UserControls.Settings
             var data = Film.Cast.Select(x => new { x.Character, PersonIMDBID = x.Person.IMDBID, x.Person.Name }).ToList();
             dataGridView1.DataSource = data.ToArray();
             
-            lstb_genres.DataSource = Film.Genre.Select(x => new ListBoxItem(x.Id, x.Type)).ToList();
-            lstb_Directors.DataSource = Film.Director.Select(x => new ListBoxItem(x.Id, x.Name)).ToList();
-            lstb_Writers.DataSource = Film.Writers.Select(x => new ListBoxItem(x.Id, x.Name)).ToList();
+            lstb_genres.DataSource = Film.Genre.Select(x => new GenreListBoxItem(x.Id, x.Type)).ToList();
+            lstb_Directors.DataSource = Film.Director.Select(x => new PersonListBoxItem(x.Id,x.IMDBID, x.Name)).ToList();
+            lstb_Writers.DataSource = Film.Writers.Select(x => new PersonListBoxItem(x.Id,x.IMDBID, x.Name)).ToList();
         }
 
         private void btn_rescan_Click(object sender, System.EventArgs e)
@@ -327,6 +327,29 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
                 Film.Writers.RemoveAt(lstb_Writers.SelectedIndex);
                 populate();
             }
+        }
+
+        private void SetToolTip(object sender)
+        {
+            var cont = sender as ListBox;
+            var item = (ListBoxItem)cont.SelectedItem;
+            var tip = item.ToolTipText();
+            toolTip1.SetToolTip(cont,tip);
+        }
+
+        private void lstb_genres_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetToolTip(sender);
+        }
+
+        private void lstb_Directors_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetToolTip(sender);
+        }
+
+        private void lstb_Writers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetToolTip(sender);
         }
     }
 }

@@ -142,6 +142,7 @@
             this.lstb_Writers.Name = "lstb_Writers";
             this.lstb_Writers.Size = new System.Drawing.Size(131, 69);
             this.lstb_Writers.TabIndex = 11;
+            this.lstb_Writers.SelectedIndexChanged += new System.EventHandler(this.lstb_Writers_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -198,6 +199,7 @@
             this.lstb_Directors.Name = "lstb_Directors";
             this.lstb_Directors.Size = new System.Drawing.Size(131, 69);
             this.lstb_Directors.TabIndex = 8;
+            this.lstb_Directors.SelectedIndexChanged += new System.EventHandler(this.lstb_Directors_SelectedIndexChanged);
             // 
             // btn_otherresults
             // 
@@ -457,6 +459,8 @@
             this.lstb_genres.Name = "lstb_genres";
             this.lstb_genres.Size = new System.Drawing.Size(131, 56);
             this.lstb_genres.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.lstb_genres, "l");
+            this.lstb_genres.SelectedIndexChanged += new System.EventHandler(this.lstb_genres_SelectedIndexChanged);
             // 
             // ResultsTemplate
             // 
