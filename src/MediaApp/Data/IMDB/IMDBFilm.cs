@@ -288,7 +288,7 @@ namespace MediaApp.Data.IMDB
                     divs.Where(
                         x => x.SelectNodes(".//h4") != null && x.SelectNodes(".//h4").First().InnerText.Trim() == "Runtime:")
                         .Single().InnerText;
-                var matches = Regex.Matches(t, "[0-9]{3} min",RegexOptions.IgnoreCase);
+                var matches = Regex.Matches(t, "[0-9]+ min",RegexOptions.IgnoreCase);
                 if(matches.Count > 0)
                     runtime = matches[0].Value.Replace(" min","");
             }
