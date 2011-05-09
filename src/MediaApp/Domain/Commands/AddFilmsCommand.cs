@@ -64,11 +64,12 @@ namespace MediaApp.Domain.Commands
                         realNewFilm.RunTime = film.RunTime;
                         realNewFilm.Synopsis = film.Synopsis;
                         realNewFilm.Title = film.Title;
-                        realNewFilm.Keywords = film.Keywords; // check for duplicates
+                        realNewFilm.Keywords = film.Keywords;
                         realNewFilm.DirectorIndexing = film.DirectorIndexing;
                         realNewFilm.GenreIndexing = film.GenreIndexing;
                         realNewFilm.CharIndexing = film.CharIndexing;
-                        realNewFilm.PersonIndexing = film.PersonIndexing; //check for duplicates
+                        realNewFilm.PersonIndexing = film.PersonIndexing;
+                        realNewFilm.PicURL = film.PicURL;
 
                         foreach (var person in film.Director)
                         {
@@ -77,6 +78,15 @@ namespace MediaApp.Domain.Commands
                                                SingleOrDefault() ?? person;
                             AddPersonToCache(director);
                             realNewFilm.Director.Add(director);
+                        }
+
+                        foreach (var person in film.Writers)
+                        {
+                            var writer = GetPersonFromCache(person.IMDBID) ??
+                                           nhSession.Query<Person>().Where(x => x.IMDBID == person.IMDBID).
+                                               SingleOrDefault() ?? person;
+                            AddPersonToCache(writer);
+                            realNewFilm.Writers.Add(writer);
                         }
 
                         foreach (var genre in film.Genre)
