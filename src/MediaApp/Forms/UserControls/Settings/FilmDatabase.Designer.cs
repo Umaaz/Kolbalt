@@ -56,9 +56,9 @@
             this.grpBoxDatabase.Controls.Add(this.chk_DisplayFilmResults);
             this.grpBoxDatabase.Controls.Add(this.lbl_Current);
             this.grpBoxDatabase.Controls.Add(this.progressBar1);
-            this.grpBoxDatabase.Location = new System.Drawing.Point(6, 226);
+            this.grpBoxDatabase.Location = new System.Drawing.Point(3, 226);
             this.grpBoxDatabase.Name = "grpBoxDatabase";
-            this.grpBoxDatabase.Size = new System.Drawing.Size(446, 228);
+            this.grpBoxDatabase.Size = new System.Drawing.Size(449, 228);
             this.grpBoxDatabase.TabIndex = 10;
             this.grpBoxDatabase.TabStop = false;
             this.grpBoxDatabase.Text = "Database";
@@ -139,7 +139,7 @@
             this.progressBar1.Enabled = false;
             this.progressBar1.Location = new System.Drawing.Point(6, 111);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(434, 23);
+            this.progressBar1.Size = new System.Drawing.Size(437, 23);
             this.progressBar1.TabIndex = 0;
             // 
             // lisb_films
@@ -176,9 +176,9 @@
             this.groupBox1.Controls.Add(this.lisb_films);
             this.groupBox1.Controls.Add(this.btn_RemoveFilm);
             this.groupBox1.Controls.Add(this.btn_Addfilm);
-            this.groupBox1.Location = new System.Drawing.Point(6, 3);
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(433, 217);
+            this.groupBox1.Size = new System.Drawing.Size(449, 217);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Film Directories - Watched folders";

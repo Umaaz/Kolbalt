@@ -205,7 +205,7 @@ namespace MediaApp.Data.Web.IMDB
                 picURL = picURL.Remove(0, picURL.IndexOf("<img src=") + 10);
                 picURL = picURL.Remove(picURL.IndexOf("\""));
             }
-            return picURL;
+            return picURL.Replace("\n", "");
         }
     
         private static List<FilmType> GetGenres(HtmlDocument doc)
@@ -222,7 +222,7 @@ namespace MediaApp.Data.Web.IMDB
             {
                 genres = gen.Select(g => new FilmType
                 {
-                    Type = HtmlEscapeCharConverter.Decode(g.InnerText.Trim())
+                    Type = HtmlEscapeCharConverter.Decode(g.InnerText.Trim().Replace("\n", ""))
                 }).ToList();
             }
             return genres;
@@ -239,10 +239,10 @@ namespace MediaApp.Data.Web.IMDB
                 var matches = Regex.Matches(dname.OuterHtml, @"/nm\d\d\d\d\d\d\d/");
                 if (matches.Count > 0)
                     directors.Add(new Person
-                    {
-                        IMDBID = matches[0].Value.Replace("/", "").Replace("nm", ""),
-                        Name = dname.InnerText
-                    });
+                                      {
+                                          IMDBID = matches[0].Value.Replace("/", "").Replace("nm", "").Replace("\n", ""),
+                                          Name = HtmlEscapeCharConverter.Decode(dname.InnerText.Replace("\n", ""))
+                                      });
             }
             return directors;
         }
@@ -263,10 +263,10 @@ namespace MediaApp.Data.Web.IMDB
                     var matches = Regex.Matches(wname.OuterHtml, @"/nm\d\d\d\d\d\d\d/");
                     if (matches.Count > 0)
                         writers.Add(new Person
-                        {
-                            IMDBID = matches[0].Value.Replace("/", "").Replace("nm", ""),
-                            Name = wname.InnerText
-                        });
+                                        {
+                                            IMDBID = matches[0].Value.Replace("/", "").Replace("nm", ""),
+                                            Name = HtmlEscapeCharConverter.Decode(wname.InnerText.Replace("\n", ""))
+                                        });
                 }
             return writers;
         }
@@ -297,7 +297,7 @@ namespace MediaApp.Data.Web.IMDB
                     }
                 }
             }
-            return keywords.Replace("See more","");
+            return keywords.Replace("See more", "").Replace("\n", "").Trim();
         }
 
         private static String GetReleaseDate(HtmlDocument doc)
@@ -307,14 +307,15 @@ namespace MediaApp.Data.Web.IMDB
                 .Where(x => x.SelectNodes(".//h4") != null)
                 .Where(x => x.SelectNodes(".//h4").First().InnerText.Trim().Contains("Release Date"))
                 .SingleOrDefault();
-            string d = null;
+            string d = "";
             if (dateString != null)
             {
                 var td = dateString.InnerText.Remove(dateString.InnerText.IndexOf("(")).Replace("Release Date:", "");
                 d = td.Replace("\n", "");
                 d = d.Remove(0, d.Length - 4);
             }
-            return d;
+            
+            return d.Replace("\n", "").Trim();
         }
     
         private static int GetRunTime(HtmlDocument doc)
@@ -353,7 +354,7 @@ namespace MediaApp.Data.Web.IMDB
                 story = HtmlEscapeCharConverter.Decode(story);
             }
             if(story != null)
-                return (story.Contains("Written by ")) ? story.Remove(story.LastIndexOf("Written by ")) : story;
+                return (story.Contains("Written by ")) ? story.Remove(story.LastIndexOf("Written by ")).Replace("\n", "").Trim() : story.Replace("\n", "").Trim();
             return "";
         }
     
@@ -376,12 +377,17 @@ namespace MediaApp.Data.Web.IMDB
                     {
                         character = character.Replace("  ", " ");
                     }
-                    var per = new Person { IMDBID = actNum, Name = HtmlEscapeCharConverter.Decode(name.Trim()) };
                     cast.Add(new Role
-                    {
-                        Character = HtmlEscapeCharConverter.Decode(Regex.Replace(character, @"(\{.*\}|\(.*\)|\[.*\])", "")),
-                        Person = per
-                    });
+                                 {
+                                     Character =
+                                         HtmlEscapeCharConverter.Decode(Regex.Replace(character, @"(\{.*\}|\(.*\)|\[.*\])", "")
+                                         .Replace("\n", "").Trim()),
+                                     Person = new Person
+                                                  {
+                                                      IMDBID = actNum,
+                                                      Name = HtmlEscapeCharConverter.Decode(name.Trim().Replace("\n", ""))
+                                                  }
+                                 });
                 }
             return cast;
         }
@@ -395,7 +401,7 @@ namespace MediaApp.Data.Web.IMDB
                 link = tlink.InnerHtml.Remove(0, tlink.InnerHtml.IndexOf("href=\"")+6);
                 link = link.Remove(link.IndexOf("\""));
             }
-            return link;
+            return link.Trim().Replace("\n", "");
         }
     }
 }

@@ -114,17 +114,26 @@ namespace MediaApp.Forms.UserControls.Settings
             bgw.RunWorkerCompleted += (o, args) =>
                                           {
                                               progressBar1.Enabled = false;
-                                              UserVerification();
-                                              
+                                              if (Properties.Settings.Default.filmDisplayResults)
+                                                  UserVerification();
+                                              Complete();
                                           };
             bgw.RunWorkerAsync();
         }
 
+        private List<Film> _filmsToAdd = new List<Film>();
         private void UserVerification()
         {
-            var results = new Results(_foundFilms,_possibleErrors);
+            Results results = null;
+            if (_films.Count == 0)
+                return;
+            results = new Results(_films);
             if (results.ShowDialog(this) != DialogResult.OK)
                 return;
+            _films = results.GetFilms();
+        }
+        private void Complete()
+        {
             var bgw = Newbgw();
             bgw.ProgressChanged += (o, args) =>
                                        {
@@ -177,10 +186,8 @@ namespace MediaApp.Forms.UserControls.Settings
         {
             var worker = sender as BackgroundWorker;
             worker.ReportProgress(99,"Saving films...");
-            var allFilms = new List<Film>(_foundFilms);
-            allFilms.AddRange(_possibleErrors);
             var command = new AddFilmsCommand();
-            command.Films = allFilms;
+            command.Films = _films.Select(x => (Film)x).ToList();
             if(command.Execute())
             {
                 
@@ -190,8 +197,7 @@ namespace MediaApp.Forms.UserControls.Settings
                 var errors = command.ValidationErrors;
             }
         }
-        private List<Film> _foundFilms = new List<Film>();
-        private List<Film> _possibleErrors = new List<Film>();
+        private List<FilmResult> _films = new List<FilmResult>();
         private void Execute (object sender, DoWorkEventArgs args)
         {
             var worker = sender as BackgroundWorker;
@@ -224,11 +230,12 @@ namespace MediaApp.Forms.UserControls.Settings
                     newFilm.FilmPath = film.Path;
                     if(Regex.IsMatch(newFilm.Title,film.Title.Trim(),RegexOptions.IgnoreCase))
                     {
-                        _foundFilms.Add(newFilm);
+                        _films.Add(new FilmResult(newFilm));
                     }
                     else
                     {
-                        _possibleErrors.Add(newFilm);
+                        var f = new FilmResult(newFilm) {PossibleErrors = true};
+                        _films.Add(f);
                     }
                 }
             }
@@ -304,12 +311,12 @@ namespace MediaApp.Forms.UserControls.Settings
             }
             return files;
         }
+        
         private BackgroundWorker Newbgw()
         {
             return new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
         }
     }
-
 
     public class PossibleFilm
     {

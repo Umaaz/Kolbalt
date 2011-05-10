@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -14,10 +15,10 @@ namespace MediaApp.Forms.UserControls.Settings
 {
     public partial class ResultsTemplate : UserControl
     {
-        public static Film Film { get; set; }
+        public static FilmResult Film { get; set; }
         private String SearchString { get; set; }
         
-        public ResultsTemplate(Film film, String searchString)
+        public ResultsTemplate(FilmResult film, String searchString)
         {
             InitializeComponent();
             Film = film;
@@ -38,10 +39,10 @@ namespace MediaApp.Forms.UserControls.Settings
 
             var data = Film.Cast.Select(x => new { x.Character, PersonIMDBID = x.Person.IMDBID, x.Person.Name }).ToList();
             dataGridView1.DataSource = data.ToArray();
-            
+
             lstb_genres.DataSource = Film.Genre.Select(x => new GenreListBoxItem(x.Id, x.Type)).ToList();
-            lstb_Directors.DataSource = Film.Director.Select(x => new PersonListBoxItem(x.Id,x.IMDBID, x.Name)).ToList();
-            lstb_Writers.DataSource = Film.Writers.Select(x => new PersonListBoxItem(x.Id,x.IMDBID, x.Name)).ToList();
+            lstb_Directors.DataSource = Film.Director.Select(x => new PersonListBoxItem(x.Id, x.IMDBID, x.Name)).ToList();
+            lstb_Writers.DataSource = Film.Writers.Select(x => new PersonListBoxItem(x.Id, x.IMDBID, x.Name)).ToList();
         }
 
         private void btn_rescan_Click(object sender, System.EventArgs e)
@@ -56,9 +57,9 @@ namespace MediaApp.Forms.UserControls.Settings
             {
                 ExecuteScan(url);
             }
-            else if(Regex.IsMatch(url,@"\d\d\d\d\d\d\d"))
+            else if (Regex.IsMatch(url, @"\d\d\d\d\d\d\d"))
             {
-                ExecuteScan("http://www.IMDB.com/title/tt" +url);
+                ExecuteScan("http://www.IMDB.com/title/tt" + url);
             }
             else
             {
@@ -76,35 +77,41 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             panel1.Enabled = false;
             panel2.Visible = true;
             bg.DoWork += (s, ee) =>
-            {
-                var worker = s as BackgroundWorker;
-                worker.ReportProgress(100, IMDBFilm.GetFilmByUrl(url));
-            };
+                             {
+                                 var worker = s as BackgroundWorker;
+                                 worker.ReportProgress(100, IMDBFilm.GetFilmByUrl(url));
+                             };
             bg.ProgressChanged += (s, ee) =>
-            {
-                if ((Film)ee.UserState != null)
-                {
-                    var path = Film.FilmPath;
-                    Film = (Film) ee.UserState;
-                    Film.FilmPath = path;
-                }
-                else
-                    if (MessageBox.Show("No film found!\n Check URL!", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
-                    {
-                        Scan(url);
-                    }
-            };
+                                      {
+                                          if (ee.UserState != null)
+                                          {
+                                              var path = Film.FilmPath;
+                                              var error = Film.PossibleErrors;
+                                              Film = new FilmResult((Film) ee.UserState)
+                                                         {
+                                                             FilmPath = path,
+                                                             PossibleErrors = error
+                                                         };
+                                          }
+                                          else if (
+                                              MessageBox.Show("No film found!\n Check URL!", "Error",
+                                                              MessageBoxButtons.RetryCancel, MessageBoxIcon.Error,
+                                                              MessageBoxDefaultButton.Button2) == DialogResult.Retry)
+                                          {
+                                              Scan(url);
+                                          }
+                                      };
             bg.RunWorkerCompleted += (s, ee) =>
-            {
-                populate();
-                panel1.Enabled = true;
-                panel2.Visible = false;
-            };
+                                         {
+                                             populate();
+                                             panel1.Enabled = true;
+                                             panel2.Visible = false;
+                                         };
 
             bg.RunWorkerAsync();
         }
 
-        
+
         private void txtb_Title_TextChanged(object sender, System.EventArgs e)
         {
             Film.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(txtb_Title.Text);
@@ -112,7 +119,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
 
         private void txtb_RunTime_TextChanged(object sender, System.EventArgs e)
         {
-            if(Regex.IsMatch(txtb_RunTime.Text,@"/([0-9])/"))
+            if (Regex.IsMatch(txtb_RunTime.Text, @"/([0-9])/"))
                 Film.RunTime = int.Parse(txtb_RunTime.Text);
         }
 
@@ -129,13 +136,13 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
         private void btn_add_Click(object sender, System.EventArgs e)
         {
             //add genre
-            string value = null;  
-            if(InputBox.Show("New Genre","Please enter the new genre","example: 'comedy'",ref value) == DialogResult.OK)
+            string value = null;
+            if (InputBox.Show("New Genre", "Please enter the new genre", "example: 'comedy'", ref value) == DialogResult.OK)
             {
                 Film.Genre.Add(new FilmType
-                                        {
-                                            Type = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value)
-                                        });
+                {
+                    Type = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value)
+                });
             }
             populate();
         }
@@ -169,11 +176,11 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
 
         private void DeleteItem_Click(object sender, EventArgs e)
         {
-            if(MessageBox.Show("Delete cast member?", "Delete",MessageBoxButtons.YesNo,MessageBoxIcon.Question,MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show("Delete cast member?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 for (var i = 0; i < Film.Cast.Count; i++)
                 {
-                    if(Film.Cast[i].Person.IMDBID == (String) dataGridView1.SelectedRows[0].Cells[1].Value)
+                    if (Film.Cast[i].Person.IMDBID == (String)dataGridView1.SelectedRows[0].Cells[1].Value)
                     {
                         Film.Cast.RemoveAt(i);
                     }
@@ -188,19 +195,19 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             var defualts = new[] { "Please enter character name", "Please enter Actor IMDB ID", "Please enter Actor Name" };
             while (true)
             {
-                if (InputBox.Show("Add new cast member - Unrecommended", prompts, defualts, ref value, true) != DialogResult.OK) 
+                if (InputBox.Show("Add new cast member - Unrecommended", prompts, defualts, ref value, true) != DialogResult.OK)
                     return;
                 if (Regex.IsMatch(value[1], "^[0-9]{7}$"))
                 {
                     Film.Cast.Add(new Role
-                                      {
-                                          Character = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[0]),
-                                          Person = new Person
-                                                       {
-                                                           IMDBID = value[1],
-                                                           Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[2])
-                                                       }
-                                      });
+                    {
+                        Character = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[0]),
+                        Person = new Person
+                        {
+                            IMDBID = value[1],
+                            Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[2])
+                        }
+                    });
                     populate();
                     return;
                 }
@@ -213,13 +220,13 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
                     return;
                 }
             }
-            
+
         }
 
 
         private void txtb_Year_TextChanged(object sender, EventArgs e)
         {
-            if(Regex.IsMatch(txtb_Year.Text,@"^[0-9]{4}$"))
+            if (Regex.IsMatch(txtb_Year.Text, @"^[0-9]{4}$"))
             {
                 Film.ReleaseYear = txtb_Year.Text;
             }
@@ -227,46 +234,14 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
 
         private void btn_otherresults_Click(object sender, EventArgs e)
         {
-            var results = new List<IMDBResult>();
-            var bgw = new BackgroundWorker();
-            bgw.WorkerReportsProgress = true;
-            panel1.Enabled = false;
-            panel2.Visible = true;
-            bgw.ProgressChanged += (o, args) =>
-                                       {
-                                           results = (List<IMDBResult>)args.UserState;
-                                       };
-            bgw.DoWork += (o, args) =>
-                              {
-                                  var worker = o as BackgroundWorker;
-                                  worker.ReportProgress(100,IMDBSearch.SearchIMDBByTitle(SearchString));
-                              };
-            bgw.RunWorkerCompleted += (o, args) =>
-                                          {
-                                              if (results.Count != 0)
-                                              {
-                                                  var cont = new IMDBResultsList(results, SearchString);
-                                                  Enabled = false;
-                                                  if (cont.ShowDialog() == DialogResult.OK)
-                                                  {
-                                                      Scan("http://www.imdb.com/title/tt" + cont.URL);
-                                                  }
-                                                  Enabled = true;
-                                              }
-                                              else
-                                              {
-                                                  MessageBox.Show("Sorry no other results where found!\nTry using direct link.", "No other results", MessageBoxButtons.OK);
-                                              }
-                                              panel1.Enabled = true;
-                                              panel2.Visible = false;
-                                          };
-            bgw.RunWorkerAsync();
+            contextMenuStrip2.Show(btn_otherresults, new Point(0, 23));
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             //delete director
-            if(lstb_Directors.SelectedIndices.Count > 0)
+            if (lstb_Directors.SelectedIndices.Count > 0)
             {
                 Film.Director.RemoveAt(lstb_Directors.SelectedIndex);
                 populate();
@@ -275,8 +250,8 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var newDirector = AddPerson(new[] {"IMDB ID", "Director Name"}, "New Director");
-            if(newDirector == null)
+            var newDirector = AddPerson(new[] { "IMDB ID", "Director Name" }, "New Director");
+            if (newDirector == null)
                 return;
             Film.Director.Add(newDirector);
             populate();
@@ -290,12 +265,12 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             {
                 if (InputBox.Show(title, prompts, defaults, ref value, true) != DialogResult.OK)
                     return null;
-                if(Regex.IsMatch(value[0],"^[0-9]{7}$"))
+                if (Regex.IsMatch(value[0], "^[0-9]{7}$"))
                     return new Person
-                               {
-                                   IMDBID = value[0],
-                                   Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[1])
-                                };
+                    {
+                        IMDBID = value[0],
+                        Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value[1])
+                    };
                 if (MessageBox.Show("Invalid IMDB ID, expected a 7 digit number.", "IMDB ID - Validation error.", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
                 {
                     defaults = value.ToArray();
@@ -319,7 +294,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
         private void btn_deleteWriter_Click(object sender, EventArgs e)
         {
             //delete Writer
-            if(lstb_Writers.SelectedIndices.Count > 0)
+            if (lstb_Writers.SelectedIndices.Count > 0)
             {
                 Film.Writers.RemoveAt(lstb_Writers.SelectedIndex);
                 populate();
@@ -331,7 +306,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             var cont = sender as ListBox;
             var item = (ListBoxItem)cont.SelectedItem;
             var tip = item.ToolTipText();
-            toolTip1.SetToolTip(cont,tip);
+            toolTip1.SetToolTip(cont, tip);
         }
 
         private void lstb_genres_SelectedIndexChanged(object sender, EventArgs e)
@@ -347,6 +322,53 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
         private void lstb_Writers_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetToolTip(sender);
+        }
+
+        private void cms2_SimiliarTitle_Click(object sender, EventArgs e)
+        {
+            SearchResults(SearchString);
+        }
+
+        private void SearchResults(String searchString)
+        {
+            var results = new List<IMDBResult>();
+            var bgw = new BackgroundWorker { WorkerReportsProgress = true };
+            panel1.Enabled = false;
+            panel2.Visible = true;
+            bgw.ProgressChanged += (o, args) =>
+            {
+                results = (List<IMDBResult>)args.UserState;
+            };
+            bgw.DoWork += (o, args) =>
+            {
+                var worker = o as BackgroundWorker;
+                worker.ReportProgress(100, IMDBSearch.SearchIMDBByTitle(searchString));
+            };
+            bgw.RunWorkerCompleted += (o, args) =>
+            {
+                if (results.Count != 0)
+                {
+                    var cont = new IMDBResultsList(results, SearchString);
+                    Enabled = false;
+                    if (cont.ShowDialog() == DialogResult.OK)
+                    {
+                        Scan("http://www.imdb.com/title/tt" + cont.URL);
+                    }
+                    Enabled = true;
+                }
+                else
+                {
+                    MessageBox.Show("Sorry no films where found!\nTry using direct link.", "No results", MessageBoxButtons.OK);
+                }
+                panel1.Enabled = true;
+                panel2.Visible = false;
+            };
+            bgw.RunWorkerAsync();
+        }
+
+        private void cms2_SearchFor_Click(object sender, EventArgs e)
+        {
+            SearchResults(toolStripTextBox1.Text);
         }
     }
 }

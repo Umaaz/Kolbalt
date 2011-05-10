@@ -39,4 +39,36 @@ namespace MediaApp.Domain.Model
         public virtual String CharIndexing { get; set; }
         public virtual String PersonIndexing { get; set; }
     }
+    public class FilmResult : Film
+    {
+        public FilmResult()
+        {
+            PossibleErrors = false;
+        }
+
+        public FilmResult(Film film)
+        {
+            PossibleErrors = false;
+            Title = film.Title;
+            Director = film.Director;
+            Id = film.Id;
+            OnExternalMedia = film.OnExternalMedia;
+            FilmPath = film.FilmPath;
+            IMDBId = film.IMDBId;
+            PicURL = film.PicURL;
+            RunTime = film.RunTime;
+            ReleaseYear = film.ReleaseYear;
+            Cast = film.Cast;
+            Genre = film.Genre;
+            Synopsis = film.Synopsis;
+            Keywords = film.Keywords;
+            TrailerLink = film.TrailerLink;
+            Writers = film.Writers;
+            DirectorIndexing = film.DirectorIndexing;
+            GenreIndexing = film.GenreIndexing;
+            CharIndexing = film.CharIndexing;
+            PersonIndexing = film.PersonIndexing;
+        }
+        public Boolean PossibleErrors { get; set; }
+    }
 }

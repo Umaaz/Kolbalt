@@ -104,7 +104,8 @@ namespace MediaApp.Forms.UserControls.FilmControls
             ActorList.DataSource = defaultListBoxItem.Union(FillActors()).ToList();
             GenreList.DataSource = defaultListBoxItem.Union(FillGenres()).ToList();
             DirectorList.DataSource = defaultListBoxItem.Union(FillDirector()).ToList();
-            DGV_Films.DataSource = GetFilms().OrderBy(x => x.Title).Select(x => new { x.Id, x.Title, x.RunTime, ReleaseDate = x.ReleaseYear })
+            var films = GetFilms();
+            DGV_Films.DataSource = films.OrderBy(x => x.Title).Select(x => new { x.Id, x.Title, x.RunTime, ReleaseDate = x.ReleaseYear })
                 .ToList();
             if (DGV_Films != null)
             {
@@ -112,18 +113,9 @@ namespace MediaApp.Forms.UserControls.FilmControls
             }
             if (DGV_Films.Rows.Count == 0)
                 return;
-            var sumMins = GetFilms().Sum(x => x.RunTime);
-            var stime = TimeSpan.FromMinutes(sumMins);
-            if(sumMins > 60)
-            {
-                //display hours
-                lbl_LibraryDetails.Text = string.Format("{0} Hours {1} Mins",stime.Hours,stime.Minutes);
-            }
-            else if(sumMins > 1440)
-            {
-                //display days
-                lbl_LibraryDetails.Text = string.Format("{0} Days {1} Hours {2} Mins", stime.Days, stime.Hours, stime.Minutes);
-            }
+            var numFilms = films.Count();
+            var sumMins = films.Sum(x => x.RunTime);
+            FillLabel(numFilms,sumMins);
         }
         //initiates extra Film details search
         private void DGV_Films_Click(object sender, EventArgs e)
@@ -236,26 +228,42 @@ namespace MediaApp.Forms.UserControls.FilmControls
                         dList.Add(listBoxItem);
                 }
                 DirectorList.DataSource = defaultListBoxItem.Union(dList).ToList();
-                DGV_Films.DataSource = GetFilms().Where(f => f.Cast.Any(r => r.Person.Id == ID)).Select(x => new { x.Id, x.Title, x.RunTime, ReleaseDate = x.ReleaseYear })
+                DGV_Films.DataSource = films.Where(f => f.Cast.Any(r => r.Person.Id == ID)).Select(x => new { x.Id, x.Title, x.RunTime, ReleaseDate = x.ReleaseYear })
                 .ToList();
                 if (DGV_Films != null)
                 {
                     DGV_Films.Columns["Id"].Visible = false;
                 }
-                var sumMins = GetFilms().Where(x => x.Cast.Any(r => r.Person.Id == ID)).Sum(x => x.RunTime);
-                var stime = TimeSpan.FromMinutes(sumMins);
-                if (sumMins > 60)
-                {
-                    //display hours
-                    lbl_LibraryDetails.Text = string.Format("{0} Hours {1} Mins", stime.Hours, stime.Minutes);
-                }
-                else if (sumMins > 1440)
-                {
-                    //display days
-                    lbl_LibraryDetails.Text = string.Format("{0} Days {1} Hours {2} Mins", stime.Days, stime.Hours, stime.Minutes);
-                }
+                var numFIlms = films.Where(x => x.Cast.Any(r => r.Person.Id == ID)).Count();
+                var sumMins = films.Where(x => x.Cast.Any(r => r.Person.Id == ID)).Sum(x => x.RunTime);
+                FillLabel(numFIlms,sumMins);
             }
         }
+        //fill label
+        private void FillLabel(int numFilms, int sumMins)
+        {
+            var stime = TimeSpan.FromMinutes(sumMins);
+            var numFilmsString = "{0} Films,";
+            var numDaysString = stime.Days > 1 ? "{x} Day ": "{x} Days ";
+            var numHoursString = stime.Hours > 1 ? "{x} Hour ":"{x} Hours ";
+            var numMinsString = "{x} Mins";
+            
+            if (sumMins < 60)
+            {
+                lbl_LibraryDetails.Text = string.Format(numFilmsString + numMinsString.Replace('x','1'), numFilms, stime.Minutes);
+            }
+            else if (sumMins >= 60)
+            {
+                //display hours
+                lbl_LibraryDetails.Text = string.Format(numFilmsString + numHoursString.Replace('x', '1') + numMinsString.Replace('x', '2'), numFilms, stime.Hours, stime.Minutes);
+            }
+            else if (sumMins >= 1440)
+            {
+                //display days
+                lbl_LibraryDetails.Text = string.Format(numFilmsString + numDaysString.Replace('x', '1') + numHoursString.Replace('x', '2') + numMinsString.Replace('x', '3'), numFilms, stime.Days, stime.Hours, stime.Minutes);
+            }
+        }
+
         //builds film list based on search string and selected actor and/or genre
         private void GenreList_Click(object sender, EventArgs e)
         {
@@ -298,18 +306,9 @@ namespace MediaApp.Forms.UserControls.FilmControls
                 films.Select(x => new { x.Id, x.Title, x.RunTime, ReleaseDate = x.ReleaseYear }).ToList();
             if (DGV_Films != null)
                 DGV_Films.Columns["Id"].Visible = false;
-            var sumMins = GetFilms().Where(x => x.Cast.Any(r => r.Person.Id == aItem.Id)).Where(x => x.Genre.Any(t => t.Id == genreID)).Sum(x => x.RunTime);
-            var stime = TimeSpan.FromMinutes(sumMins);
-            if (sumMins > 60)
-            {
-                //display hours
-                lbl_LibraryDetails.Text = string.Format("{0} Hours {1} Mins", stime.Hours, stime.Minutes);
-            }
-            else if (sumMins > 1440)
-            {
-                //display days
-                lbl_LibraryDetails.Text = string.Format("{0} Days {1} Hours {2} Mins", stime.Days, stime.Hours, stime.Minutes);
-            }
+            var numFilms = films.Count();
+            var sumMins = films.Sum(x => x.RunTime);
+            FillLabel(numFilms,sumMins);
         }
         //builds film list based on search string and selected actor and/or genre and/or director
         private void DirectorList_Click(object sender, EventArgs e)
@@ -349,18 +348,7 @@ namespace MediaApp.Forms.UserControls.FilmControls
             if (DGV_Films != null)
                 DGV_Films.Columns["Id"].Visible = false;
 
-            var sumMins = films.Sum(x => x.RunTime);
-            var stime = TimeSpan.FromMinutes(sumMins);
-            if (sumMins > 60)
-            {
-                //display hours
-                lbl_LibraryDetails.Text = string.Format("{0} Hours {1} Mins", stime.Hours, stime.Minutes);
-            }
-            else if (sumMins > 1440)
-            {
-                //display days
-                lbl_LibraryDetails.Text = string.Format("{0} Days {1} Hours {2} Mins", stime.Days, stime.Hours, stime.Minutes);
-            }
+            FillLabel(films.Count(), films.Sum(x => x.RunTime));
         }
     }
 }

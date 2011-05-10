@@ -39,7 +39,30 @@ namespace MediaApp.Data.Web.IMDB
             {
                 return null;
             }
-            return SearchIMDBBySource(source);
+            if (Regex.IsMatch(response.ResponseUri.ToString(), "http://www.imdb.com/title/tt[0-9]{7}(/|)"))
+            {
+                return SingleResult(response.ResponseUri.ToString());
+            }
+            if(Regex.IsMatch(response.ResponseUri.ToString(),@"http://www.imdb.com/find\?s=(all|tt)&q="))
+            {
+                return SearchIMDBBySource(source);
+            }
+            return null;
+        }
+
+        public static IList<IMDBResult> SingleResult(String url)
+        {
+            var film = IMDBFilm.GetFilmByUrl(url);
+            return new List<IMDBResult>
+                       {
+                           new IMDBResult
+                               {
+                                   PicUrl = film.PicURL,
+                                   Title = film.Title,
+                                   Url = film.IMDBId,
+                                   Year = film.ReleaseYear
+                               }
+                       };
         }
          
         public static IList<IMDBResult> SearchIMDBBySource(String source)

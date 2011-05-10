@@ -68,10 +68,15 @@
             this.lbl_Genres = new System.Windows.Forms.Label();
             this.lstb_genres = new System.Windows.Forms.ListBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cms2_SimiliarTitle = new System.Windows.Forms.ToolStripMenuItem();
+            this.cms2_SearchFor = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -462,6 +467,36 @@
             this.toolTip1.SetToolTip(this.lstb_genres, "l");
             this.lstb_genres.SelectedIndexChanged += new System.EventHandler(this.lstb_genres_SelectedIndexChanged);
             // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cms2_SimiliarTitle,
+            this.cms2_SearchFor,
+            this.toolStripTextBox1});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(161, 95);
+            // 
+            // cms2_SimiliarTitle
+            // 
+            this.cms2_SimiliarTitle.Name = "cms2_SimiliarTitle";
+            this.cms2_SimiliarTitle.Size = new System.Drawing.Size(160, 22);
+            this.cms2_SimiliarTitle.Text = "Similiar Titles";
+            this.cms2_SimiliarTitle.Click += new System.EventHandler(this.cms2_SimiliarTitle_Click);
+            // 
+            // cms2_SearchFor
+            // 
+            this.cms2_SearchFor.Name = "cms2_SearchFor";
+            this.cms2_SearchFor.Size = new System.Drawing.Size(160, 22);
+            this.cms2_SearchFor.Text = "Search for..";
+            this.cms2_SearchFor.Click += new System.EventHandler(this.cms2_SearchFor_Click);
+            // 
+            // toolStripTextBox1
+            // 
+            this.toolStripTextBox1.Name = "toolStripTextBox1";
+            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
+            this.toolStripTextBox1.Text = "Enter Film Title..";
+            this.toolStripTextBox1.ToolTipText = "Enter title of film to search IMDB for.";
+            // 
             // ResultsTemplate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -475,6 +510,8 @@
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
+            this.contextMenuStrip2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -520,6 +557,10 @@
         private System.Windows.Forms.ListBox lstb_Writers;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem cms2_SimiliarTitle;
+        private System.Windows.Forms.ToolStripMenuItem cms2_SearchFor;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
 
     }
 }
