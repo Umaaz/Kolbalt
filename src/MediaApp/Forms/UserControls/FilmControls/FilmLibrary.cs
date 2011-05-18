@@ -26,11 +26,12 @@ namespace MediaApp.Forms.UserControls.FilmControls
         //Build film queryable based on search string todo needs additions to also search cast and genres
         private IQueryable<Film> GetFilms()
         {
-            var query = txtb_Search.Text;
-            if (string.IsNullOrWhiteSpace(query)||!char.IsLetterOrDigit(query[0]))
+            var pattern = new string[Properties.Settings.Default.Searchpattern.Count];
+                Properties.Settings.Default.Searchpattern.CopyTo(pattern, 0);
+            var query = txtb_Search.Text.Trim();
+            if (string.IsNullOrWhiteSpace(query) || !char.IsLetterOrDigit(query[0]) || !char.IsLetterOrDigit(query[query.Length - 1]))
                 return _nhSession.Query<Film>();
-            var parser = new MultiFieldQueryParser(Lucene.Net.Util.Version.LUCENE_29,
-                new[] { "Title", "Synopsis", "Keywords", "DirectorIndexing", "CharIndexing", "GenreIndexing", "PersonIndexing" }, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29));
+            var parser = new MultiFieldQueryParser(Lucene.Net.Util.Version.LUCENE_29, pattern, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29));
             var searchSession = NHibernate.Search.Search.CreateFullTextSession(_nhSession);
             return searchSession.CreateFullTextQuery(parser.Parse(query + "*"), new[] { typeof(Film) }).List<Film>().AsQueryable();
         }
@@ -95,8 +96,18 @@ namespace MediaApp.Forms.UserControls.FilmControls
         //calls build film on search string change
         private void txtb_Search_TextChanged(object sender, EventArgs e)
         {
-            buildFilm();
+            timer1.Stop();
+            timer1.Interval = 500;
+            timer1.Enabled = true;
+            timer1.Start();
         }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            buildFilm();
+            timer1.Enabled = false;
+        }
+
         //populates Actor, Genre, Director list boxes, and sets DataSource for GridView (called upon entering film library view)
         private void buildFilm()
         {

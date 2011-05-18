@@ -209,5 +209,24 @@ namespace MediaApp.Properties {
                 this["FilmEnableWatchedFolders"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>Title</string>
+  <string>Keywords</string>
+  <string>DirectorIndexing</string>
+  <string>GenreIndexing</string>
+  <string>PersonIndexing</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Searchpattern {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Searchpattern"]));
+            }
+            set {
+                this["Searchpattern"] = value;
+            }
+        }
     }
 }
