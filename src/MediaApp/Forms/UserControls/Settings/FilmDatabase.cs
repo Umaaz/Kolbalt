@@ -71,7 +71,7 @@ namespace MediaApp.Forms.UserControls.Settings
                 var appPath = Path.GetDirectoryName(Application.ExecutablePath);
                 Directory.Delete(appPath + "\\SearchIndex", true);
                 Directory.CreateDirectory(appPath + "\\SearchIndex");
-                Bgw = Newbgw();
+                Bgw = HelperClass.NewBGW();
                 Bgw.ProgressChanged += (o, args) =>
                                            {
                                                lbl_Current.Visible = true;
@@ -145,7 +145,7 @@ namespace MediaApp.Forms.UserControls.Settings
             UComplete = false;
             Building = true;
             Enable(false);
-            Bgw = Newbgw();
+            Bgw = HelperClass.NewBGW();
             progressBar1.Enabled = true;
             progressBar1.Value = 0;
             Bgw.ProgressChanged += (o, args) =>
@@ -205,7 +205,7 @@ namespace MediaApp.Forms.UserControls.Settings
         }
         private void Complete()
         {
-            Bgw = Newbgw();
+            Bgw = HelperClass.NewBGW();
             Bgw.ProgressChanged += (o, args) =>
                                        {
                                            lbl_Current.Visible = true;
@@ -228,7 +228,7 @@ namespace MediaApp.Forms.UserControls.Settings
         }
         private void Index()
         {
-            Bgw = Newbgw();
+            Bgw = HelperClass.NewBGW();
             Bgw.ProgressChanged += (o, args) =>
                                        {
                                            lbl_Current.Text = (String) args.UserState;
@@ -243,6 +243,7 @@ namespace MediaApp.Forms.UserControls.Settings
                                               else
                                               {
                                                   lbl_Current.Text = "Build Complete.";
+                                                  progressBar1.Value = 100;
                                                   lbl_Current.Visible = true;
                                                   progressBar1.Enabled = false;
                                                   Building = false;
@@ -403,10 +404,6 @@ namespace MediaApp.Forms.UserControls.Settings
                 }
             }
             return files;
-        }
-        private BackgroundWorker Newbgw()
-        {
-            return new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};
         }
     }
 

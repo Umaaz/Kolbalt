@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MediaApp.Data.Items;
+using MediaApp.Data.Web;
 using MediaApp.Data.Web.IMDB;
 using MediaApp.Domain.Model;
 using MediaApp.Forms.Popups;
@@ -45,6 +46,11 @@ namespace MediaApp.Forms.UserControls.Settings
             lstb_Writers.DataSource = Film.Writers.Select(x => new PersonListBoxItem(x.Id, x.IMDBID, x.Name)).ToList();
 
             panel2.Visible = false;
+            if(String.IsNullOrEmpty(Film.PicURL))
+                return;
+            var pic = new DownloadImage(Film.PicURL);
+            pic.Download();
+            pictureBox1.Image = pic.GetImage();
         }
 
         private void btn_rescan_Click(object sender, System.EventArgs e)
@@ -74,7 +80,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
 
         private void ExecuteScan(string url)
         {
-            var bg = new BackgroundWorker();
+            var bg = HelperClass.NewBGW();
             bg.WorkerReportsProgress = true;
             panel1.Enabled = false;
             panel2.Visible = true;
@@ -333,7 +339,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
         private void SearchResults(String searchString)
         {
             var results = new List<IMDBResult>();
-            var bgw = new BackgroundWorker { WorkerReportsProgress = true };
+            var bgw = HelperClass.NewBGW();
             panel1.Enabled = false;
             panel2.Visible = true;
             bgw.ProgressChanged += (o, args) =>

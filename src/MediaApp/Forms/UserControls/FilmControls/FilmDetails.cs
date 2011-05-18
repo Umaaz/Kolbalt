@@ -21,7 +21,7 @@ namespace MediaApp.Forms.UserControls.FilmControls
             _url ="Http://www.IMDB.com/title/tt" + film.IMDBId;
             _film = film;
             InitializeComponent();
-            var bgw = new BackgroundWorker {WorkerReportsProgress = true};
+            var bgw = HelperClass.NewBGW();
             bgw.ProgressChanged += (o, args) =>
                                        {
 
@@ -116,7 +116,7 @@ namespace MediaApp.Forms.UserControls.FilmControls
                 case 0:
                     _count = 1;
                     url = _url + "/trivia";
-                    bgw = new BackgroundWorker {WorkerReportsProgress = true};
+                    bgw = HelperClass.NewBGW();
                     bgw.ProgressChanged += (o, args) =>
                                                {
                                                    splitContainer2.Panel2.Controls.Clear();
@@ -131,7 +131,7 @@ namespace MediaApp.Forms.UserControls.FilmControls
                 case 1:
                     _count = 0;
                     url = _url + "/goofs";
-                    bgw = new BackgroundWorker {WorkerReportsProgress = true};
+                    bgw = HelperClass.NewBGW();
                     bgw.ProgressChanged += (o, args) =>
                                                {
                                                    splitContainer2.Panel2.Controls.Clear();

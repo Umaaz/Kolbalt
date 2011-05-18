@@ -225,6 +225,7 @@
     <Compile Include="Forms\ValidationErrors.Designer.cs">
       <DependentUpon>ValidationErrors.cs</DependentUpon>
     </Compile>
+    <Compile Include="HelperClass.cs" />
     <Compile Include="Mappings\AlarmsMap.cs" />
     <Compile Include="Mappings\Conventions\ColumnConventions.cs" />
     <Compile Include="Mappings\Conventions\ForeignKeyConstraintNameConvention.cs" />

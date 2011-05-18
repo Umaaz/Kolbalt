@@ -72,15 +72,18 @@
             this.cms2_SimiliarTitle = new System.Windows.Forms.ToolStripMenuItem();
             this.cms2_SearchFor = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.btn_deleteWriter);
             this.panel1.Controls.Add(this.btn_addWriter);
             this.panel1.Controls.Add(this.lstb_Writers);
@@ -115,7 +118,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(866, 295);
+            this.panel1.Size = new System.Drawing.Size(1043, 295);
             this.panel1.TabIndex = 0;
             // 
             // btn_deleteWriter
@@ -474,7 +477,7 @@
             this.cms2_SearchFor,
             this.toolStripTextBox1});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(161, 95);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(161, 73);
             // 
             // cms2_SimiliarTitle
             // 
@@ -498,13 +501,25 @@
             this.toolStripTextBox1.ToolTipText = "Enter title of film to search IMDB for.";
             this.toolStripTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripTextBox1_KeyDown);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.ErrorImage = global::MediaApp.Properties.Resources.no_image;
+            this.pictureBox1.Image = global::MediaApp.Properties.Resources.no_image;
+            this.pictureBox1.InitialImage = global::MediaApp.Properties.Resources.no_image;
+            this.pictureBox1.Location = new System.Drawing.Point(869, 33);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(171, 259);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 73;
+            this.pictureBox1.TabStop = false;
+            // 
             // ResultsTemplate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
             this.Name = "ResultsTemplate";
-            this.Size = new System.Drawing.Size(866, 295);
+            this.Size = new System.Drawing.Size(1043, 295);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -513,6 +528,7 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.contextMenuStrip2.ResumeLayout(false);
             this.contextMenuStrip2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -562,6 +578,7 @@
         private System.Windows.Forms.ToolStripMenuItem cms2_SimiliarTitle;
         private System.Windows.Forms.ToolStripMenuItem cms2_SearchFor;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
+        private System.Windows.Forms.PictureBox pictureBox1;
 
     }
 }
