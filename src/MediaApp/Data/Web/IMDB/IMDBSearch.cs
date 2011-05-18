@@ -59,7 +59,7 @@ namespace MediaApp.Data.Web.IMDB
                                {
                                    PicUrl = film.PicURL,
                                    Title = film.Title,
-                                   Url = film.IMDBId,
+                                   IMDBIDUrl = film.IMDBId,
                                    Year = film.ReleaseYear
                                }
                        };

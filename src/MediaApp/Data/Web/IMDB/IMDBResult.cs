@@ -12,7 +12,7 @@ namespace MediaApp.Data.Web.IMDB
 
         public IMDBResult(String title, String url, String year, String picUrl)
         {
-            Url = url;
+            IMDBIDUrl = url;
             Title = title;
             Year = year;
             PicUrl = picUrl;
@@ -23,7 +23,7 @@ namespace MediaApp.Data.Web.IMDB
 
         public string Title { get; set; }
 
-        public string Url { get; set; }
+        public string IMDBIDUrl { get; set; }
 
         public string Year { get; set; }
 

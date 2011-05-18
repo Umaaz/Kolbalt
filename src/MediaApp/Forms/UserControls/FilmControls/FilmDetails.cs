@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using HtmlAgilityPack;
 using MediaApp.Data;
 using MediaApp.Data.Web;
+using MediaApp.Domain.Model;
+using NHibernate.Linq;
 
 namespace MediaApp.Forms.UserControls.FilmControls
 {
@@ -13,12 +15,49 @@ namespace MediaApp.Forms.UserControls.FilmControls
     {
         private int _count = 0;
         private readonly String _url;
-        public FilmDetails(String url)
+        private readonly Film _film;
+        public FilmDetails(Film film)
         {
-            _url ="Http://www.IMDB.com/title/tt" + url;
+            _url ="Http://www.IMDB.com/title/tt" + film.IMDBId;
+            _film = film;
             InitializeComponent();
-        }
+            var bgw = new BackgroundWorker {WorkerReportsProgress = true};
+            bgw.ProgressChanged += (o, args) =>
+                                       {
 
+                                       };
+            bgw.DoWork += loadPicture;
+            bgw.RunWorkerCompleted += (o, args) =>
+                                          {
+                                              lbl_picloading.Visible = false;
+                                          };
+            bgw.RunWorkerAsync();
+            populate();
+            timer1.Enabled = true;
+        }
+        
+        private void populate()
+        {
+            llbl_title.Text = _film.Title;
+            llbl_title.Click += (o, ee) => System.Diagnostics.Process.Start("http://www.imdb.com/title/tt" + _film.IMDBId);
+            llbl_title.Visible = true;
+            llbl_year.Text = _film.ReleaseYear;
+            llbl_year.Click += (o, ee) => System.Diagnostics.Process.Start("http://www.imdb.com/year/"+_film.ReleaseYear);
+            llbl_year.Visible = true;
+            llbl_director.Text = _film.Director.Select(x => x.Name).First();
+            llbl_director.Click += (o, ee) => System.Diagnostics.Process.Start("http://www.imdb.com/name/nm" + _film.Director.Select(x => x.IMDBID).First());
+            llbl_director.Visible = true;
+            llbl_Star1.Text = _film.Cast.Select(x => x.Person.Name).First();
+            llbl_Star1.Click += (o, ee) => System.Diagnostics.Process.Start("http://www.imdb.com/name/nm" + _film.Cast.Select(x => x.Person.IMDBID).First());
+            llbl_Star1.Visible = true;
+            llbl_star2.Text = _film.Cast.Select(x => x.Person.Name).Skip(1).First();
+            llbl_star2.Click += (o, ee) => System.Diagnostics.Process.Start("http://www.imdb.com/name/nm" + _film.Cast.Select(x => x.Person.Name).Skip(1).First());
+            llbl_star2.Visible = true;
+            lbl_Frating.Text = string.Format("{0}/10", _film.IMDBRating);
+            lbl_Frating.Visible = true;
+            lbl_loading.Visible = false;
+        }
+        
         private void LoadTrivia(object sender, DoWorkEventArgs e)
         {
             var worker = sender as BackgroundWorker;
@@ -104,22 +143,6 @@ namespace MediaApp.Forms.UserControls.FilmControls
                     bgw.DoWork += LoadGoof;
                     bgw.RunWorkerAsync();
                     break;
-                    //reviews get <p> tag from site filmurl/usercomments, where doesn't contain innerHTML <small>
-                //case 2:
-                //    _count = 0;
-                //    url = _url + "/goofs";
-                //    bgw = new BackgroundWorker { WorkerReportsProgress = true };
-                //    bgw.ProgressChanged += (o, args) =>
-                //    {
-                //        splitContainer2.Panel2.Controls.Clear();
-                //        var goof = args.UserState.ToString();
-                //        var goofControl = new ExtraFilmDetails(url, "Goofs", goof);
-                //        splitContainer2.Panel2.Controls.Add(goofControl);
-                //        goofControl.Dock = DockStyle.Fill;
-                //    };
-                //    bgw.DoWork += LoadGoof;
-                //    bgw.RunWorkerAsync();
-                //    break;
                 default:
                     _count = 0;
                     timer1_Tick(sender,e);
@@ -127,68 +150,12 @@ namespace MediaApp.Forms.UserControls.FilmControls
             }
         }
 
-
-        private void LoadDetails(object sender, DoWorkEventArgs e)
-        {
-            var worker = sender as BackgroundWorker;
-            var hw = new HtmlWeb();
-            var doc = hw.Load(_url);
-            var cc = new HtmlEscapeCharConverter();
-            var title = doc.DocumentNode.SelectSingleNode(".//h1[@class='header']").InnerText.Trim();
-            var year = title.Substring(title.LastIndexOf("(")+1, 4);
-            title = HtmlEscapeCharConverter.Decode(title.Remove(title.IndexOf("(")));
-            worker.ReportProgress(10,title);
-            worker.ReportProgress(20, year);
-            var divs = doc.DocumentNode.SelectNodes(".//div[@class='txt-block']");
-            var director = divs.First().SelectSingleNode(".//a").InnerText.Trim();
-            var dirnum = divs.First().InnerHtml;
-            var dirNum = dirnum.Remove(0, dirnum.IndexOf("nm") + 2);
-            dirNum = dirNum.Remove(7);
-            var rating = doc.DocumentNode.SelectNodes(".//span[@class='rating-rating']").Single().InnerText;
-            var IMDBrating = rating.Replace("\"", "");
-            worker.ReportProgress(30, IMDBrating);
-            worker.ReportProgress(40, director);
-            worker.ReportProgress(50,dirNum);
-            var stars = divs
-                .Where(x => x.SelectNodes(".//h4") != null)
-                .Where(x => x.SelectNodes(".//h4").First().InnerText.Trim().Contains("Stars"))
-                .Single().InnerText;
-            stars = stars.Replace("and ", "").Replace(",", "").Replace("Stars:", "").Replace("\n", "");
-            worker.ReportProgress(60,stars);
-            var starslinks = divs
-                .Where(x => x.SelectNodes(".//h4") != null)
-                .Where(x => x.SelectNodes(".//h4").First().InnerText.Trim().Contains("Stars"))
-                .Single().InnerHtml;
-            var i = 70;
-            while (starslinks.Contains("href"))
-            {
-                starslinks = starslinks.Remove(0, starslinks.IndexOf("href")+14);
-                worker.ReportProgress(i,starslinks.Remove(starslinks.IndexOf("/")));
-                i += 10;
-            }
-            worker.ReportProgress(100);
-        }
-        
         private void loadPicture(object sender, DoWorkEventArgs e)
         {
             var worker = sender as BackgroundWorker;
-            var hw = new HtmlWeb();
-            var doc = hw.Load(_url).DocumentNode.WriteContentTo();
-            var p = doc.IndexOf("<img src=\"http://ia.media-IMDB.com");
-            var pp = doc.IndexOf("<img src=\"http://ia.media-imdb.com");
-            string picURL = null;
-            if(p != -1)
+            if (_film.PicURL != null)
             {
-                picURL = doc.Remove(0, p + 10);
-            }
-            else if(pp != -1)
-            {
-                picURL = doc.Remove(0, pp + 10);
-            }
-            if (picURL != null)
-            {
-                picURL = picURL.Remove(picURL.IndexOf("\""));
-                var pic = new DownloadImage(picURL);
+                var pic = new DownloadImage(_film.PicURL);
                 pic.Download();
                 pb_Filmposter.Image = pic.GetImage();
                 pb_Filmposter.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -196,75 +163,6 @@ namespace MediaApp.Forms.UserControls.FilmControls
             worker.ReportProgress(100);
         }
         
-        private void UCFilmBase_Load(object sender, EventArgs e)
-        {
-            backgroundWorker1.WorkerReportsProgress = true;
-            backgroundWorker1.ProgressChanged += (o, args) =>
-            {
-                switch (args.ProgressPercentage)
-                {
-                    case 10:
-                        llbl_title.Text = args.UserState.ToString();
-                        llbl_title.Click += (s, ee) => System.Diagnostics.Process.Start(_url);
-                        llbl_title.Visible = true;
-                        break;
-                    case 20:
-                        llbl_year.Text = args.UserState.ToString();
-                        llbl_year.Click += (s, ee) => System.Diagnostics.Process.Start("HTTP://www.IMDB.com/year/" + args.UserState.ToString());
-                        llbl_year.Visible = true;
-                        break;
-                    case 30:
-                        lbl_Frating.Text = args.UserState.ToString();
-                        lbl_Frating.Visible = true;
-                        break;
-                    case 40:
-                        llbl_director.Text = args.UserState.ToString();
-                        llbl_director.BringToFront();
-                        llbl_director.Visible = true;
-                        break;
-                    case 50:
-                        llbl_director.Click += (s, ee) => System.Diagnostics.Process.Start("HTTP://www.IMDB.com/name/nm" + args.UserState.ToString());
-                        break;
-                    case 60:
-                        var star = args.UserState.ToString().Split(' ');
-                        if (star.Count() >= 2)
-                        {
-                            llbl_Star1.Text = star[0] + " " + star[1];
-                            llbl_Star1.Visible = true;
-                        }
-                        if (star.Count() >= 4)
-                        {
-                            llbl_star2.Text = star[2] + " " + star[3];
-                            llbl_star2.Visible = true;
-                        }
-                        panel2.BringToFront();
-                        break;
-                    case 70:
-                        llbl_Star1.Click +=
-                            (s, ee) =>
-                            System.Diagnostics.Process.Start("HTTP://www.IMDB.com/name/nm" + args.UserState.ToString());
-                        break;
-                    case 80:
-                        llbl_star2.Click +=
-                            (s, ee) =>
-                            System.Diagnostics.Process.Start("HTTP://www.IMDB.com/name/nm" + args.UserState.ToString());
-                        break;
-                    case 100:
-                        panel1.Visible = true;
-                        lbl_loading.Visible = false;
-                        timer1_Tick(sender, e);
-                        break;
-                }
-            };
-            backgroundWorker1.DoWork += LoadDetails;
-            backgroundWorker1.RunWorkerAsync();
-            backgroundWorker2.WorkerReportsProgress = true;
-            backgroundWorker2.ProgressChanged += (s, args) => lbl_picloading.Visible = false;
-            backgroundWorker2.DoWork += loadPicture;
-            backgroundWorker2.RunWorkerAsync();
-            timer1.Enabled = true;
-        }
-
         private void llbl_year_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
 

@@ -8,11 +8,16 @@ namespace MediaApp.Data.Web
     public class DownloadImage {
         private readonly string _imageUrl;
         private Bitmap _bitmap;
-        public DownloadImage(string imageUrl) {
+        
+        public DownloadImage(string imageUrl) 
+        {
             this._imageUrl = imageUrl;
         }
-        public void Download() {
-            try {
+        
+        public void Download() 
+        {
+            try 
+            {
                 var client = new WebClient();
                 var stream = client.OpenRead(_imageUrl);
                 if (stream != null)
@@ -22,15 +27,21 @@ namespace MediaApp.Data.Web
                     stream.Close();
                 }
             }
-            catch (Exception e) {
+            catch (Exception e) 
+            {
                 Console.WriteLine(e.Message);
             }
         }
-        public Bitmap GetImage() {
+        
+        public Bitmap GetImage() 
+        {
             return _bitmap;
         }
-        public void SaveImage(string filename, ImageFormat format) {
-            if (_bitmap != null) {
+        
+        public void SaveImage(string filename, ImageFormat format) 
+        {
+            if (_bitmap != null) 
+            {
                 _bitmap.Save(filename, format);
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MediaApp.Data;
@@ -18,14 +19,22 @@ namespace MediaApp.Forms.UserControls.Settings
     public partial class FilmDatabase : UserControl
     {
         private static readonly ISession NhSession = NhContext.GetSession();
+        private List<FilmResult> _films = new List<FilmResult>();
+        public BackgroundWorker Bgw { get; private set; }
+        public Boolean UComplete { get; set; }
+        public Boolean UClosePending { get; set; }
+        public Boolean Building;
+        
         public FilmDatabase()
         {
             InitializeComponent();
             PopulateList();
+            UComplete = true;
         }
         #region Watched Folders
         private void PopulateList()
         {
+            lisb_films.DataSource = new[] {""};
             lisb_films.DataSource = Properties.Settings.Default.FilmDirectories;
         }
 
@@ -42,9 +51,6 @@ namespace MediaApp.Forms.UserControls.Settings
 
         private void btn_RemoveFilm_Click(object sender, EventArgs e)
         {
-            var appPath = Path.GetDirectoryName(Application.ExecutablePath);
-            Directory.Delete(appPath + "\\SearchIndex",true);
-            Directory.CreateDirectory(appPath + "\\SearchIndex");
             if(lisb_films.SelectedItems.Count > 0)
             {
                 if(MessageBox.Show("Are you sure you want to remove this path?\n" + lisb_films.SelectedItem, "Are you sure?",MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -56,27 +62,36 @@ namespace MediaApp.Forms.UserControls.Settings
             PopulateList();
         }
         #endregion
-
         private void btn_ReBuild_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are you sure you want to continue?\n - This will clear the current database!","Are you Sure?",MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                var bgw = Newbgw();
-                bgw.ProgressChanged += (o, args) =>
+                Enable(false);
+                UComplete = false;
+                var appPath = Path.GetDirectoryName(Application.ExecutablePath);
+                Directory.Delete(appPath + "\\SearchIndex", true);
+                Directory.CreateDirectory(appPath + "\\SearchIndex");
+                Bgw = Newbgw();
+                Bgw.ProgressChanged += (o, args) =>
                                            {
                                                lbl_Current.Visible = true;
                                                lbl_Current.Text = (String)args.UserState;
                                            };
-                bgw.DoWork += DeleteAll;
-                bgw.RunWorkerCompleted += (o, args) =>
+                Bgw.DoWork += DeleteAll;
+                Bgw.RunWorkerCompleted += (o, args) =>
                                               {
-                                                  lbl_Current.Visible = false;
-                                                  Build();
+                                                  UComplete = true;
+                                                  if (UClosePending)
+                                                      MainForms.FRM_Main.Settings.Close();
+                                                  else
+                                                  {
+                                                      lbl_Current.Visible = false;
+                                                      Build();
+                                                  }
                                               };
-                bgw.RunWorkerAsync();
+                Bgw.RunWorkerAsync();
             }
         }
-
         private void DeleteAll(object sender, DoWorkEventArgs args)
         {
             var worker = sender as BackgroundWorker;
@@ -90,83 +105,152 @@ namespace MediaApp.Forms.UserControls.Settings
                 }
                 tx.Commit();
             }
-
         }
-
+        private bool CheckNetConnection()
+        {
+            var code = (HttpStatusCode) 0;
+            var pass = true;
+            var request = (HttpWebRequest)WebRequest.Create("http://www.IMDB.com/");
+            request.Proxy = null;
+            HttpWebResponse response;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+                code = response.StatusCode;
+            }
+            catch (WebException)
+            {
+                pass = false;
+            }
+            if(code != HttpStatusCode.OK)
+            {
+                pass = false;
+            }
+            return pass;
+        }
         private void button1_Click(object sender, EventArgs e)
         {
-            Build();
+            if (CheckNetConnection())
+                Build();
+            else
+                MessageBox.Show("Error Connection to IMDB\nCheck net connection and retry!", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-        
         private void Build()
         {
+            if(Building)
+            {
+                MessageBox.Show("Build currently in progress!");
+            }
+            UComplete = false;
+            Building = true;
+            Enable(false);
+            Bgw = Newbgw();
             progressBar1.Enabled = true;
             progressBar1.Value = 0;
-            var bgw = Newbgw();
-            bgw.ProgressChanged += (o, args) =>
+            Bgw.ProgressChanged += (o, args) =>
                                        {
+
                                            lbl_Current.Visible = true;
                                            lbl_Current.Text = (String) args.UserState;
                                            progressBar1.Enabled = true;
                                            progressBar1.Value = args.ProgressPercentage;
                                        };
-            bgw.DoWork += Execute;
-            bgw.RunWorkerCompleted += (o, args) =>
+            Bgw.DoWork += Execute;
+            Bgw.RunWorkerCompleted += (o, args) =>
                                           {
-                                              progressBar1.Enabled = false;
-                                              if (Properties.Settings.Default.filmDisplayResults)
-                                                  UserVerification();
-                                              Complete();
+                                              UComplete = true;
+                                              if (UClosePending)
+                                                  MainForms.FRM_Main.Settings.Close();
+                                              else
+                                              {
+                                                  progressBar1.Enabled = false;
+                                                  if (Properties.Settings.Default.filmDisplayResults)
+                                                  {
+                                                      if (UserVerification())
+                                                      {
+                                                          Complete();
+                                                      }
+                                                      else
+                                                      {
+                                                          lbl_Current.Text = "User Aborted!";
+                                                          Enable(true);
+                                                          
+                                                      }
+                                                  }
+                                                  else
+                                                  {
+                                                      Complete();
+                                                  }
+                                              }
                                           };
-            bgw.RunWorkerAsync();
+            Bgw.RunWorkerAsync();
         }
-
-        private List<Film> _filmsToAdd = new List<Film>();
-        private void UserVerification()
+        private void Enable(Boolean b)
+        {
+            btn_update.Enabled = b;
+            btn_ReBuild.Enabled = b;
+            btn_build.Enabled = b;
+        }
+        private bool UserVerification()
         {
             Results results = null;
             if (_films.Count == 0)
-                return;
+                return false;
             results = new Results(_films);
             if (results.ShowDialog(this) != DialogResult.OK)
-                return;
+                return false;
             _films = results.GetFilms();
+            return true;
         }
         private void Complete()
         {
-            var bgw = Newbgw();
-            bgw.ProgressChanged += (o, args) =>
+            Bgw = Newbgw();
+            Bgw.ProgressChanged += (o, args) =>
                                        {
                                            lbl_Current.Visible = true;
                                            lbl_Current.Text = (String) args.UserState;
 
                                        };
-            bgw.DoWork += SaveFilms;
-            bgw.RunWorkerCompleted += (o, args) =>
+            Bgw.DoWork += SaveFilms;
+            Bgw.RunWorkerCompleted += (o, args) =>
                                           {
-                                              lbl_Current.Visible = false;
-                                              Index();
+                                              UComplete = true;
+                                              if (UClosePending)
+                                                  MainForms.FRM_Main.Settings.Close();
+                                              else
+                                              {
+                                                  lbl_Current.Visible = false;
+                                                  Index();
+                                              }
                                           };
-            bgw.RunWorkerAsync();
+            Bgw.RunWorkerAsync();
         }
         private void Index()
         {
-            var bgw = Newbgw();
-            bgw.ProgressChanged += (o, args) =>
+            Bgw = Newbgw();
+            Bgw.ProgressChanged += (o, args) =>
                                        {
                                            lbl_Current.Text = (String) args.UserState;
                                            lbl_Current.Visible = true;
                                        };
-            bgw.DoWork += UpdateIndex;
-            bgw.RunWorkerCompleted += (o, args) =>
+            Bgw.DoWork += UpdateIndex;
+            Bgw.RunWorkerCompleted += (o, args) =>
                                           {
-                                              lbl_Current.Text = "Build Coimplete.";
-                                              lbl_Current.Visible = true;
-                                              progressBar1.Enabled = false;
+                                              UComplete = true;
+                                              if (UClosePending)
+                                                  MainForms.FRM_Main.Settings.Close();
+                                              else
+                                              {
+                                                  lbl_Current.Text = "Build Complete.";
+                                                  lbl_Current.Visible = true;
+                                                  progressBar1.Enabled = false;
+                                                  Building = false;
+                                                  Enable(true);
+                                              }
                                           };
-            bgw.RunWorkerAsync();
+            Bgw.RunWorkerAsync();
         }
-
         private void UpdateIndex(object sender, DoWorkEventArgs args)
         {
             var worker = sender as BackgroundWorker;
@@ -181,7 +265,6 @@ namespace MediaApp.Forms.UserControls.Settings
                 trans.Commit();
             }
         }
-
         private void SaveFilms(object sender, DoWorkEventArgs args)
         {
             var worker = sender as BackgroundWorker;
@@ -197,7 +280,6 @@ namespace MediaApp.Forms.UserControls.Settings
                 var errors = command.ValidationErrors;
             }
         }
-        private List<FilmResult> _films = new List<FilmResult>();
         private void Execute (object sender, DoWorkEventArgs args)
         {
             var worker = sender as BackgroundWorker;
@@ -214,7 +296,6 @@ namespace MediaApp.Forms.UserControls.Settings
             GrapFilms(sender,ffilms);
             worker.ReportProgress(99, "Awaiting user verification...");
         }
-        
         private void GrapFilms(object sender, List<PossibleFilm> films)
         {
             var worker = sender as BackgroundWorker;
@@ -222,6 +303,8 @@ namespace MediaApp.Forms.UserControls.Settings
             var count = 1;
             foreach (var film in films)
             {
+                if (UClosePending)
+                    return;
                 var percent = (count++/(double) numFilms)*100;
                 worker.ReportProgress((int)percent,film.Path);
                 var newFilm = IMDBFilm.GetFilmByName(film.Title);
@@ -230,17 +313,31 @@ namespace MediaApp.Forms.UserControls.Settings
                     newFilm.FilmPath = film.Path;
                     if(Regex.IsMatch(newFilm.Title,film.Title.Trim(),RegexOptions.IgnoreCase))
                     {
-                        _films.Add(new FilmResult(newFilm));
+                        _films.Add(new FilmResult(newFilm)
+                                       {
+                                           PossibleErrors = false
+                                       });
                     }
                     else
                     {
-                        var f = new FilmResult(newFilm) {PossibleErrors = true};
+                        var f = new FilmResult(newFilm)
+                                    {
+                                        PossibleErrors = true
+                                    };
                         _films.Add(f);
                     }
                 }
+                else
+                {
+                    var f = new FilmResult()
+                                {
+                                    FilmPath = film.Path,
+                                    PossibleErrors = null
+                                };
+                    _films.Add(f);
+                }
             }
         }
-
         private List<PossibleFilm> FilterFilms(List<String> files)
         {
             var filter = GetFilter();
@@ -272,7 +369,6 @@ namespace MediaApp.Forms.UserControls.Settings
             }
             return pFilms;
         }
-
         private String GetFilter()
         {
             var filter = Properties.Settings.Default.FilmFileFilter;
@@ -284,19 +380,16 @@ namespace MediaApp.Forms.UserControls.Settings
             nfilter += ")";
             return nfilter;
         }
-
         private bool MostCapitals(String s)
         {
             var length = s.Length;
             var passCount = s.Count(c => char.IsUpper(c));
             return ((passCount / (Double)length) * 100) > 80;
         }
-
         private bool InExtrasDirectory(String file)
         {
             return (Regex.IsMatch(file, @"(\\extra\\|\\extras\\)", RegexOptions.IgnoreCase));
         }
-
         private List<String> GetFiles()
         {
             var folders = Properties.Settings.Default.FilmDirectories;
@@ -311,7 +404,6 @@ namespace MediaApp.Forms.UserControls.Settings
             }
             return files;
         }
-        
         private BackgroundWorker Newbgw()
         {
             return new BackgroundWorker {WorkerReportsProgress = true, WorkerSupportsCancellation = true};

@@ -43,6 +43,8 @@ namespace MediaApp.Forms.UserControls.Settings
             lstb_genres.DataSource = Film.Genre.Select(x => new GenreListBoxItem(x.Id, x.Type)).ToList();
             lstb_Directors.DataSource = Film.Director.Select(x => new PersonListBoxItem(x.Id, x.IMDBID, x.Name)).ToList();
             lstb_Writers.DataSource = Film.Writers.Select(x => new PersonListBoxItem(x.Id, x.IMDBID, x.Name)).ToList();
+
+            panel2.Visible = false;
         }
 
         private void btn_rescan_Click(object sender, System.EventArgs e)
@@ -105,7 +107,6 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
                                          {
                                              populate();
                                              panel1.Enabled = true;
-                                             panel2.Visible = false;
                                          };
 
             bg.RunWorkerAsync();
@@ -336,39 +337,53 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             panel1.Enabled = false;
             panel2.Visible = true;
             bgw.ProgressChanged += (o, args) =>
-            {
-                results = (List<IMDBResult>)args.UserState;
-            };
+                                       {
+                                           results = (List<IMDBResult>) args.UserState;
+                                       };
             bgw.DoWork += (o, args) =>
-            {
-                var worker = o as BackgroundWorker;
-                worker.ReportProgress(100, IMDBSearch.SearchIMDBByTitle(searchString));
-            };
+                              {
+                                  var worker = o as BackgroundWorker;
+                                  worker.ReportProgress(100, IMDBSearch.SearchIMDBByTitle(searchString));
+                              };
             bgw.RunWorkerCompleted += (o, args) =>
-            {
-                if (results.Count != 0)
-                {
-                    var cont = new IMDBResultsList(results, SearchString);
-                    Enabled = false;
-                    if (cont.ShowDialog() == DialogResult.OK)
-                    {
-                        Scan("http://www.imdb.com/title/tt" + cont.URL);
-                    }
-                    Enabled = true;
-                }
-                else
-                {
-                    MessageBox.Show("Sorry no films where found!\nTry using direct link.", "No results", MessageBoxButtons.OK);
-                }
-                panel1.Enabled = true;
-                panel2.Visible = false;
-            };
+                                          {
+                                              if (results != null && results.Count != 0)
+                                              {
+                                                  var cont = new IMDBResultsList(results, SearchString);
+                                                  Enabled = false;
+                                                  if (cont.ShowDialog() == DialogResult.OK)
+                                                  {
+                                                      Scan("http://www.imdb.com/title/tt" + cont.URL);
+                                                  }
+                                                  Enabled = true;
+
+                                              }
+                                              else
+                                              {
+                                                  MessageBox.Show(
+                                                      "Sorry no films where found!\nTry using direct link.",
+                                                      "No results", MessageBoxButtons.OK);
+                                              }
+                                              panel1.Enabled = true;
+                                          };
             bgw.RunWorkerAsync();
         }
 
         private void cms2_SearchFor_Click(object sender, EventArgs e)
         {
-            SearchResults(toolStripTextBox1.Text);
+            var value = "";
+            if(InputBox.Show("Search for","Enter title of film to search for.","Example 'The Matrix",ref value) == DialogResult.OK)
+            {
+                SearchResults(value);
+            }
+        }
+
+        private void toolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                SearchResults(toolStripTextBox1.Text);
+            }
         }
     }
 }

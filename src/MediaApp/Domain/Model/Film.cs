@@ -11,6 +11,22 @@ namespace MediaApp.Domain.Model
             Genre = new List<FilmType>();
             Director = new List<Person>();
             Writers = new List<Person>();
+
+            Title = "";
+            OnExternalMedia = false;
+            FilmPath = "";
+            IMDBId = "";
+            PicURL = "";
+            ReleaseYear = "";
+            Synopsis = "";
+            Keywords = "";
+            TrailerLink = "";
+
+            DirectorIndexing = "";
+            GenreIndexing = "";
+            CharIndexing = "";
+            PersonIndexing = "";
+            IMDBRating = 0;
         }
         //required
         public virtual Guid Id { get; set; }
@@ -21,6 +37,7 @@ namespace MediaApp.Domain.Model
         public virtual String FilmPath { get; set; }
         
         //optional
+        public virtual Double IMDBRating { get; set; }
         public virtual String IMDBId { get; set; }
         public virtual String PicURL { get; set; }
         public virtual IList<Person> Director { get; set; }
@@ -43,12 +60,13 @@ namespace MediaApp.Domain.Model
     {
         public FilmResult()
         {
-            PossibleErrors = false;
+            PossibleErrors = null;
         }
 
         public FilmResult(Film film)
         {
-            PossibleErrors = false;
+            PossibleErrors = null;
+            IMDBRating = film.IMDBRating;
             Title = film.Title;
             Director = film.Director;
             Id = film.Id;
@@ -69,6 +87,6 @@ namespace MediaApp.Domain.Model
             CharIndexing = film.CharIndexing;
             PersonIndexing = film.PersonIndexing;
         }
-        public Boolean PossibleErrors { get; set; }
+        public Boolean? PossibleErrors { get; set; }
     }
 }

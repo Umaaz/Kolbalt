@@ -141,11 +141,13 @@ namespace MediaApp.Forms.MainForms
         }
         
         #region Settings
-        
+
+        public static Settings Settings;
+
         private void creatDataBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var DBC = new Settings();
-            if (DBC.ShowDialog() == DialogResult.OK)
+            Settings = new Settings();
+            if (Settings.ShowDialog() == DialogResult.OK)
             {
                 var fl = new FilmLibrary();
                 SC_LibraryNavLibrary.Panel2.Controls.Clear();

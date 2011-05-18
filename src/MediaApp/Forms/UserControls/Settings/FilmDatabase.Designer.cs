@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.grpBoxDatabase = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btn_update = new System.Windows.Forms.Button();
             this.lbl_TR = new System.Windows.Forms.Label();
             this.lbl_TRemaing = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_build = new System.Windows.Forms.Button();
             this.btn_ReBuild = new System.Windows.Forms.Button();
             this.chk_DisplayFilmResults = new System.Windows.Forms.CheckBox();
             this.lbl_Current = new System.Windows.Forms.Label();
@@ -48,10 +48,10 @@
             // 
             // grpBoxDatabase
             // 
-            this.grpBoxDatabase.Controls.Add(this.button2);
+            this.grpBoxDatabase.Controls.Add(this.btn_update);
             this.grpBoxDatabase.Controls.Add(this.lbl_TR);
             this.grpBoxDatabase.Controls.Add(this.lbl_TRemaing);
-            this.grpBoxDatabase.Controls.Add(this.button1);
+            this.grpBoxDatabase.Controls.Add(this.btn_build);
             this.grpBoxDatabase.Controls.Add(this.btn_ReBuild);
             this.grpBoxDatabase.Controls.Add(this.chk_DisplayFilmResults);
             this.grpBoxDatabase.Controls.Add(this.lbl_Current);
@@ -63,14 +63,14 @@
             this.grpBoxDatabase.TabStop = false;
             this.grpBoxDatabase.Text = "Database";
             // 
-            // button2
+            // btn_update
             // 
-            this.button2.Location = new System.Drawing.Point(203, 199);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 22);
-            this.button2.TabIndex = 14;
-            this.button2.Text = "Update Index";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btn_update.Location = new System.Drawing.Point(203, 199);
+            this.btn_update.Name = "btn_update";
+            this.btn_update.Size = new System.Drawing.Size(75, 22);
+            this.btn_update.TabIndex = 14;
+            this.btn_update.Text = "Update Index";
+            this.btn_update.UseVisualStyleBackColor = true;
             // 
             // lbl_TR
             // 
@@ -92,15 +92,15 @@
             this.lbl_TRemaing.Text = "Time Remaing:";
             this.lbl_TRemaing.Visible = false;
             // 
-            // button1
+            // btn_build
             // 
-            this.button1.Location = new System.Drawing.Point(284, 200);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 22);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Build";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btn_build.Location = new System.Drawing.Point(284, 200);
+            this.btn_build.Name = "btn_build";
+            this.btn_build.Size = new System.Drawing.Size(75, 22);
+            this.btn_build.TabIndex = 11;
+            this.btn_build.Text = "Build";
+            this.btn_build.UseVisualStyleBackColor = true;
+            this.btn_build.Click += new System.EventHandler(this.button1_Click);
             // 
             // btn_ReBuild
             // 
@@ -214,18 +214,18 @@
         #endregion
 
         private System.Windows.Forms.GroupBox grpBoxDatabase;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btn_update;
         private System.Windows.Forms.Label lbl_TR;
         private System.Windows.Forms.Label lbl_TRemaing;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_build;
         private System.Windows.Forms.Button btn_ReBuild;
         private System.Windows.Forms.CheckBox chk_DisplayFilmResults;
-        private System.Windows.Forms.Label lbl_Current;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btn_Addfilm;
         private System.Windows.Forms.Button btn_RemoveFilm;
         private System.Windows.Forms.ListBox lisb_films;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox chk_EnableWatchedFolders;
+        public System.Windows.Forms.Label lbl_Current;
     }
 }

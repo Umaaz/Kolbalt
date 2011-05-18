@@ -17,9 +17,12 @@ namespace MediaApp.Data.Web.IMDB
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Proxy = null;
             HttpWebResponse response;
+            string source;
             try
             {
                 response = (HttpWebResponse)request.GetResponse();
+                var sr = new StreamReader(response.GetResponseStream());
+                source = sr.ReadToEnd();
             }
             catch (WebException)
             {
@@ -27,16 +30,14 @@ namespace MediaApp.Data.Web.IMDB
             }
             if (response.StatusCode != HttpStatusCode.OK)
                 return null;
-            var sr = new StreamReader(response.GetResponseStream());
-            var source = sr.ReadToEnd();
             IMDBResult result = null;
             if (response.ResponseUri.ToString().Contains("http://www.imdb.com/find?s=tt"))
             {
                 result = IMDBSearch.TopResultBySource(source);
             }
-            if (result!= null)
+            if (result != null)
             {
-                var urlEnd = result.Url;
+                var urlEnd = result.IMDBIDUrl;
                 url = "Http://www.IMDB.com/title/tt" + urlEnd;
             }
             else
@@ -50,10 +51,19 @@ namespace MediaApp.Data.Web.IMDB
         
         public static Film GetFilmByUrl(string url)
         {
-            if (!Regex.IsMatch(url, @"(http://)www.imdb.com/title/tt\d\d\d\d\d\d\d", RegexOptions.IgnoreCase))
+            if (!Regex.IsMatch(url, @"(http://)www.imdb.com/title/tt\d\d\d\d\d\d\d(/|)", RegexOptions.IgnoreCase))
                 return null;
             var hw = new HtmlWeb();
-            var doc = hw.Load(url);
+            HtmlDocument doc;
+            try
+            {
+                 doc = hw.Load(url);
+            }
+            catch(WebException)
+            {
+                return null;
+            }
+            
             if (hw.StatusCode != HttpStatusCode.OK)
                 return null;
             
@@ -73,6 +83,11 @@ namespace MediaApp.Data.Web.IMDB
                     return null;
                 title = GetTitle(doc);
             }
+
+            //rating
+            var imdbRating = 0.0;
+            if (docString.Contains("class=\"rating-rating\""))
+                imdbRating = GetImdbRating(doc);
 
             //picurl
             var picURL = "";
@@ -128,14 +143,16 @@ namespace MediaApp.Data.Web.IMDB
             var directorindexing = "";
             foreach (var person in directors)
             {
-                directorindexing += person.Name + " ";
+                if(!directorindexing.Contains(person.Name))
+                    directorindexing += person.Name + " ";
             }
             if (directorindexing.Length > 4000)
                 directorindexing.Remove(4000);
             var genreIndexing = "";
             foreach (var filmType in genres)
             {
-                genreIndexing += filmType.Type + " ";
+                if(!genreIndexing.Contains(filmType.Type))
+                    genreIndexing += filmType.Type + " ";
             }
             if (genreIndexing.Length > 4000)
                 genreIndexing.Remove(4000);
@@ -143,8 +160,10 @@ namespace MediaApp.Data.Web.IMDB
             var personIndexing = "";
             foreach (var role in cast)
             {
-                charIndexing += role.Character + " ";
-                personIndexing += role.Person.Name + " ";
+                if(!charIndexing.Contains(role.Character))
+                    charIndexing += role.Character + " ";
+                if(!personIndexing.Contains(role.Person.Name))
+                    personIndexing += role.Person.Name + " ";
             }
             if (personIndexing.Length > 4000)
                 personIndexing.Remove(4000);
@@ -154,6 +173,7 @@ namespace MediaApp.Data.Web.IMDB
             return new Film
                        {
                            Title = title,
+                           IMDBRating = imdbRating,
                            Synopsis = storyLine,
                            RunTime = runTime,
                            IMDBId = IMDBFilmId,
@@ -195,6 +215,16 @@ namespace MediaApp.Data.Web.IMDB
                 title = HtmlEscapeCharConverter.Decode(title.Remove(title.IndexOf("(")));
             }
             return title.Replace("\n","");
+        }
+
+        private static Double GetImdbRating(HtmlDocument doc)
+        {
+            var rating = doc.DocumentNode.SelectNodes(".//span[@class='rating-rating']").Single().InnerText;
+            var IMDBrating = rating.Replace("\"", "");
+            IMDBrating = IMDBrating.Remove(IMDBrating.IndexOf('/'));
+            Double drating = 0.0;
+            Double.TryParse(IMDBrating,out drating);
+            return drating;
         }
 
         private static String GetPicURL(HtmlDocument doc)

@@ -496,6 +496,7 @@
             this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
             this.toolStripTextBox1.Text = "Enter Film Title..";
             this.toolStripTextBox1.ToolTipText = "Enter title of film to search IMDB for.";
+            this.toolStripTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripTextBox1_KeyDown);
             // 
             // ResultsTemplate
             // 

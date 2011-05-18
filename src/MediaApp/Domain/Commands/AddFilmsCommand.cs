@@ -89,6 +89,7 @@ namespace MediaApp.Domain.Commands
                     realNewFilm.CharIndexing = film.CharIndexing;
                     realNewFilm.PersonIndexing = film.PersonIndexing;
                     realNewFilm.PicURL = film.PicURL;
+                    realNewFilm.IMDBRating = film.IMDBRating;
 
                     foreach (var person in film.Director)
                     {

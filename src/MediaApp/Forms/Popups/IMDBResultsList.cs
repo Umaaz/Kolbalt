@@ -29,12 +29,12 @@ namespace MediaApp.Forms.Popups
                     var pic = new DownloadImage(imdbResult.PicUrl);
                     pic.Download();
                     il.Images.Add(pic.GetImage());
-                    item = new ListViewItem(new[] {imdbResult.Title, imdbResult.Year}) {ImageIndex = count++};
+                    item = new ListViewItem(new[] {imdbResult.Title, imdbResult.Year, imdbResult.IMDBIDUrl}) {ImageIndex = count++};
                 }
                 else
                 {
                     il.Images.Add(Properties.Resources.no_image);
-                    item = new ListViewItem(new[] {imdbResult.Title, imdbResult.Year}) {ImageIndex = count++};
+                    item = new ListViewItem(new[] { imdbResult.Title, imdbResult.Year, imdbResult.IMDBIDUrl }) { ImageIndex = count++ };
                 }
                 listView1.Items.Add(item);
             }
@@ -48,7 +48,7 @@ namespace MediaApp.Forms.Popups
 
         private void btn_fetch_Click(object sender, EventArgs e)
         {
-            URL = _results[listView1.SelectedIndices[0]].Url;
+            URL = _results[listView1.SelectedIndices[0]].IMDBIDUrl;
         }
 
         private void listView1_MouseHover(object sender, EventArgs e)
@@ -62,9 +62,17 @@ namespace MediaApp.Forms.Popups
             }
         }
 
-        private void IMDBResultsList_Load(object sender, EventArgs e)
+        private void viewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            var item = listView1.SelectedItems[0];
+            var url = item.SubItems[2].Text;
+            if(url != "")
+            {
+                System.Diagnostics.Process.Start("http://www.imdb.com/title/tt" + url);
+            }
+            
         }
+
+        
     }
 }

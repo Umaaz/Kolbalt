@@ -29,8 +29,8 @@ namespace MediaApp.Forms.UserControls.FilmControls
             var query = txtb_Search.Text;
             if (string.IsNullOrWhiteSpace(query)||!char.IsLetterOrDigit(query[0]))
                 return _nhSession.Query<Film>();
-            var parser = new MultiFieldQueryParser(Lucene.Net.Util.Version.LUCENE_CURRENT,
-                new[] { "Title", "Synopsis", "Keywords", "DirectorIndexing", "CharIndexing", "GenreIndexing", "PersonIndexing" }, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT));
+            var parser = new MultiFieldQueryParser(Lucene.Net.Util.Version.LUCENE_29,
+                new[] { "Title", "Synopsis", "Keywords", "DirectorIndexing", "CharIndexing", "GenreIndexing", "PersonIndexing" }, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29));
             var searchSession = NHibernate.Search.Search.CreateFullTextSession(_nhSession);
             return searchSession.CreateFullTextQuery(parser.Parse(query + "*"), new[] { typeof(Film) }).List<Film>().AsQueryable();
         }
@@ -124,7 +124,7 @@ namespace MediaApp.Forms.UserControls.FilmControls
             {
                 var id = DGV_Films.SelectedRows[0].Cells[0].Value.ToString();
                 SelectedFilmDetailsPanel.Controls.Clear();
-                var fb = new FilmDetails(_nhSession.Get<Film>(new Guid(id)).IMDBId);
+                var fb = new FilmDetails(_nhSession.Get<Film>(new Guid(id)));
                 fb.Visible = true;
                 SelectedFilmDetailsPanel.Controls.Add(fb);
                 fb.Dock = DockStyle.Fill;
@@ -183,7 +183,7 @@ namespace MediaApp.Forms.UserControls.FilmControls
                 ad.Visible = true;
                 ad.Dock = DockStyle.Fill;
             }
-            else if(Properties.Settings.Default.selectedFilmDetailsShow && ActorList.SelectedItem == "All")
+            else if(Properties.Settings.Default.selectedFilmDetailsShow && ActorList.SelectedItem.ToString() == "All")
             {
                 
             }

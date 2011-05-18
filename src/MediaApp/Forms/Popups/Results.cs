@@ -19,10 +19,10 @@ namespace MediaApp.Forms.Popups
         #region Film Dictionary
         private Dictionary<string, FilmResult> _filmDic = new Dictionary<string, FilmResult>();
 
-        void ReplaceFilm(FilmResult film, String oldId)
+        void ReplaceFilm(FilmResult film, String path)
         {
-            if (_filmDic.ContainsKey(oldId))
-                _filmDic[oldId] = film;
+            if (_filmDic.ContainsKey(path))
+                _filmDic[path] = film;
         }
 
         public List<FilmResult> GetFilms()
@@ -32,26 +32,26 @@ namespace MediaApp.Forms.Popups
 
         void AddFilm(FilmResult film)
         {
-            if (!_filmDic.ContainsKey(film.IMDBId))
-                _filmDic[film.IMDBId] = film;
+            if (!_filmDic.ContainsKey(film.FilmPath))
+                _filmDic[film.FilmPath] = film;
         }
 
         void DeleteFilm(Film film)
         {
-            if (HasFilm(film.IMDBId))
-                _filmDic.Remove(film.IMDBId);
+            if (HasFilm(film.FilmPath))
+                _filmDic.Remove(film.FilmPath);
         }
 
-        FilmResult GetFilm(String imdbId)
+        FilmResult GetFilm(String filmPath)
         {
             FilmResult film;
-            _filmDic.TryGetValue(imdbId, out film);
+            _filmDic.TryGetValue(filmPath, out film);
             return film;
         }
 
-        bool HasFilm(String imdbId)
+        bool HasFilm(String filmPath)
         {
-            return _filmDic.ContainsKey(imdbId);
+            return _filmDic.ContainsKey(filmPath);
         }
         #endregion
 
@@ -77,6 +77,7 @@ namespace MediaApp.Forms.Popups
             var count = 0;
             listView1.Groups.Add(new ListViewGroup("Films"));
             listView1.Groups.Add(new ListViewGroup("Possible Errors"));
+            listView1.Groups.Add(new ListViewGroup("Not Found"));
             listView1.View = View.Tile;
             _il.ImageSize = new Size(32, 32);
             listView1.LargeImageList = _il;
@@ -88,17 +89,23 @@ namespace MediaApp.Forms.Popups
                     var pic = new DownloadImage(film.PicURL);
                     pic.Download();
                     var picture = pic.GetImage();
-                    if(picture != null)
-                        _il.Images.Add(picture);
-                    item = new ListViewItem(new[] { film.Title, film.ReleaseYear, film.IMDBId }) { ImageIndex = count++ };
+                        _il.Images.Add(picture ?? Properties.Resources.no_image);
+                    item = new ListViewItem(new[] { film.Title, film.ReleaseYear, film.FilmPath }) { ImageIndex = count++ };
                 }
                 else
                 {
                     _il.Images.Add(Properties.Resources.no_image);
-                    item = new ListViewItem(new[] { film.Title, film.ReleaseYear, film.IMDBId }) {ImageIndex = count++};
+                    item = new ListViewItem(new[] { film.Title, film.ReleaseYear, film.FilmPath }) {ImageIndex = count++};
                 }
-                if(film.PossibleErrors)
-                    item.Group = film.PossibleErrors ? listView1.Groups[1]: listView1.Groups[0];
+                if (film.PossibleErrors.HasValue)
+                    item.Group = film.PossibleErrors.Value ? listView1.Groups[1] : listView1.Groups[0];
+                else
+                {
+                    item.SubItems[0].Text = film.FilmPath;
+                    item.SubItems[1].Text = "";
+                    item.SubItems[2].Text = film.FilmPath;
+                    item.Group = listView1.Groups[2];
+                }
                 listView1.Items.Add(item);
             }
         }
@@ -114,7 +121,7 @@ namespace MediaApp.Forms.Popups
                     {
                         var pic = new DownloadImage(film.PicURL);
                         pic.Download();
-                        nil.Images.Add(pic.GetImage());
+                        nil.Images.Add(pic.GetImage() ?? Properties.Resources.no_image);
                     }
                     else
                     {
@@ -172,7 +179,7 @@ namespace MediaApp.Forms.Popups
 
         private void SaveCurrent()
         {
-            ReplaceFilm(ResultsTemplate.Film, _previousId);
+            ReplaceFilm(ResultsTemplate.Film, ResultsTemplate.Film.FilmPath);
         }
 
         private void deleteToolStripMenuItem_Click(object sender, System.EventArgs e)
@@ -188,6 +195,11 @@ namespace MediaApp.Forms.Popups
             index = index == 0 ? index : index - 1;
             var prevFilm = GetFilm(listView1.Items[index].SubItems[2].Text);
             ShowControl(prevFilm, prevFilm.Title);
+        }
+
+        private void btn_ok_Click(object sender, EventArgs e)
+        {
+            ReplaceFilm(ResultsTemplate.Film, ResultsTemplate.Film.FilmPath);
         }
     }
 }
