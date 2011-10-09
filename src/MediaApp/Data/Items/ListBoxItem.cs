@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MediaApp.Data.Items
+namespace Kolbalt.Client.Data.Items
 {
     public class ListBoxItem
     {

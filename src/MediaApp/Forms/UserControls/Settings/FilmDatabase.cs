@@ -6,23 +6,26 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using MediaApp.Data;
-using MediaApp.Data.Web.IMDB;
-using MediaApp.Domain.Commands;
-using MediaApp.Domain.Model;
-using MediaApp.Forms.Popups;
+using Kolbalt.Client.Data;
+using Kolbalt.Client.Forms.Popups;
+using Kolbalt.Core.Data;
+using Kolbalt.Core.Data.Web.IMDB;
+using Kolbalt.Core.Domain.Commands;
+using Kolbalt.Core.Domain.Model;
+using MediaApp.Forms.MainForms;
 using NHibernate;
 using NHibernate.Linq;
 
-namespace MediaApp.Forms.UserControls.Settings
+namespace Kolbalt.Client.Forms.UserControls.Settings
 {
     public partial class FilmDatabase : UserControl
     {
         private static readonly ISession NhSession = NhContext.GetSession();
-        private List<FilmResult> _films = new List<FilmResult>();
+        private List<FilmResult> _films;
         public BackgroundWorker Bgw { get; private set; }
         public Boolean UComplete { get; set; }
         public Boolean UClosePending { get; set; }
+        private Boolean UCanceling { get; set; }
         public Boolean Building;
         
         public FilmDatabase()
@@ -30,6 +33,7 @@ namespace MediaApp.Forms.UserControls.Settings
             InitializeComponent();
             PopulateList();
             UComplete = true;
+            UCanceling = false;
         }
         #region Watched Folders
         private void PopulateList()
@@ -67,10 +71,11 @@ namespace MediaApp.Forms.UserControls.Settings
             if (MessageBox.Show("Are you sure you want to continue?\n - This will clear the current database!","Are you Sure?",MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 Enable(false);
+                UCanceling = false;
                 UComplete = false;
                 var appPath = Path.GetDirectoryName(Application.ExecutablePath);
-                Directory.Delete(appPath + "\\SearchIndex", true);
-                Directory.CreateDirectory(appPath + "\\SearchIndex");
+                //Directory.Delete(appPath + "\\SearchIndex", true);
+                //Directory.CreateDirectory(appPath + "\\SearchIndex");
                 Bgw = HelperClass.NewBGW();
                 Bgw.ProgressChanged += (o, args) =>
                                            {
@@ -82,7 +87,13 @@ namespace MediaApp.Forms.UserControls.Settings
                                               {
                                                   UComplete = true;
                                                   if (UClosePending)
-                                                      MainForms.FRM_Main.Settings.Close();
+                                                      FRM_Main.Settings.Close();
+                                                  else if (UCanceling)
+                                                  {
+                                                      lbl_Current.Text = "Canceled.";
+                                                      progressBar1.Value = 0;
+                                                      Enable(true);
+                                                  }
                                                   else
                                                   {
                                                       lbl_Current.Visible = false;
@@ -100,6 +111,8 @@ namespace MediaApp.Forms.UserControls.Settings
                 var films = NhSession.Query<Film>();
                 foreach (var film in films)
                 {
+                    if (UCanceling||UClosePending)
+                        return;
                     worker.ReportProgress(1,"Deleted: " + film.Title);
                     NhSession.Delete(film);
                 }
@@ -130,19 +143,23 @@ namespace MediaApp.Forms.UserControls.Settings
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            if (CheckNetConnection())
-                Build();
-            else
-                MessageBox.Show("Error Connection to IMDB\nCheck net connection and retry!", "Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            switch (btn_build.Text)
+            {
+                case "Build":
+                    Build();
+                    break;
+                case "Cancel":
+                    lbl_Current.Text = "Canceling..";
+                    UCanceling = true;
+                    break;
+            }
+            
         }
         private void Build()
         {
-            if(Building)
-            {
-                MessageBox.Show("Build currently in progress!");
-            }
+            _films = new List<FilmResult>();
             UComplete = false;
+            UCanceling = false;
             Building = true;
             Enable(false);
             Bgw = HelperClass.NewBGW();
@@ -150,7 +167,8 @@ namespace MediaApp.Forms.UserControls.Settings
             progressBar1.Value = 0;
             Bgw.ProgressChanged += (o, args) =>
                                        {
-
+                                           if(args.ProgressPercentage == -1)
+                                               MessageBox.Show("Error Connection to IMDB\nCheck net connection and retry!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                            lbl_Current.Visible = true;
                                            lbl_Current.Text = (String) args.UserState;
                                            progressBar1.Enabled = true;
@@ -161,7 +179,13 @@ namespace MediaApp.Forms.UserControls.Settings
                                           {
                                               UComplete = true;
                                               if (UClosePending)
-                                                  MainForms.FRM_Main.Settings.Close();
+                                                  FRM_Main.Settings.Close();
+                                              else if (UCanceling)
+                                              {
+                                                  lbl_Current.Text = "Canceled.";
+                                                  progressBar1.Value = 0;
+                                                  Enable(true);
+                                              }
                                               else
                                               {
                                                   progressBar1.Enabled = false;
@@ -174,6 +198,7 @@ namespace MediaApp.Forms.UserControls.Settings
                                                       else
                                                       {
                                                           lbl_Current.Text = "User Aborted!";
+                                                          progressBar1.Value = 0;
                                                           Enable(true);
                                                           
                                                       }
@@ -190,7 +215,7 @@ namespace MediaApp.Forms.UserControls.Settings
         {
             btn_update.Enabled = b;
             btn_ReBuild.Enabled = b;
-            btn_build.Enabled = b;
+            btn_build.Text = b ? "Build" : "Cancel";
         }
         private bool UserVerification()
         {
@@ -217,7 +242,13 @@ namespace MediaApp.Forms.UserControls.Settings
                                           {
                                               UComplete = true;
                                               if (UClosePending)
-                                                  MainForms.FRM_Main.Settings.Close();
+                                                  FRM_Main.Settings.Close();
+                                              else if (UCanceling)
+                                              {
+                                                  lbl_Current.Text = "Canceled.";
+                                                  progressBar1.Value = 0;
+                                                  Enable(true);
+                                              }
                                               else
                                               {
                                                   lbl_Current.Visible = false;
@@ -239,7 +270,13 @@ namespace MediaApp.Forms.UserControls.Settings
                                           {
                                               UComplete = true;
                                               if (UClosePending)
-                                                  MainForms.FRM_Main.Settings.Close();
+                                                  FRM_Main.Settings.Close();
+                                              else if (UCanceling)
+                                              {
+                                                  lbl_Current.Text = "Canceled.";
+                                                  progressBar1.Value = 0;
+                                                  Enable(true);
+                                              }
                                               else
                                               {
                                                   lbl_Current.Text = "Build Complete.";
@@ -284,6 +321,12 @@ namespace MediaApp.Forms.UserControls.Settings
         private void Execute (object sender, DoWorkEventArgs args)
         {
             var worker = sender as BackgroundWorker;
+            worker.ReportProgress(1,"Checking connection...");
+            if (!CheckNetConnection())
+            {
+                worker.ReportProgress(-1);
+                return;
+            }
             worker.ReportProgress(1, "Gathering Files...");
             var files = GetFiles();
             if (files.Count <= 0)
@@ -295,7 +338,25 @@ namespace MediaApp.Forms.UserControls.Settings
             var ffilms = FilterFilms(files);
             worker.ReportProgress(3, "Searching...");
             GrapFilms(sender,ffilms);
+            RemoveDuplicates();
             worker.ReportProgress(99, "Awaiting user verification...");
+        }
+        private void RemoveDuplicates()
+        {
+            var films = _films;
+            var newFilms = new List<FilmResult>();
+            foreach (var film in films)
+            {
+                var add = true;
+                foreach (var filmResult in newFilms)
+                {
+                    if (film.Title == filmResult.Title)
+                        add = false;
+                }
+                if(add)
+                    newFilms.Add(film);
+            }
+            _films = newFilms;
         }
         private void GrapFilms(object sender, List<PossibleFilm> films)
         {
@@ -304,38 +365,37 @@ namespace MediaApp.Forms.UserControls.Settings
             var count = 1;
             foreach (var film in films)
             {
-                if (UClosePending)
+                if (UClosePending||UCanceling)
                     return;
                 var percent = (count++/(double) numFilms)*100;
                 worker.ReportProgress((int)percent,film.Path);
                 var newFilm = IMDBFilm.GetFilmByName(film.Title);
-                if (newFilm != null)
+                if (newFilm != null && (newFilm is Film))
                 {
-                    newFilm.FilmPath = film.Path;
-                    if(Regex.IsMatch(newFilm.Title,film.Title.Trim(),RegexOptions.IgnoreCase))
+                    var ff = (Film) newFilm;
+                    ff.FilmPath = film.Path;
+                    if (Regex.IsMatch(ff.Title, film.Title.Trim(), RegexOptions.IgnoreCase))
                     {
-                        _films.Add(new FilmResult(newFilm)
+                        _films.Add(new FilmResult(ff)
                                        {
                                            PossibleErrors = false
                                        });
                     }
                     else
                     {
-                        var f = new FilmResult(newFilm)
-                                    {
-                                        PossibleErrors = true
-                                    };
-                        _films.Add(f);
+                        _films.Add(new FilmResult(ff)
+                                       {
+                                           PossibleErrors = true
+                                       });
                     }
                 }
                 else
                 {
-                    var f = new FilmResult()
-                                {
-                                    FilmPath = film.Path,
-                                    PossibleErrors = null
-                                };
-                    _films.Add(f);
+                    _films.Add(new FilmResult
+                                   {
+                                       FilmPath = film.Path,
+                                       PossibleErrors = null
+                                   });
                 }
             }
         }
@@ -355,7 +415,7 @@ namespace MediaApp.Forms.UserControls.Settings
                 title = Regex.Replace(title, @"(cd|part|parts)[\s\d][\s\d]", "", RegexOptions.IgnoreCase);
                 title = title.Trim();
                 var splitTitle = title.Split(' ');
-                //removes words that are mostly capitals, "usually tags from Torrent sites"
+                //removes words that are mostly capitals, (usually tags from Torrent sites)
                 var nsplitTitle = splitTitle.Where(x => !MostCapitals(x)).ToList();
                 title = "";
                 foreach (var s in nsplitTitle)
@@ -404,6 +464,18 @@ namespace MediaApp.Forms.UserControls.Settings
                 }
             }
             return files;
+        }
+
+        private void btn_update_Click(object sender, EventArgs e)
+        {
+            var bgw = HelperClass.NewBGW();
+            lbl_Current.Text = "Updating indexing";
+            bgw.DoWork += UpdateIndex;
+            bgw.RunWorkerCompleted += (o, args) =>
+                                          {
+                                              lbl_Current.Text = "Update complete";
+                                          };
+            bgw.RunWorkerAsync();
         }
     }
 

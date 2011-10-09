@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using MediaApp.Data.Web;
-using MediaApp.Domain.Model;
+using Kolbalt.Client.Data;
+using Kolbalt.Core.Domain.Model;
 using MediaApp.Forms.UserControls.Settings;
 
-namespace MediaApp.Forms.Popups
+namespace Kolbalt.Client.Forms.Popups
 {
     public partial class Results : Form
     {

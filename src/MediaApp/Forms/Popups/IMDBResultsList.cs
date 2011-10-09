@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Kolbalt.Client.Data;
+using Kolbalt.Client.Data.Web.IMDB;
 using MediaApp.Data.Web;
-using MediaApp.Data.Web.IMDB;
 
 namespace MediaApp.Forms.Popups
 {
@@ -28,7 +29,8 @@ namespace MediaApp.Forms.Popups
                 {
                     var pic = new DownloadImage(imdbResult.PicUrl);
                     pic.Download();
-                    il.Images.Add(pic.GetImage());
+                    
+                    il.Images.Add(pic.GetImage() ?? Properties.Resources.no_image);
                     item = new ListViewItem(new[] {imdbResult.Title, imdbResult.Year, imdbResult.IMDBIDUrl}) {ImageIndex = count++};
                 }
                 else

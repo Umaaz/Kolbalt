@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using HtmlAgilityPack;
-using MediaApp.Data;
+using Kolbalt.Client.Data;
 using MediaApp.Data.Web;
 
 namespace MediaApp.Forms.UserControls.FilmControls
@@ -85,12 +85,21 @@ namespace MediaApp.Forms.UserControls.FilmControls
             var hw = new HtmlWeb();
             var doc = hw.Load(_url);
 
-            var born = doc.DocumentNode.SelectSingleNode(".//div[@class='txt-block']").InnerText.Trim();
-            worker.ReportProgress(30, HtmlEscapeCharConverter.Decode(born.Replace("  ", " ").Replace("\n", "")));
-            var name = doc.DocumentNode.SelectSingleNode(".//h1[@class='header']").InnerText.Trim();
-            worker.ReportProgress(60, HtmlEscapeCharConverter.Decode(name.Replace("  ", " ").Replace("\n", "")));
-            var bio = doc.DocumentNode.SelectNodes(".//p").First().InnerText.Trim();
-            worker.ReportProgress(90, HtmlEscapeCharConverter.Decode(bio));
+            if (doc.DocumentNode.InnerHtml.Contains("txt-block"))
+            {
+                var born = doc.DocumentNode.SelectSingleNode(".//div[@class='txt-block']").InnerText.Trim();
+                worker.ReportProgress(30, HtmlEscapeCharConverter.Decode(born.Replace("  ", " ").Replace("\n", "")));
+            }
+            if (doc.DocumentNode.InnerHtml.Contains("header"))
+            {
+                var name = doc.DocumentNode.SelectSingleNode(".//h1[@class='header']").InnerText.Trim();
+                worker.ReportProgress(60, HtmlEscapeCharConverter.Decode(name.Replace("  ", " ").Replace("\n", "")));
+            }
+            if (doc.DocumentNode.InnerHtml.Contains("<p>"))
+            {
+                var bio = doc.DocumentNode.SelectNodes(".//p").First().InnerText.Trim();
+                worker.ReportProgress(90, HtmlEscapeCharConverter.Decode(bio));
+            }
         }
     }
 }

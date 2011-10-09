@@ -1,4 +1,4 @@
-﻿namespace MediaApp.Forms.UserControls.Settings
+﻿namespace Kolbalt.Client.Forms.UserControls.Settings
 {
     partial class FilmDatabase
     {
@@ -71,6 +71,7 @@
             this.btn_update.TabIndex = 14;
             this.btn_update.Text = "Update Index";
             this.btn_update.UseVisualStyleBackColor = true;
+            this.btn_update.Click += new System.EventHandler(this.btn_update_Click);
             // 
             // lbl_TR
             // 

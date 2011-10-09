@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using Kolbalt.Client.Data;
+using Kolbalt.Client.Domain.Model;
+using Kolbalt.Core.Data;
 using MediaApp.Data;
 using MediaApp.Domain;
-using MediaApp.Domain.Model;
 using NHibernate;
 using NHibernate.Linq;
-using ListViewItem = MediaApp.Data.AlarmListViewItem;
+using ListViewItem = Kolbalt.Client.Data.AlarmListViewItem;
 
 namespace MediaApp
 {

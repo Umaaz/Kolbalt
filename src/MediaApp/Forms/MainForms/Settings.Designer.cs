@@ -1,4 +1,4 @@
-﻿namespace MediaApp.Forms.MainForms
+﻿namespace Kolbalt.Client.Forms.MainForms
 {
     partial class Settings
     {
@@ -53,6 +53,7 @@
             // treeView1
             // 
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.HideSelection = false;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
             treeNode1.Name = "General";
@@ -150,6 +151,7 @@
             this.MinimizeBox = false;
             this.Name = "Settings";
             this.Text = "Settings";
+            this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.Settings_HelpButtonClicked);
             this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);

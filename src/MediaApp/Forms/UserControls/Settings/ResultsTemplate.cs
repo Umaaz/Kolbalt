@@ -6,10 +6,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using MediaApp.Data.Items;
+using Kolbalt.Client.Data;
+using Kolbalt.Client.Data.Items;
+using Kolbalt.Client.Data.Web.IMDB;
+using Kolbalt.Client.Domain.Model;
 using MediaApp.Data.Web;
-using MediaApp.Data.Web.IMDB;
-using MediaApp.Domain.Model;
 using MediaApp.Forms.Popups;
 
 namespace MediaApp.Forms.UserControls.Settings
@@ -147,9 +148,9 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             if (InputBox.Show("New Genre", "Please enter the new genre", "example: 'comedy'", ref value) == DialogResult.OK)
             {
                 Film.Genre.Add(new FilmType
-                {
-                    Type = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value)
-                });
+                                   {
+                                       Type = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value)
+                                   });
             }
             populate();
         }
@@ -187,7 +188,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             {
                 for (var i = 0; i < Film.Cast.Count; i++)
                 {
-                    if (Film.Cast[i].Person.IMDBID == (String)dataGridView1.SelectedRows[0].Cells[1].Value)
+                    if (Film.Cast[i].Person.IMDBID == dataGridView1.SelectedRows[0].Cells[1].Value.ToString())
                     {
                         Film.Cast.RemoveAt(i);
                     }
@@ -242,7 +243,6 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
         private void btn_otherresults_Click(object sender, EventArgs e)
         {
             contextMenuStrip2.Show(btn_otherresults, new Point(0, 23));
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -264,10 +264,10 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             populate();
         }
 
-        private Person AddPerson(string[] prompts, string title)
+        private Person AddPerson(String[] prompts, String title)
         {
             var defaults = new[] { "Example \"0012487\"", "Example \"Joe Bloggs\"" };
-            var value = new List<string>();
+            var value = new List<String>();
             while (true)
             {
                 if (InputBox.Show(title, prompts, defaults, ref value, true) != DialogResult.OK)
@@ -371,6 +371,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
                                                       "No results", MessageBoxButtons.OK);
                                               }
                                               panel1.Enabled = true;
+                                              panel2.Visible = false;
                                           };
             bgw.RunWorkerAsync();
         }

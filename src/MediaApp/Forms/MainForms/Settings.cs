@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
+using Kolbalt.Client.Forms.UserControls.Settings;
+using Kolbalt.Help;
 using MediaApp.Forms.UserControls.Settings;
 
-namespace MediaApp.Forms.MainForms
+namespace Kolbalt.Client.Forms.MainForms
 {
     public partial class Settings : Form
     {
@@ -69,6 +71,12 @@ namespace MediaApp.Forms.MainForms
                 }
             }
             base.OnFormClosing(e);
+        }
+
+        private void Settings_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var frm = new HelpFrom();
+            frm.Show();
         }
     }
 }

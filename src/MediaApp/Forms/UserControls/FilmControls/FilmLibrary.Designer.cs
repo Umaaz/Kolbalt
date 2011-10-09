@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.SC_SearchLibrary = new System.Windows.Forms.SplitContainer();
             this.btn_Clear = new System.Windows.Forms.Button();
             this.btn_AdvSearch = new System.Windows.Forms.Button();
@@ -48,16 +48,6 @@
             this.SC_FilmDataGridDetControls = new System.Windows.Forms.SplitContainer();
             this.SC_DatagridSynopsis = new System.Windows.Forms.SplitContainer();
             this.DGV_Films = new System.Windows.Forms.DataGridView();
-            this.SC_CastSynopsis = new System.Windows.Forms.SplitContainer();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.lv_FilmCast = new System.Windows.Forms.ListView();
-            this.clm_Actor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clm_Character = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.pn_RuntimeReleaseDate = new System.Windows.Forms.Panel();
-            this.lbl_RTimeLabel = new System.Windows.Forms.Label();
-            this.lbl_rTime = new System.Windows.Forms.Label();
-            this.lbl_RDateLabel = new System.Windows.Forms.Label();
-            this.lbl_rdate = new System.Windows.Forms.Label();
             this.txtb_Synopsis = new System.Windows.Forms.TextBox();
             this.btn_PlayFilm = new System.Windows.Forms.Button();
             this.btn_showHideFilmDetails = new System.Windows.Forms.Button();
@@ -100,12 +90,6 @@
             this.SC_DatagridSynopsis.Panel2.SuspendLayout();
             this.SC_DatagridSynopsis.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGV_Films)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SC_CastSynopsis)).BeginInit();
-            this.SC_CastSynopsis.Panel1.SuspendLayout();
-            this.SC_CastSynopsis.Panel2.SuspendLayout();
-            this.SC_CastSynopsis.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.pn_RuntimeReleaseDate.SuspendLayout();
             this.SelectedFilmDetailsPanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -192,7 +176,7 @@
             // 
             // SC_LibraryDetails
             // 
-            this.SC_LibraryDetails.DataBindings.Add(new System.Windows.Forms.Binding("Panel2Collapsed", global::MediaApp.Properties.Settings.Default, "selectedFilmDetailsShow", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.SC_LibraryDetails.DataBindings.Add(new System.Windows.Forms.Binding("Panel2Collapsed", global::Kolbalt.Client.Properties.Settings.Default, "selectedFilmDetailsShow", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.SC_LibraryDetails.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SC_LibraryDetails.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.SC_LibraryDetails.IsSplitterFixed = true;
@@ -208,7 +192,7 @@
             // SC_LibraryDetails.Panel2
             // 
             this.SC_LibraryDetails.Panel2.Controls.Add(this.SelectedFilmDetailsPanel);
-            this.SC_LibraryDetails.Panel2Collapsed = global::MediaApp.Properties.Settings.Default.selectedFilmDetailsShow;
+            this.SC_LibraryDetails.Panel2Collapsed = global::Kolbalt.Client.Properties.Settings.Default.selectedFilmDetailsShow;
             this.SC_LibraryDetails.Size = new System.Drawing.Size(633, 549);
             this.SC_LibraryDetails.SplitterDistance = 455;
             this.SC_LibraryDetails.TabIndex = 0;
@@ -343,7 +327,7 @@
             // 
             // SC_DatagridSynopsis.Panel2
             // 
-            this.SC_DatagridSynopsis.Panel2.Controls.Add(this.SC_CastSynopsis);
+            this.SC_DatagridSynopsis.Panel2.Controls.Add(this.txtb_Synopsis);
             this.SC_DatagridSynopsis.Size = new System.Drawing.Size(633, 228);
             this.SC_DatagridSynopsis.SplitterDistance = 309;
             this.SC_DatagridSynopsis.TabIndex = 6;
@@ -353,29 +337,29 @@
             this.DGV_Films.AllowUserToAddRows = false;
             this.DGV_Films.AllowUserToDeleteRows = false;
             this.DGV_Films.AllowUserToOrderColumns = true;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            this.DGV_Films.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            this.DGV_Films.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.DGV_Films.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
             this.DGV_Films.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DGV_Films.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DGV_Films.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DGV_Films.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.DGV_Films.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(21)))), ((int)(((byte)(28)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DGV_Films.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(21)))), ((int)(((byte)(28)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DGV_Films.DefaultCellStyle = dataGridViewCellStyle3;
             this.DGV_Films.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DGV_Films.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(242)))));
             this.DGV_Films.Location = new System.Drawing.Point(0, 0);
@@ -390,117 +374,6 @@
             this.DGV_Films.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             this.DGV_Films.Click += new System.EventHandler(this.DGV_Films_Click);
             // 
-            // SC_CastSynopsis
-            // 
-            this.SC_CastSynopsis.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SC_CastSynopsis.Location = new System.Drawing.Point(0, 0);
-            this.SC_CastSynopsis.Name = "SC_CastSynopsis";
-            this.SC_CastSynopsis.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // SC_CastSynopsis.Panel1
-            // 
-            this.SC_CastSynopsis.Panel1.Controls.Add(this.panel3);
-            this.SC_CastSynopsis.Panel1.Controls.Add(this.pn_RuntimeReleaseDate);
-            // 
-            // SC_CastSynopsis.Panel2
-            // 
-            this.SC_CastSynopsis.Panel2.Controls.Add(this.txtb_Synopsis);
-            this.SC_CastSynopsis.Size = new System.Drawing.Size(320, 228);
-            this.SC_CastSynopsis.SplitterDistance = 119;
-            this.SC_CastSynopsis.TabIndex = 0;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.lv_FilmCast);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(0, 19);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(320, 100);
-            this.panel3.TabIndex = 0;
-            // 
-            // lv_FilmCast
-            // 
-            this.lv_FilmCast.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
-            this.lv_FilmCast.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lv_FilmCast.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.clm_Actor,
-            this.clm_Character});
-            this.lv_FilmCast.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lv_FilmCast.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            this.lv_FilmCast.FullRowSelect = true;
-            this.lv_FilmCast.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lv_FilmCast.Location = new System.Drawing.Point(0, 0);
-            this.lv_FilmCast.Name = "lv_FilmCast";
-            this.lv_FilmCast.Size = new System.Drawing.Size(320, 100);
-            this.lv_FilmCast.TabIndex = 0;
-            this.lv_FilmCast.UseCompatibleStateImageBehavior = false;
-            this.lv_FilmCast.View = System.Windows.Forms.View.Details;
-            this.lv_FilmCast.Click += new System.EventHandler(this.lv_FilmCast_Click);
-            // 
-            // clm_Actor
-            // 
-            this.clm_Actor.Text = "Actor";
-            this.clm_Actor.Width = 152;
-            // 
-            // clm_Character
-            // 
-            this.clm_Character.Text = "Character";
-            this.clm_Character.Width = 151;
-            // 
-            // pn_RuntimeReleaseDate
-            // 
-            this.pn_RuntimeReleaseDate.Controls.Add(this.lbl_RTimeLabel);
-            this.pn_RuntimeReleaseDate.Controls.Add(this.lbl_rTime);
-            this.pn_RuntimeReleaseDate.Controls.Add(this.lbl_RDateLabel);
-            this.pn_RuntimeReleaseDate.Controls.Add(this.lbl_rdate);
-            this.pn_RuntimeReleaseDate.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pn_RuntimeReleaseDate.Location = new System.Drawing.Point(0, 0);
-            this.pn_RuntimeReleaseDate.Name = "pn_RuntimeReleaseDate";
-            this.pn_RuntimeReleaseDate.Size = new System.Drawing.Size(320, 19);
-            this.pn_RuntimeReleaseDate.TabIndex = 1;
-            // 
-            // lbl_RTimeLabel
-            // 
-            this.lbl_RTimeLabel.AutoSize = true;
-            this.lbl_RTimeLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lbl_RTimeLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            this.lbl_RTimeLabel.Location = new System.Drawing.Point(53, 0);
-            this.lbl_RTimeLabel.Name = "lbl_RTimeLabel";
-            this.lbl_RTimeLabel.Size = new System.Drawing.Size(0, 13);
-            this.lbl_RTimeLabel.TabIndex = 0;
-            // 
-            // lbl_rTime
-            // 
-            this.lbl_rTime.AutoSize = true;
-            this.lbl_rTime.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lbl_rTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            this.lbl_rTime.Location = new System.Drawing.Point(0, 0);
-            this.lbl_rTime.Name = "lbl_rTime";
-            this.lbl_rTime.Size = new System.Drawing.Size(53, 13);
-            this.lbl_rTime.TabIndex = 1;
-            this.lbl_rTime.Text = "RunTime:";
-            // 
-            // lbl_RDateLabel
-            // 
-            this.lbl_RDateLabel.AutoSize = true;
-            this.lbl_RDateLabel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lbl_RDateLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            this.lbl_RDateLabel.Location = new System.Drawing.Point(245, 0);
-            this.lbl_RDateLabel.Name = "lbl_RDateLabel";
-            this.lbl_RDateLabel.Size = new System.Drawing.Size(75, 13);
-            this.lbl_RDateLabel.TabIndex = 3;
-            this.lbl_RDateLabel.Text = "Release Date:";
-            // 
-            // lbl_rdate
-            // 
-            this.lbl_rdate.AutoSize = true;
-            this.lbl_rdate.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lbl_rdate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(97)))), ((int)(((byte)(166)))), ((int)(((byte)(184)))));
-            this.lbl_rdate.Location = new System.Drawing.Point(320, 0);
-            this.lbl_rdate.Name = "lbl_rdate";
-            this.lbl_rdate.Size = new System.Drawing.Size(0, 13);
-            this.lbl_rdate.TabIndex = 2;
-            // 
             // txtb_Synopsis
             // 
             this.txtb_Synopsis.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(29)))), ((int)(((byte)(43)))));
@@ -512,8 +385,8 @@
             this.txtb_Synopsis.Name = "txtb_Synopsis";
             this.txtb_Synopsis.ReadOnly = true;
             this.txtb_Synopsis.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtb_Synopsis.Size = new System.Drawing.Size(320, 105);
-            this.txtb_Synopsis.TabIndex = 6;
+            this.txtb_Synopsis.Size = new System.Drawing.Size(320, 228);
+            this.txtb_Synopsis.TabIndex = 7;
             // 
             // btn_PlayFilm
             // 
@@ -658,17 +531,10 @@
             this.SC_FilmDataGridDetControls.ResumeLayout(false);
             this.SC_DatagridSynopsis.Panel1.ResumeLayout(false);
             this.SC_DatagridSynopsis.Panel2.ResumeLayout(false);
+            this.SC_DatagridSynopsis.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SC_DatagridSynopsis)).EndInit();
             this.SC_DatagridSynopsis.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DGV_Films)).EndInit();
-            this.SC_CastSynopsis.Panel1.ResumeLayout(false);
-            this.SC_CastSynopsis.Panel2.ResumeLayout(false);
-            this.SC_CastSynopsis.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SC_CastSynopsis)).EndInit();
-            this.SC_CastSynopsis.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.pn_RuntimeReleaseDate.ResumeLayout(false);
-            this.pn_RuntimeReleaseDate.PerformLayout();
             this.SelectedFilmDetailsPanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -694,17 +560,6 @@
         private System.Windows.Forms.SplitContainer SC_FilmDataGridDetControls;
         private System.Windows.Forms.SplitContainer SC_DatagridSynopsis;
         private System.Windows.Forms.DataGridView DGV_Films;
-        private System.Windows.Forms.SplitContainer SC_CastSynopsis;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.ListView lv_FilmCast;
-        private System.Windows.Forms.ColumnHeader clm_Actor;
-        private System.Windows.Forms.ColumnHeader clm_Character;
-        private System.Windows.Forms.Panel pn_RuntimeReleaseDate;
-        private System.Windows.Forms.Label lbl_RTimeLabel;
-        private System.Windows.Forms.Label lbl_rTime;
-        private System.Windows.Forms.Label lbl_RDateLabel;
-        private System.Windows.Forms.Label lbl_rdate;
-        private System.Windows.Forms.TextBox txtb_Synopsis;
         private System.Windows.Forms.Button btn_PlayFilm;
         private System.Windows.Forms.Button btn_showHideFilmDetails;
         private System.Windows.Forms.Button btn_CrtPlaylist;
@@ -716,5 +571,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.TextBox txtb_Synopsis;
     }
 }

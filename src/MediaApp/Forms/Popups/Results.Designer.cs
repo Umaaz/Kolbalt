@@ -1,4 +1,4 @@
-﻿namespace MediaApp.Forms.Popups
+﻿namespace Kolbalt.Client.Forms.Popups
 {
     partial class Results
     {

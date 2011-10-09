@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1E03F1D7-2EC9-4006-BC3B-FC8162245965}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Kolbalt.Core</RootNamespace>
+    <AssemblyName>Kolbalt.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\packages\FluentNHibernate.1.2.0.712\lib\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate.Search">
+      <HintPath>..\..\lib\nhibernate\FluentNHibernate.Search.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.2.0.0.0\lib\NET35\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.0\lib\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.1.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\packages\Lucene.2.9.2.2\lib\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.1.0.4000\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\packages\NHibernate.Castle.3.1.0.4000\lib\Net35\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Search">
+      <HintPath>..\packages\NHibernate.Search.2.0.2.4000\lib\Net35\NHibernate.Search.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Data\AlarmListViewItem.cs" />
+    <Compile Include="Data\NhContext.cs" />
+    <Compile Include="Data\Web\DownloadImage.cs" />
+    <Compile Include="Data\Web\HTMLescapeCharConverter.cs" />
+    <Compile Include="Data\Web\IMDB\IMDBFilm.cs" />
+    <Compile Include="Data\Web\IMDB\IMDBResult.cs" />
+    <Compile Include="Data\Web\IMDB\IMDBSearch.cs" />
+    <Compile Include="Domain\Commands\AddFilmsCommand.cs" />
+    <Compile Include="Domain\Mappings\AlarmsMap.cs" />
+    <Compile Include="Domain\Mappings\Conventions\ColumnConventions.cs" />
+    <Compile Include="Domain\Mappings\Conventions\ForeignKeyConstraintNameConvention.cs" />
+    <Compile Include="Domain\Mappings\Conventions\TableNameConventions.cs" />
+    <Compile Include="Domain\Mappings\FilmMap.cs" />
+    <Compile Include="Domain\Mappings\FilmSearchMap.cs" />
+    <Compile Include="Domain\Mappings\FilmTypeMap.cs" />
+    <Compile Include="Domain\Mappings\PersonMap.cs" />
+    <Compile Include="Domain\Mappings\RoleMap.cs" />
+    <Compile Include="Domain\Mappings\RoleSearchMap.cs" />
+    <Compile Include="Domain\Mappings\SearchMap.cs" />
+    <Compile Include="Domain\Model\Alarms.cs" />
+    <Compile Include="Domain\Model\Film.cs" />
+    <Compile Include="Domain\Model\FilmType.cs" />
+    <Compile Include="Domain\Model\Game.cs" />
+    <Compile Include="Domain\Model\IMDBItem.cs" />
+    <Compile Include="Domain\Model\Person.cs" />
+    <Compile Include="Domain\Model\Role.cs" />
+    <Compile Include="Domain\Validations\FilmValidator.cs" />
+    <Compile Include="Domain\Validations\GenreValidator.cs" />
+    <Compile Include="Domain\Validations\PersonValidator.cs" />
+    <Compile Include="Domain\Validations\RoleValidator.cs" />
+    <Compile Include="Domain\Validations\ValidationMethods.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
