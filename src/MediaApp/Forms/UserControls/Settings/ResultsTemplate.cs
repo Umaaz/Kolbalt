@@ -6,9 +6,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Kolbalt.Core.Data.Web.IMDB;
+using Kolbalt.Core.Domain.Model;
 using MediaApp.Data.Items;
-using MediaApp.Data.Web.IMDB;
-using MediaApp.Domain.Model;
 using MediaApp.Forms.Popups;
 
 namespace MediaApp.Forms.UserControls.Settings
@@ -81,7 +81,7 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
             bg.DoWork += (s, ee) =>
                              {
                                  var worker = s as BackgroundWorker;
-                                 worker.ReportProgress(100, IMDBFilm.GetFilmByUrl(url));
+                                 worker.ReportProgress(100, ImdbFilm.GetFilmByUrl(url));
                              };
             bg.ProgressChanged += (s, ee) =>
                                       {
@@ -332,18 +332,18 @@ Expected ""http://www.IMDB.com/title/tt"" followed by a 7 digit number, or just 
 
         private void SearchResults(String searchString)
         {
-            var results = new List<IMDBResult>();
+            var results = new List<ImdbResult>();
             var bgw = new BackgroundWorker { WorkerReportsProgress = true };
             panel1.Enabled = false;
             panel2.Visible = true;
             bgw.ProgressChanged += (o, args) =>
                                        {
-                                           results = (List<IMDBResult>) args.UserState;
+                                           results = (List<ImdbResult>)args.UserState;
                                        };
             bgw.DoWork += (o, args) =>
                               {
                                   var worker = o as BackgroundWorker;
-                                  worker.ReportProgress(100, IMDBSearch.SearchIMDBByTitle(searchString));
+                                  worker.ReportProgress(100, ImdbSearch.SearchIMDBByTitle(searchString));
                               };
             bgw.RunWorkerCompleted += (o, args) =>
                                           {

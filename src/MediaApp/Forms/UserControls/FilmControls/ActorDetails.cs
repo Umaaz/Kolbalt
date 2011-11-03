@@ -3,8 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using HtmlAgilityPack;
-using MediaApp.Data;
-using MediaApp.Data.Web;
+using Kolbalt.Core.Data.Web;
 
 namespace MediaApp.Forms.UserControls.FilmControls
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Windows.Forms;
+using Kolbalt.Core.Domain;
 using MediaApp.Data;
 using MediaApp.Forms.MainForms;
 

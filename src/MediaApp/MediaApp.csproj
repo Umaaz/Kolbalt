@@ -118,22 +118,13 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Web\DownloadImage.cs" />
-    <Compile Include="Data\Items\ComboBoxItem.cs" />
-    <Compile Include="Domain\Commands\AddFilmsCommand.cs" />
-    <Compile Include="Domain\Validations\FilmValidator.cs" />
+    <Compile Include="Resources\Items\ComboBoxItem.cs" />
     <Compile Include="Forms\ClkSettings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ClkSettings.Designer.cs">
       <DependentUpon>ClkSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\NhContext.cs" />
-    <Compile Include="Domain\Model\Alarms.cs" />
-    <Compile Include="Domain\Model\Film.cs" />
-    <Compile Include="Domain\Model\FilmType.cs" />
-    <Compile Include="Domain\Model\Person.cs" />
-    <Compile Include="Domain\Model\Role.cs" />
     <Compile Include="Forms\PlayBack\FullScreanVideo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -152,11 +143,7 @@
     <Compile Include="Forms\MainForms\MainFrm.Designer.cs">
       <DependentUpon>MainFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Web\HTMLescapeCharConverter.cs" />
-    <Compile Include="Data\Web\IMDB\IMDBFilm.cs" />
-    <Compile Include="Data\Web\IMDB\IMDBResult.cs" />
-    <Compile Include="Data\Web\IMDB\IMDBSearch.cs" />
-    <Compile Include="Data\Items\ListBoxItem.cs" />
+    <Compile Include="Resources\Items\ListBoxItem.cs" />
     <Compile Include="Data\AlarmListViewItem.cs" />
     <Compile Include="Forms\Popups\InputBox.cs" />
     <Compile Include="Forms\Popups\Results.cs">
@@ -225,17 +212,6 @@
     <Compile Include="Forms\ValidationErrors.Designer.cs">
       <DependentUpon>ValidationErrors.cs</DependentUpon>
     </Compile>
-    <Compile Include="Mappings\AlarmsMap.cs" />
-    <Compile Include="Mappings\Conventions\ColumnConventions.cs" />
-    <Compile Include="Mappings\Conventions\ForeignKeyConstraintNameConvention.cs" />
-    <Compile Include="Mappings\Conventions\TableNameConventions.cs" />
-    <Compile Include="Mappings\FilmMap.cs" />
-    <Compile Include="Mappings\FilmSearchMap.cs" />
-    <Compile Include="Mappings\FilmTypeMap.cs" />
-    <Compile Include="Mappings\PersonMap.cs" />
-    <Compile Include="Mappings\RoleMap.cs" />
-    <Compile Include="Mappings\RoleSearchMap.cs" />
-    <Compile Include="Mappings\SearchMap.cs" />
     <Compile Include="MediaDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -326,18 +302,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Rewind.gif" />
-    <None Include="Resources\Pause.gif" />
-    <None Include="Resources\Play.gif" />
-    <None Include="Resources\Play1.gif" />
-    <None Include="Resources\Back.gif" />
-    <None Include="Resources\Rewind1.gif" />
-    <None Include="Resources\stop.gif" />
-    <None Include="Resources\FastFoward.gif" />
-    <None Include="Resources\Next.gif" />
-    <None Include="Resources\RestoreScreen.gif" />
-    <None Include="Resources\Delete.gif" />
-    <None Include="Resources\Add.gif" />
+    <None Include="Resources\Images\Rewind.gif" />
+    <None Include="Resources\Images\Pause.gif" />
+    <None Include="Resources\Images\Play.gif" />
+    <None Include="Resources\Images\Play1.gif" />
+    <None Include="Resources\Images\Back.gif" />
+    <None Include="Resources\Images\Rewind1.gif" />
+    <None Include="Resources\Images\stop.gif" />
+    <None Include="Resources\Images\FastFoward.gif" />
+    <None Include="Resources\Images\Next.gif" />
+    <None Include="Resources\Images\RestoreScreen.gif" />
+    <None Include="Resources\Images\Delete.gif" />
+    <None Include="Resources\Images\Add.gif" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -380,7 +356,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\no_image.gif" />
+    <None Include="Resources\Images\no_image.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kolbalt.Core\Kolbalt.Core.csproj">
+      <Project>{A0F400CC-C729-44FA-98FE-D2C5D08C7465}</Project>
+      <Name>Kolbalt.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

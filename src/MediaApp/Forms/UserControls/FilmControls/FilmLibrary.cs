@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Kolbalt.Core.Domain;
+using Kolbalt.Core.Domain.Model;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers;
-using MediaApp.Data;
 using MediaApp.Data.Items;
-using MediaApp.Domain.Model;
 using NHibernate;
 using NHibernate.Linq;
 

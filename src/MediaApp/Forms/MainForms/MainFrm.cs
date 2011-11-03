@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using MediaApp.Data;
-using MediaApp.Domain.Model;
+using Kolbalt.Core.Domain;
+using Kolbalt.Core.Domain.Model;
 using MediaApp.Forms.PlayBack;
 using MediaApp.Forms.UserControls.FilmControls;
 using MediaApp.Forms.UserControls.WPFControls;

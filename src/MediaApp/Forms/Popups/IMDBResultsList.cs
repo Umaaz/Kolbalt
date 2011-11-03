@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using MediaApp.Data.Web;
-using MediaApp.Data.Web.IMDB;
+using Kolbalt.Core.Data.Web;
+using Kolbalt.Core.Data.Web.IMDB;
 
 namespace MediaApp.Forms.Popups
 {
     public partial class IMDBResultsList : Form
     {
         public String URL { get; set; }
-        private readonly IList<IMDBResult> _results;
-        public IMDBResultsList(IList<IMDBResult> results, String title)
+        private readonly IList<ImdbResult> _results;
+        public IMDBResultsList(IList<ImdbResult> results, String title)
         {
             _results = results;
             InitializeComponent();

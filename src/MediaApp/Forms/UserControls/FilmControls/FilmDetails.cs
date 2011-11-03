@@ -4,10 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using HtmlAgilityPack;
-using MediaApp.Data;
-using MediaApp.Data.Web;
-using MediaApp.Domain.Model;
-using NHibernate.Linq;
+using Kolbalt.Core.Data.Web;
+using Kolbalt.Core.Domain.Model;
 
 namespace MediaApp.Forms.UserControls.FilmControls
 {

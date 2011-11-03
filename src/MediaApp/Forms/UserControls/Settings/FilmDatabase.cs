@@ -6,10 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using MediaApp.Data;
-using MediaApp.Data.Web.IMDB;
-using MediaApp.Domain.Commands;
-using MediaApp.Domain.Model;
+using Kolbalt.Core.Data.Web.IMDB;
+using Kolbalt.Core.Domain;
+using Kolbalt.Core.Domain.Commands;
+using Kolbalt.Core.Domain.Model;
 using MediaApp.Forms.Popups;
 using NHibernate;
 using NHibernate.Linq;
@@ -307,7 +307,7 @@ namespace MediaApp.Forms.UserControls.Settings
                     return;
                 var percent = (count++/(double) numFilms)*100;
                 worker.ReportProgress((int)percent,film.Path);
-                var newFilm = IMDBFilm.GetFilmByName(film.Title);
+                var newFilm = ImdbFilm.GetFilmByName(film.Title);
                 if (newFilm != null)
                 {
                     newFilm.FilmPath = film.Path;
